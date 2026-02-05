@@ -62,29 +62,52 @@
             padding: 20px;
         }
 
+        /* ================================================================
+           BODY SCROLL LOCK - ARQUITECTURA DEFINITIVA PARA SAFARI iOS
+           Elimina completamente el rubber-banding/overscroll
+           ================================================================ */
+
         /* === MOBILE VIEW (Real devices - No frame, fullscreen app) === */
         @media screen and (max-width: 768px) {
 
-            /* Prevent rubber-banding/overscroll */
-            html,
-            body {
-                overscroll-behavior: none;
-                -webkit-overflow-scrolling: touch;
-                position: fixed;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-            }
-
-            body {
-                padding: 0;
-                margin: 0;
-                background: #F9F7F2;
-                display: block;
-            }
-
-            .phone-frame {
+            /* 1. BLOQUEO TOTAL DEL ROOT (HTML/BODY) */
+            html {
+                position: fixed !important;
+                overflow: hidden !important;
                 width: 100% !important;
+                height: 100dvh !important;
+                height: 100% !important;
+                top: 0 !important;
+                left: 0 !important;
+                overscroll-behavior: none !important;
+                -webkit-overflow-scrolling: auto !important;
+            }
+
+            body {
+                position: fixed !important;
+                overflow: hidden !important;
+                width: 100% !important;
+                height: 100dvh !important;
+                height: 100% !important;
+                top: 0 !important;
+                left: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #F9F7F2 !important;
+                overscroll-behavior: none !important;
+                -webkit-overflow-scrolling: auto !important;
+                touch-action: none !important;
+            }
+
+            /* Phone frame = contenedor estanco principal fijo */
+            .phone-frame {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 100dvh !important;
                 height: 100% !important;
                 border-radius: 0 !important;
                 border: none !important;
@@ -93,68 +116,114 @@
                 display: flex !important;
                 flex-direction: column !important;
                 overflow: hidden !important;
+                touch-action: none !important;
             }
 
             .phone-notch {
                 display: none !important;
             }
 
-            /* Screen container - flex layout for fixed header/footer */
+            /* Screen = contenedor de cada pantalla, flex layout */
             .screen {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
                 border-radius: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
+                height: 100dvh !important;
                 height: 100% !important;
                 overflow: hidden !important;
+                background: #F9F7F2 !important;
             }
 
-            /* Header stays at top with safe area (gradient header) */
+            /* Header (gradient) - fijo arriba con safe area */
             .header-gradient {
                 flex-shrink: 0 !important;
-                padding-top: max(3rem, calc(env(safe-area-inset-top) + 12px)) !important;
-                /* Background extends into status bar */
-                margin-top: calc(-1 * env(safe-area-inset-top));
-                padding-top: calc(env(safe-area-inset-top) + 3rem) !important;
+                position: relative !important;
+                z-index: 100 !important;
+                margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+                padding-top: calc(env(safe-area-inset-top, 0px) + 3rem) !important;
             }
 
-            /* White/Sticky headers (pet profile, booking screens, etc.) */
+            /* White/Sticky headers (pet profile, booking screens) - fijos arriba */
             .screen>div.sticky,
             .screen>div[class*="border-b"][class*="pt-12"] {
                 flex-shrink: 0 !important;
                 position: relative !important;
-                padding-top: calc(env(safe-area-inset-top) + 12px) !important;
-                margin-top: calc(-1 * env(safe-area-inset-top));
+                z-index: 100 !important;
+                margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+                padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
                 background: #F9F7F2 !important;
             }
 
-            /* Main content area - scrollable */
-            .screen>div:not(.header-gradient):not(.bottom-nav):not(.sticky):not([class*="border-b"][class*="pt-12"]) {
+            /* 2. CONTENEDOR DE SCROLL INDEPENDIENTE (.main-viewport) */
+            .main-viewport {
+                flex: 1 !important;
+                height: 100% !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior-y: contain !important;
+                background: #F9F7F2 !important;
+                position: relative !important;
+                touch-action: pan-y !important;
+            }
+
+            /* Contenido dentro de .main-viewport - padding generoso */
+            .main-viewport>.viewport-content {
+                min-height: 100%;
+                padding-bottom: 150px !important;
+                background: #F9F7F2 !important;
+            }
+
+            /* 3. FONDO INFINITO - div invisible al final del contenido */
+            .infinite-bg {
+                height: 100vh !important;
+                background: #F9F7F2 !important;
+                pointer-events: none !important;
+            }
+
+            /* Fallback para contenedores antiguos (sin .main-viewport) */
+            .screen>div.px-5:not(.main-viewport) {
                 flex: 1 !important;
                 overflow-y: auto !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
                 overscroll-behavior-y: contain !important;
+                background: #F9F7F2 !important;
+                padding-bottom: 150px !important;
+                touch-action: pan-y !important;
             }
 
-            /* Content wrapper inside screens - make scrollable */
-            .screen>div.px-5 {
-                flex: 1 !important;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
-                -webkit-overflow-scrolling: touch !important;
-                overscroll-behavior-y: contain !important;
-            }
-
-            /* Fixed bottom navigation with safe area */
+            /* 4. TAB BAR - z-index 9999, fondo sólido, sin transparencia */
             .bottom-nav {
                 position: relative !important;
                 flex-shrink: 0 !important;
-                padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+                z-index: 9999 !important;
                 background: #F9F7F2 !important;
-                border-top: 1px solid rgba(197, 160, 89, 0.2) !important;
+                border-top: 1px solid rgba(197, 160, 89, 0.25) !important;
+                padding-bottom: env(safe-area-inset-bottom, 20px) !important;
+                /* Sombra sutil para separación visual */
+                box-shadow: 0 -2px 10px rgba(75, 54, 33, 0.05) !important;
             }
 
-            /* Slightly smaller text for real mobile screens */
+            /* Extensión de Tab Bar hasta borde físico inferior */
+            .bottom-nav::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: calc(env(safe-area-inset-bottom, 0px) + 50px);
+                background: #F9F7F2;
+                z-index: -1;
+                pointer-events: none;
+            }
+
+            /* Text sizing for mobile */
             .text-xl {
                 font-size: 1.15rem !important;
             }
@@ -173,11 +242,11 @@
                 height: 2.75rem !important;
             }
 
-            /* Sticky headers inside scrollable content */
+            /* Sticky headers inside scrollable */
             .sticky {
                 position: sticky !important;
                 top: 0 !important;
-                z-index: 20 !important;
+                z-index: 50 !important;
             }
         }
 
@@ -331,16 +400,19 @@
             animation: pulse 2s infinite;
         }
 
-        /* Bottom Nav */
+        /* Bottom Nav - Tab Bar estilo Instagram */
         .bottom-nav {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
             background: #F9F7F2;
-            border-top: 1px solid rgba(197, 160, 89, 0.2);
+            border-top: 1px solid rgba(197, 160, 89, 0.25);
             padding-bottom: 20px;
-            z-index: 50;
+            z-index: 9999;
+            /* Fondo sólido, sin transparencia */
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
         }
 
         .no-scrollbar::-webkit-scrollbar {
@@ -901,102 +973,107 @@
                     </svg>
                 </button>
             </div>
+            <!-- MAIN VIEWPORT - Contenedor de scroll independiente -->
+            <div class="main-viewport">
+                <div class="viewport-content px-5 pt-4">
+                    <p class="text-gray-500 text-sm mb-4">1 mascota registrada</p>
 
-            <div class="px-5 pb-24 pt-4">
-                <p class="text-gray-500 text-sm mb-4">1 mascota registrada</p>
+                    <div class="pet-card bg-white rounded-3xl shadow-lg overflow-hidden mb-6">
+                        <div class="relative h-48 bg-gradient-to-br from-orange-100 to-orange-50">
+                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop"
+                                alt="Luna" class="w-full h-full object-cover">
+                            <div
+                                class="absolute bottom-3 right-3 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
 
-                <div class="pet-card bg-white rounded-3xl shadow-lg overflow-hidden mb-6">
-                    <div class="relative h-48 bg-gradient-to-br from-orange-100 to-orange-50">
-                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop"
-                            alt="Luna" class="w-full h-full object-cover">
-                        <div
-                            class="absolute bottom-3 right-3 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <h2 class="text-2xl font-bold text-gray-800">Luna</h2>
+                                    <p class="text-gray-500">Golden Retriever</p>
+                                </div>
+                                <span
+                                    class="bg-orange-100 text-primary px-3 py-1 rounded-full text-sm font-medium">Hembra</span>
+                            </div>
+
+                            <div class="flex gap-4 mb-4">
+                                <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
+                                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                                    </svg>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Peso</p>
+                                        <p class="font-semibold text-gray-800">28 kg</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
+                                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="text-xs text-gray-500">Edad</p>
+                                        <p class="font-semibold text-gray-800">3 años</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-4">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-amber-500 mt-0.5 mr-2 flex-shrink-0" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                    <div>
+                                        <p class="text-sm font-medium text-amber-800 mb-1">Notas especiales</p>
+                                        <p class="text-sm text-amber-700">Es nerviosa con extraños. No le gusta el agua
+                                            muy
+                                            caliente.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3 mt-5">
+                                <button
+                                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                    Editar
+                                </button>
+                                <button onclick="showScreen('screen-booking-van')"
+                                    class="flex-1 bg-primary hover:bg-primaryDark text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    Agendar
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="p-5">
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-800">Luna</h2>
-                                <p class="text-gray-500">Golden Retriever</p>
-                            </div>
-                            <span
-                                class="bg-orange-100 text-primary px-3 py-1 rounded-full text-sm font-medium">Hembra</span>
-                        </div>
-
-                        <div class="flex gap-4 mb-4">
-                            <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
-                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                                </svg>
-                                <div>
-                                    <p class="text-xs text-gray-500">Peso</p>
-                                    <p class="font-semibold text-gray-800">28 kg</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
-                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <div>
-                                    <p class="text-xs text-gray-500">Edad</p>
-                                    <p class="font-semibold text-gray-800">3 años</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-4">
-                            <div class="flex items-start">
-                                <svg class="w-5 h-5 text-amber-500 mt-0.5 mr-2 flex-shrink-0" fill="none"
-                                    stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                </svg>
-                                <div>
-                                    <p class="text-sm font-medium text-amber-800 mb-1">Notas especiales</p>
-                                    <p class="text-sm text-amber-700">Es nerviosa con extraños. No le gusta el agua muy
-                                        caliente.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3 mt-5">
-                            <button
-                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                                Editar
-                            </button>
-                            <button onclick="showScreen('screen-booking-van')"
-                                class="flex-1 bg-primary hover:bg-primaryDark text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Agendar
-                            </button>
-                        </div>
-                    </div>
+                    <button
+                        class="w-full border-2 border-dashed border-primary text-primary font-medium py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-orange-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Agregar otra mascota
+                    </button>
                 </div>
-
-                <button
-                    class="w-full border-2 border-dashed border-primary text-primary font-medium py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-orange-50 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Agregar otra mascota
-                </button>
+                <!-- FONDO INFINITO - Previene ver el color del sistema al overscroll -->
+                <div class="infinite-bg"></div>
             </div>
 
             <div class="bottom-nav flex justify-around items-center py-3 px-2">
