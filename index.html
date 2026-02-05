@@ -1405,20 +1405,51 @@
             </div>
         </div>
 
-        <!-- SCREEN: BOOKING CONFIRMED -->
         <div id="screen-confirmed" class="screen hidden">
-            <div class="flex flex-col items-center justify-center h-full bg-background px-8">
-                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 check-animation">
-                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex flex-col items-center justify-center h-full bg-background px-6">
+                <!-- Success Icon -->
+                <div
+                    class="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mb-6 check-animation border-4 border-green-100">
+                    <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">¡Reserva Confirmada!</h2>
-                <p class="text-gray-500 text-center mb-8">Te esperamos pronto. Tu mascota está en las mejores manos.</p>
-                <button onclick="showScreen('screen-home')"
-                    class="btn-ripple bg-primary hover:bg-primaryDark text-white font-semibold py-4 px-8 rounded-2xl transition-colors">
-                    Volver al Inicio
-                </button>
+
+                <h2 class="text-3xl font-bold text-gray-800 mb-3 text-center tracking-tight">¡Reserva Confirmada!</h2>
+                <p class="text-gray-500 text-center mb-10 text-lg px-4">Tu mascota está en las mejores manos.<br>Hemos
+                    reservado tu espacio.</p>
+
+                <!-- Payment Section -->
+                <div class="w-full max-w-sm">
+                    <div class="mb-4">
+                        <p class="text-center text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Finalizar
+                            Reserva</p>
+                    </div>
+
+                    <!-- Button A: Pay Now (Primary) -->
+                    <button onclick="handleStripePayment()"
+                        class="btn-ripple w-full mb-4 relative overflow-hidden group rounded-2xl shadow-xl transform transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#D4AF37] to-[#C5A059]"></div>
+                        <div class="absolute inset-0 bg-white/20 group-hover:bg-white/10 transition-colors"></div>
+                        <div class="relative py-4 px-6 flex items-center justify-center gap-3">
+                            <span class="text-white font-bold text-lg">💳 Pagar Ahora</span>
+                            <span
+                                class="bg-white/20 text-white text-xs py-0.5 px-2 rounded-full font-medium">Seguro</span>
+                        </div>
+                    </button>
+
+                    <!-- Button B: Pay Later (Secondary) -->
+                    <button onclick="handlePayLater()"
+                        class="btn-ripple w-full bg-transparent border-2 border-[#4B3621] text-[#4B3621] font-bold py-4 px-6 rounded-2xl hover:bg-[#4B3621]/5 transition-colors mb-8">
+                        Pagar al finalizar el servicio
+                    </button>
+
+                    <!-- Volver Discreto -->
+                    <button onclick="showScreen('screen-home')"
+                        class="w-full text-center text-gray-400 text-sm hover:text-gray-600 transition-colors">
+                        Volver al inicio sin pagar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1471,6 +1502,33 @@
             document.getElementById('address-form').classList.add('hidden');
             document.getElementById('validation-result').classList.add('hidden');
             document.getElementById('success-message').classList.remove('hidden');
+        }
+
+        // ========== PAYMENT LOGIC ==========
+
+        function handleStripePayment() {
+            // Open Stripe in new tab
+            window.open('https://buy.stripe.com/14A8wH1Yjd6E0The7Adby00', '_blank');
+
+            // Optional: Mark as "Payment Started" locally
+            updateLastBookingStatus('payment_started');
+        }
+
+        function handlePayLater() {
+            // Mark as "Payment Pendiente"
+            updateLastBookingStatus('payment_pending');
+
+            // Redirect to Appointments (or Home)
+            showScreen('screen-appointments');
+        }
+
+        function updateLastBookingStatus(status) {
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            if (bookings.length > 0) {
+                // Assuming the last one is the current one
+                bookings[bookings.length - 1].paymentStatus = status;
+                localStorage.setItem('bookings', JSON.stringify(bookings));
+            }
         }
     </script>
 
