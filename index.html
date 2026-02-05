@@ -1092,8 +1092,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    <span
-                        class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
+                    <span id="cart-badge"
+                        class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
                 </div>
             </div>
 
@@ -1138,7 +1138,7 @@
                         <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Perrarina Super Premium</h3>
                         <div class="flex justify-between items-center">
                             <span class="text-primary font-bold">54.99 €</span>
-                            <button
+                            <button onclick="addToCart('Perrarina Super Premium', 54.99)"
                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1156,7 +1156,7 @@
                         <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Collar GPS</h3>
                         <div class="flex justify-between items-center">
                             <span class="text-primary font-bold">129.99 €</span>
-                            <button
+                            <button onclick="addToCart('Collar GPS', 129.99)"
                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1174,7 +1174,7 @@
                         <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Juguete Indestructible</h3>
                         <div class="flex justify-between items-center">
                             <span class="text-primary font-bold">24.50 €</span>
-                            <button
+                            <button onclick="addToCart('Juguete Indestructible', 24.50)"
                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -1192,7 +1192,7 @@
                         <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Champú Orgánico</h3>
                         <div class="flex justify-between items-center">
                             <span class="text-primary font-bold">18.90 €</span>
-                            <button
+                            <button onclick="addToCart('Champú Orgánico', 18.90)"
                                 class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -2053,6 +2053,73 @@
             renderSocial();
         });
 
+    </script>
+    <!-- SHOP LOGIC -->
+    <script>
+        // Cart State
+        let cart = [];
+
+        // Add to Cart Function
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            updateCartBadge();
+            showToast(`¡${productName} agregado!`);
+
+            // Add slight bump animation to badge
+            const badge = document.getElementById('cart-badge');
+            if (badge) {
+                badge.classList.add('scale-125');
+                setTimeout(() => badge.classList.remove('scale-125'), 200);
+            }
+        }
+
+        // Update Badge Function
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            if (!badge) return;
+
+            const count = cart.length;
+
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Toast Feedback Function
+        function showToast(message) {
+            // Check if toast container exists, if not create it
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'fixed bottom-24 left-1/2 transform -translate-x-1/2 z-[60] flex flex-col gap-2 pointer-events-none';
+                document.body.appendChild(toastContainer);
+            }
+
+            // Create Toast Element
+            const toast = document.createElement('div');
+            toast.className = 'bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg text-sm font-medium opacity-0 transform translate-y-4 transition-all duration-300 flex items-center gap-2';
+            toast.innerHTML = `
+                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                ${message}
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Animate In
+            requestAnimationFrame(() => {
+                toast.classList.remove('opacity-0', 'translate-y-4');
+            });
+
+            // Animate Out & Remove
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
     </script>
 </body>
 
