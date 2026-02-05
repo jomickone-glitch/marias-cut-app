@@ -62,25 +62,38 @@
             padding: 20px;
         }
 
+        /* ================================================================
+           PWA LAYOUT ARCHITECTURE - iOS Native-like Experience
+           ================================================================ */
+
         /* === MOBILE VIEW (Real devices - Fullscreen PWA) === */
         @media screen and (max-width: 768px) {
 
-            /* Base: html con fondo hueso para Status Bar/Dynamic Island */
+            /* ========================================
+               1. CONQUISTA TOTAL DE BARRA DE ESTADO
+               ======================================== */
+
+            /* HTML con fondo beige para que el notch/isla dinámica sea del mismo color */
             html {
-                background: #F9F7F2 !important;
+                background-color: #F9F7F2 !important;
                 height: 100% !important;
+                overflow: hidden !important;
             }
 
-            /* Body: fondo hueso, sin márgenes, altura completa */
+            /* Body sin márgenes, fondo beige, altura completa */
             body {
-                background: #F9F7F2 !important;
+                background-color: #F9F7F2 !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 height: 100% !important;
                 overflow: hidden !important;
             }
 
-            /* Phone frame: contenedor principal fijo */
+            /* ========================================
+               2. CONTENEDOR ESTANCO PRINCIPAL
+               ======================================== */
+
+            /* Phone frame: contenedor con altura 100dvh y overflow hidden */
             .phone-frame {
                 position: fixed !important;
                 top: 0 !important;
@@ -88,73 +101,95 @@
                 right: 0 !important;
                 bottom: 0 !important;
                 width: 100% !important;
+                height: 100dvh !important;
                 height: 100% !important;
                 border-radius: 0 !important;
                 border: none !important;
                 box-shadow: none !important;
                 background: #F9F7F2 !important;
-                display: flex !important;
-                flex-direction: column !important;
                 overflow: hidden !important;
-                /* Safe area padding para que el contenido respete la isla dinámica */
-                padding-top: env(safe-area-inset-top, 0px) !important;
+                /* NO padding-top aquí - se maneja en cada screen/header */
             }
 
             .phone-notch {
                 display: none !important;
             }
 
-            /* Screen: cada pantalla ocupa todo el espacio disponible */
+            /* ========================================
+               3. SISTEMA DE PANTALLAS (SCREENS)
+               ======================================== */
+
+            /* Cada screen ocupa todo el viewport */
             .screen {
                 position: absolute !important;
                 top: 0 !important;
                 left: 0 !important;
                 right: 0 !important;
                 bottom: 0 !important;
-                border-radius: 0 !important;
                 display: flex !important;
                 flex-direction: column !important;
                 height: 100% !important;
                 overflow: hidden !important;
                 background: #F9F7F2 !important;
+                border-radius: 0 !important;
             }
 
-            /* Header gradient: respeta safe area superior */
+            /* ========================================
+               4. HEADERS CON SAFE AREA CORRECTA
+               ======================================== */
+
+            /* Header gradient (Home) - padding-top incluye safe area */
             .header-gradient {
                 flex-shrink: 0 !important;
+                padding-top: calc(env(safe-area-inset-top, 20px) + 12px) !important;
                 position: relative !important;
                 z-index: 10 !important;
             }
 
-            /* Headers con borde (pet profile, booking) */
-            .screen>div[class*="border-b"][class*="pt-12"] {
+            /* Headers de sub-páginas (Mascotas, Reservas, etc.) */
+            /* Tienen class pt-12 pero necesitamos agregar safe-area */
+            .screen>div[class*="border-b"][class*="pt-12"],
+            .screen>div.sticky[class*="pt-12"] {
                 flex-shrink: 0 !important;
+                /* Reemplazar pt-12 (3rem) con safe-area + espacio razonable */
+                padding-top: calc(env(safe-area-inset-top, 20px) + 12px) !important;
                 position: relative !important;
                 z-index: 10 !important;
                 background: #FFFDF5 !important;
             }
 
-            /* Área de contenido scrollable */
-            .screen>div.px-5,
-            .screen>div.content-area {
+            /* ========================================
+               5. ÁREA DE CONTENIDO SCROLLABLE
+               ======================================== */
+
+            /* Contenido principal - única área con scroll */
+            .screen>div.px-5 {
                 flex: 1 !important;
                 overflow-y: auto !important;
                 overflow-x: hidden !important;
                 -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior-y: none !important;
                 background: #F9F7F2 !important;
             }
 
-            /* Tab Bar: fija abajo, fondo sólido */
+            /* ========================================
+               6. TAB BAR FIJA EN BOTTOM
+               ======================================== */
+
             .bottom-nav {
-                position: relative !important;
                 flex-shrink: 0 !important;
+                position: relative !important;
                 z-index: 100 !important;
                 background: #F9F7F2 !important;
                 border-top: 1px solid rgba(197, 160, 89, 0.2) !important;
+                /* Safe area inferior para Home Indicator */
                 padding-bottom: env(safe-area-inset-bottom, 20px) !important;
             }
 
-            /* Text sizing for mobile */
+            /* ========================================
+               7. AJUSTES DE TIPOGRAFÍA MOBILE
+               ======================================== */
+
             .text-xl {
                 font-size: 1.15rem !important;
             }
@@ -167,7 +202,7 @@
                 font-size: 1.65rem !important;
             }
 
-            /* Smaller logo on mobile */
+            /* Logo más pequeño en mobile */
             .header-gradient .w-14 {
                 width: 2.75rem !important;
                 height: 2.75rem !important;
