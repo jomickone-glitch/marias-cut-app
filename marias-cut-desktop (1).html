@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARIA'S CUT | Estética Animal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        space: {
+                            900: '#F9F7F2',
+                            800: '#FFFDF5',
+                            700: '#F5F3EE',
+                            600: '#F0EAD6',
+                        },
+                        neon: {
+                            cyan: '#C5A059',
+                            violet: '#D4B896',
+                            pink: '#FCEEA7',
+                        },
+                        glass: {
+                            light: 'rgba(249, 247, 242, 0.7)',
+                            medium: 'rgba(249, 247, 242, 0.85)',
+                            heavy: 'rgba(249, 247, 242, 0.95)',
+                        }
+                    },
+                    backdropBlur: {
+                        xs: '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', 'Poppins', sans-serif;
+            background: #F9F7F2;
+            min-height: 100vh;
+            color: #4B3621;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles - Soft floating dots */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #E6C88B 0%, #C5A059 100%);
+            border-radius: 50%;
+            opacity: 0.25;
+            animation: float 30s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.25;
+            }
+
+            90% {
+                opacity: 0.25;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Soft card utilities - Warm cream tones */
+        .glass {
+            background: #FFFDF5;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            box-shadow: 0 4px 20px rgba(75, 54, 33, 0.06);
+        }
+
+        .glass-strong {
+            background: #FFFDF5;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            box-shadow: 0 8px 32px rgba(75, 54, 33, 0.08);
+        }
+
+        .glass-card {
+            background: #F0EAD6;
+            border: 1px solid rgba(197, 160, 89, 0.25);
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(75, 54, 33, 0.08),
+                0 4px 12px rgba(197, 160, 89, 0.06);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(197, 160, 89, 0.5);
+            box-shadow: 0 15px 50px rgba(75, 54, 33, 0.12),
+                0 8px 20px rgba(197, 160, 89, 0.1);
+            transform: translateY(-4px);
+        }
+
+        /* Golden accent border */
+        .neon-border {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 26px;
+            padding: 2px;
+            background: linear-gradient(45deg, #C5A059, #E6C88B);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .neon-border:hover::before {
+            opacity: 1;
+        }
+
+        .neon-text {
+            color: #D4AF37;
+            text-shadow: none;
+        }
+
+        /* Custom scrollbar - soft and elegant */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F9F7F2;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #C5A059, #D4B896);
+            border-radius: 10px;
+            border: 2px solid #F9F7F2;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #C5A059, #E6C88B);
+        }
+
+        /* Button animations - soft and inviting */
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50px !important;
+            background: #F0EAD6 !important;
+            border: 2px solid rgba(197, 160, 89, 0.4) !important;
+            color: #4B3621 !important;
+            font-weight: 600 !important;
+        }
+
+        .btn-glow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(230, 200, 139, 0.4) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            border-radius: 50%;
+        }
+
+        .btn-glow:hover::after {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 8px 30px rgba(197, 160, 89, 0.25),
+                0 4px 15px rgba(75, 54, 33, 0.1);
+            border-color: rgba(197, 160, 89, 0.6) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Decorative pattern overlay - soft paw prints/dots instead of grid */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(197, 160, 89, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(212, 184, 150, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(230, 200, 139, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Product card hover - gentle lift */
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px !important;
+            overflow: hidden;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(75, 54, 33, 0.1),
+                0 8px 20px rgba(197, 160, 89, 0.08);
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        .product-image {
+            transition: transform 0.5s ease;
+            border-radius: 16px;
+        }
+
+        /* Gradient text - warm golden tones */
+        .gradient-text {
+            background: linear-gradient(135deg, #C5A059 0%, #D4B896 50%, #E6C88B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Navigation link underline effect - soft gold */
+        .nav-link {
+            position: relative;
+            color: #5D4037;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #C5A059, #E6C88B);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: #C5A059;
+        }
+
+        /* Category badge - warm beige */
+        .category-badge {
+            background: #FCEEA7;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            color: #4B3621;
+            font-weight: 600;
+            border-radius: 20px;
+            padding: 6px 14px;
+        }
+
+        /* Price tag - elegant gold accent */
+        .price-tag {
+            background: rgba(197, 160, 89, 0.15);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            color: #5D4037;
+            font-weight: 700;
+            border-radius: 12px;
+        }
+
+        /* Loading shimmer - warm tones */
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(230, 200, 139, 0.3), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2.5s infinite;
+        }
+
+        /* Additional luxury spa styles */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #4B3621;
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+        }
+
+        /* Override Tailwind text colors for the new theme */
+        .text-white {
+            color: #4B3621 !important;
+        }
+
+        .text-gray-400,
+        .text-gray-300 {
+            color: #6D5D4E !important;
+        }
+
+        .text-gray-500,
+        .text-gray-600 {
+            color: #7D6D5E !important;
+        }
+
+        .text-neon-cyan {
+            color: #C5A059 !important;
+        }
+
+        .text-neon-violet {
+            color: #D4B896 !important;
+        }
+
+        /* Update background colors for nav and footer */
+        .border-white\/5,
+        .border-white\/10 {
+            border-color: rgba(197, 160, 89, 0.2) !important;
+        }
+
+        .border-neon-cyan\/30,
+        .border-neon-cyan\/40 {
+            border-color: rgba(197, 160, 89, 0.4) !important;
+        }
+
+        .border-neon-violet\/30,
+        .border-neon-violet\/40 {
+            border-color: rgba(212, 184, 150, 0.4) !important;
+        }
+
+        .from-neon-cyan\/20,
+        .to-neon-cyan\/20,
+        .from-neon-cyan\/10,
+        .to-neon-cyan\/5 {
+            --tw-gradient-from: rgba(197, 160, 89, 0.15) !important;
+            --tw-gradient-to: rgba(212, 184, 150, 0.1) !important;
+        }
+
+        .from-neon-violet\/20,
+        .to-neon-violet\/20,
+        .from-neon-violet\/10,
+        .to-neon-violet\/5 {
+            --tw-gradient-from: rgba(212, 184, 150, 0.2) !important;
+            --tw-gradient-to: rgba(230, 200, 139, 0.15) !important;
+        }
+
+        .bg-neon-cyan,
+        .bg-neon-cyan\/20 {
+            background-color: rgba(197, 160, 89, 0.2) !important;
+        }
+
+        .bg-neon-violet\/10,
+        .bg-neon-violet\/20 {
+            background-color: rgba(212, 184, 150, 0.2) !important;
+        }
+
+        /* Rounded pill buttons */
+        button,
+        [role="button"] {
+            border-radius: 50px !important;
+        }
+
+        /* Card border radius increase */
+        .rounded-2xl,
+        .rounded-3xl {
+            border-radius: 28px !important;
+        }
+
+        .rounded-xl {
+            border-radius: 20px !important;
+        }
+
+        .rounded-lg {
+            border-radius: 16px !important;
+        }
+
+        /* Input fields styling */
+        input,
+        textarea {
+            background: #FFFDF5 !important;
+            border: 2px solid rgba(197, 160, 89, 0.25) !important;
+            color: #4B3621 !important;
+            border-radius: 16px !important;
+            font-family: 'Quicksand', sans-serif !important;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #8B7355 !important;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: rgba(197, 160, 89, 0.5) !important;
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.1) !important;
+            outline: none !important;
+        }
+
+        /* Override dark gradients in content */
+        .from-space-900\/80 {
+            --tw-gradient-from: rgba(249, 247, 242, 0.95) !important;
+        }
+
+        /* Hover states for interactive elements */
+        .hover\:text-white:hover {
+            color: #C5A059 !important;
+        }
+
+        .hover\:border-neon-cyan\/60:hover {
+            border-color: rgba(197, 160, 89, 0.6) !important;
+        }
+
+        .hover\:bg-neon-cyan\/20:hover,
+        .hover\:bg-neon-cyan\/30:hover {
+            background-color: rgba(197, 160, 89, 0.25) !important;
+        }
+
+        /* Animate pulse with soft colors */
+        .animate-pulse {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                opacity: 1;
+                background-color: #E8B4B8;
+            }
+
+            50% {
+                opacity: 0.6;
+                background-color: #F5D6E0;
+            }
+        }
+
+        /* Footer override */
+        footer {
+            background: linear-gradient(180deg, transparent 0%, rgba(255, 240, 245, 0.5) 100%);
+        }
+
+        /* SVG icon colors */
+        svg {
+            stroke: currentColor;
+        }
+
+        .text-neon-cyan svg,
+        svg.text-neon-cyan {
+            color: #D4AF37 !important;
+        }
+
+        .text-neon-violet svg,
+        svg.text-neon-violet {
+            color: #B8A9C9 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Particle Background Component
+        const ParticleBackground = () => {
+            useEffect(() => {
+                const particlesContainer = document.getElementById('particles');
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 20 + 's';
+                    particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }, []);
+
+            return <div id="particles" className="particles"></div>;
+        };
+
+        // Navigation Component
+        const Navbar = ({ activeSection, setActiveSection }) => {
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const navLinks = [
+                { id: 'services', label: 'Servicios' },
+                { id: 'store', label: 'Tienda' },
+                { id: 'vans', label: 'Furgones' },
+                { id: 'contact', label: 'Contacto' },
+            ];
+
+            return (
+                <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-3' : 'py-6'
+                    }`}>
+                    <div className="max-w-7xl mx-auto px-8">
+                        <div className={`glass-strong rounded-2xl px-8 py-4 flex items-center justify-between transition-all duration-500 ${scrolled ? 'shadow-2xl' : ''
+                            }`}>
+                            {/* Logo */}
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/10">
+                                    <img src="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG" alt="Maria's Cut Logo" className="w-full h-full object-cover" />
+                                </div>
+                                <span className="text-xl font-semibold tracking-wider">
+                                    MARIA'S <span className="gradient-text">CUT</span>
+                                </span>
+                            </div>
+
+                            {/* Navigation Links */}
+                            <div className="hidden md:flex items-center gap-8">
+                                {navLinks.map(link => (
+                                    <button
+                                        key={link.id}
+                                        onClick={() => setActiveSection(link.id)}
+                                        className={`nav-link text-sm font-medium transition-colors ${activeSection === link.id
+                                            ? 'text-neon-cyan'
+                                            : 'text-gray-400 hover:text-white'
+                                            }`}
+                                    >
+                                        {link.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* CTA Button */}
+                            <button onClick={() => window.handleReservar()} className="btn-glow px-6 py-2.5 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-violet/20 border border-neon-cyan/30 text-sm font-medium text-white hover:border-neon-cyan/60 transition-all">
+                                Reservar
+                            </button>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        // Hero Section
+        const HeroSection = ({ setActiveSection }) => {
+            return (
+                <section className="relative min-h-screen flex items-center justify-center pt-32 pb-20 px-8">
+                    <div className="max-w-6xl mx-auto text-center">
+                        {/* Badge */}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8">
+                            <span className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
+                            <span className="text-xs font-medium text-gray-300 tracking-wider uppercase">Cuidado con Cariño</span>
+                        </div>
+
+                        {/* Main Title */}
+                        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                            <span className="gradient-text">Estética Animal</span>
+                        </h1>
+
+                        {/* Subtitle */}
+                        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-16 leading-relaxed">
+                            Cuidamos de ellos como tú lo harías.<br />
+                            Higiene, amor y detalle en cada corte.
+                        </p>
+
+                        {/* Service Cards */}
+                        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            {/* Sede Física */}
+                            <div
+                                onClick={() => setActiveSection('services')}
+                                className="glass-card neon-border rounded-3xl p-8 cursor-pointer group"
+                            >
+                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    <svg className="w-8 h-8 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-2xl font-semibold mb-3">Sede Física</h3>
+                                <p className="text-gray-400 mb-6">Instalaciones cómodas y acogedoras donde tu mascota se sentirá como en casa.</p>
+                                <div className="flex items-center text-neon-cyan text-sm font-medium">
+                                    <span>Explorar servicios</span>
+                                    <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Unidad Móvil */}
+                            <div
+                                onClick={() => setActiveSection('vans')}
+                                className="glass-card neon-border rounded-3xl p-8 cursor-pointer group"
+                            >
+                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-violet/20 to-neon-violet/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    <svg className="w-8 h-8 text-neon-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4m5-4v6m0 0l3-3m-3 3l-3-3" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-2xl font-semibold mb-3">Unidad Móvil</h3>
+                                <p className="text-gray-400 mb-6">Furgonetas equipadas que llegan a tu ubicación. Servicio puerta a puerta con geolocalización.</p>
+                                <div className="flex items-center text-neon-violet text-sm font-medium">
+                                    <span>Ver cobertura</span>
+                                    <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="flex justify-center gap-16 mt-20">
+                            {[
+                                { value: '15K+', label: 'Clientes' },
+                                { value: '50+', label: 'Furgones' },
+                                { value: '99.8%', label: 'Satisfacción' },
+                            ].map((stat, i) => (
+                                <div key={i} className="text-center">
+                                    <div className="text-3xl md:text-4xl font-bold gradient-text mb-1">{stat.value}</div>
+                                    <div className="text-sm text-gray-500">{stat.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Store Section
+        const StoreSection = () => {
+            const [activeCategory, setActiveCategory] = useState('all');
+
+            const categories = [
+                { id: 'all', label: 'Todos' },
+                { id: 'dogs', label: 'Perros' },
+                { id: 'cats', label: 'Gatos' },
+                { id: 'tech', label: 'Tech' },
+                { id: 'accessories', label: 'Accesorios' },
+            ];
+
+            const products = [
+                {
+                    id: 1,
+                    name: 'Perrarina Premium Pro',
+                    category: 'dogs',
+                    price: '$45.990',
+                    image: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=400&h=300&fit=crop',
+                    badge: 'Bestseller',
+                    description: 'Nutrición molecular de alta absorción'
+                },
+                {
+                    id: 2,
+                    name: 'Collar GPS Tracker X1',
+                    category: 'tech',
+                    price: '$129.990',
+                    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=300&fit=crop',
+                    badge: 'Nuevo',
+                    description: 'Geolocalización en tiempo real'
+                },
+                {
+                    id: 3,
+                    name: 'Juguete Interactivo AI',
+                    category: 'dogs',
+                    price: '$34.990',
+                    image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=300&fit=crop',
+                    badge: null,
+                    description: 'Aprendizaje adaptativo por IA'
+                },
+                {
+                    id: 4,
+                    name: 'Bozal Ergonómico Pro',
+                    category: 'accessories',
+                    price: '$24.990',
+                    image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&h=300&fit=crop',
+                    badge: null,
+                    description: 'Diseño biométrico, máximo confort'
+                },
+                {
+                    id: 5,
+                    name: 'Arena Sanitaria Nano',
+                    category: 'cats',
+                    price: '$18.990',
+                    image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=300&fit=crop',
+                    badge: 'Eco',
+                    description: 'Absorción molecular, sin olor'
+                },
+                {
+                    id: 6,
+                    name: 'Dispensador Smart Feed',
+                    category: 'tech',
+                    price: '$89.990',
+                    image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&h=300&fit=crop',
+                    badge: 'Smart',
+                    description: 'Controlado por app, programable'
+                },
+                {
+                    id: 7,
+                    name: 'Rascador Vertical X',
+                    category: 'cats',
+                    price: '$54.990',
+                    image: 'https://images.unsplash.com/photo-1513245543132-31f507417b26?w=400&h=300&fit=crop',
+                    badge: null,
+                    description: 'Diseño minimalista, materiales premium'
+                },
+                {
+                    id: 8,
+                    name: 'Arnés Táctico K9',
+                    category: 'accessories',
+                    price: '$39.990',
+                    image: 'https://images.unsplash.com/photo-1606567595334-d39972c85dfd?w=400&h=300&fit=crop',
+                    badge: 'Pro',
+                    description: 'Materiales aeroespaciales'
+                },
+            ];
+
+            const filteredProducts = activeCategory === 'all'
+                ? products
+                : products.filter(p => p.category === activeCategory);
+
+            return (
+                <section id="store" className="py-24 px-8">
+                    <div className="max-w-7xl mx-auto">
+                        {/* Section Header */}
+                        <div className="text-center mb-16">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+                                <svg className="w-4 h-4 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                <span className="text-xs font-medium text-gray-300 tracking-wider uppercase">E-Commerce</span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                                Suministros de <span className="gradient-text">Alto Rendimiento</span>
+                            </h2>
+                            <p className="text-gray-400 max-w-2xl mx-auto">
+                                Productos seleccionados con los más altos estándares de calidad.
+                                Tecnología de punta para el cuidado animal.
+                            </p>
+                        </div>
+
+                        {/* Category Filter */}
+                        <div className="flex flex-wrap justify-center gap-3 mb-12">
+                            {categories.map(cat => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => setActiveCategory(cat.id)}
+                                    className={`px-6 py-2.5 rounded-xl text-sm font-medium transition-all ${activeCategory === cat.id
+                                        ? 'bg-gradient-to-r from-neon-cyan/20 to-neon-violet/20 border border-neon-cyan/40 text-white'
+                                        : 'glass text-gray-400 hover:text-white hover:border-white/20'
+                                        }`}
+                                >
+                                    {cat.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Products Grid */}
+                        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {filteredProducts.map(product => (
+                                <div key={product.id} className="product-card glass-card rounded-2xl overflow-hidden group">
+                                    {/* Image */}
+                                    <div className="relative h-48 overflow-hidden">
+                                        <img
+                                            src={product.image}
+                                            alt={product.name}
+                                            className="product-image w-full h-full object-cover"
+                                        />
+                                        {product.badge && (
+                                            <div className="absolute top-3 left-3 px-3 py-1 rounded-full category-badge text-xs font-medium">
+                                                {product.badge}
+                                            </div>
+                                        )}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-space-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-4">
+                                            <button className="px-6 py-2 rounded-xl bg-neon-cyan/20 border border-neon-cyan/40 text-sm font-medium text-neon-cyan backdrop-blur-sm hover:bg-neon-cyan/30 transition-colors">
+                                                Ver detalles
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-5">
+                                        <h3 className="font-semibold text-white mb-1">{product.name}</h3>
+                                        <p className="text-xs text-gray-500 mb-3">{product.description}</p>
+                                        <div className="flex items-center justify-between">
+                                            <span className="price-tag px-3 py-1 rounded-lg text-neon-cyan font-semibold">
+                                                {product.price}
+                                            </span>
+                                            <button className="w-8 h-8 rounded-lg glass flex items-center justify-center hover:bg-neon-cyan/20 transition-colors">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* View All Button */}
+                        <div className="text-center mt-12">
+                            <button className="btn-glow px-8 py-3 rounded-xl glass border border-white/10 text-white font-medium hover:border-neon-cyan/40 transition-all inline-flex items-center gap-2">
+                                <span>Ver catálogo completo</span>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Services Section
+        const ServicesSection = () => {
+            const services = [
+                {
+                    icon: 'M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+                    title: 'Grooming Premium',
+                    description: 'Corte de precisión con herramientas profesionales de última generación.',
+                    price: 'Desde $35.000'
+                },
+                {
+                    icon: 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z',
+                    title: 'Spa Terapéutico',
+                    description: 'Tratamientos hidratantes y relajantes con productos dermatológicos.',
+                    price: 'Desde $55.000'
+                },
+                {
+                    icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+                    title: 'Chequeo Veterinario',
+                    description: 'Evaluación completa de salud por veterinarios certificados.',
+                    price: 'Desde $25.000'
+                },
+                {
+                    icon: 'M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z',
+                    title: 'Fotografía Profesional',
+                    description: 'Sesión fotográfica con iluminación de estudio y edición digital.',
+                    price: 'Desde $45.000'
+                }
+            ];
+
+            return (
+                <section id="services" className="py-24 px-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                                Servicios <span className="gradient-text">Especializados</span>
+                            </h2>
+                            <p className="text-gray-400 max-w-2xl mx-auto">
+                                Protocolos desarrollados por expertos en comportamiento animal
+                                y tecnología de vanguardia.
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                            {services.map((service, i) => (
+                                <div key={i} className="glass-card neon-border rounded-2xl p-6 flex items-start gap-5 group cursor-pointer">
+                                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-neon-cyan/10 to-neon-violet/10 flex items-center justify-center flex-shrink-0 group-hover:from-neon-cyan/20 group-hover:to-neon-violet/20 transition-all">
+                                        <svg className="w-7 h-7 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={service.icon} />
+                                        </svg>
+                                    </div>
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
+                                        <p className="text-gray-400 text-sm mb-3">{service.description}</p>
+                                        <span className="text-neon-cyan text-sm font-medium">{service.price}</span>
+                                    </div>
+                                    <svg className="w-5 h-5 text-gray-600 group-hover:text-neon-cyan group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Vans Section
+        const VansSection = () => {
+            return (
+                <section id="vans" className="py-24 px-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-12 items-center">
+                            {/* Content */}
+                            <div>
+                                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+                                    <span className="w-2 h-2 rounded-full bg-neon-violet animate-pulse"></span>
+                                    <span className="text-xs font-medium text-gray-300 tracking-wider uppercase">Flota Propia</span>
+                                </div>
+                                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                                    Unidades Móviles <span className="gradient-text">Equipadas</span>
+                                </h2>
+                                <p className="text-gray-400 mb-8 leading-relaxed">
+                                    Nuestra flota de furgonetas está equipada con tecnología de punta
+                                    para brindar el mismo servicio de calidad que en nuestras sedes,
+                                    directamente en tu domicilio.
+                                </p>
+
+                                <div className="space-y-4 mb-8">
+                                    {[
+                                        { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z', text: 'Geolocalización en tiempo real' },
+                                        { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', text: 'Agendamiento inteligente por zona' },
+                                        { icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', text: 'Protocolos de bioseguridad' },
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-lg bg-neon-violet/10 flex items-center justify-center">
+                                                <svg className="w-5 h-5 text-neon-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={item.icon} />
+                                                </svg>
+                                            </div>
+                                            <span className="text-gray-300">{item.text}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button className="btn-glow px-8 py-3 rounded-xl bg-gradient-to-r from-neon-violet/20 to-neon-violet/10 border border-neon-violet/40 text-white font-medium hover:border-neon-violet/60 transition-all">
+                                    Verificar cobertura en mi zona
+                                </button>
+                            </div>
+
+                            {/* Visual */}
+                            <div className="relative">
+                                <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-neon-violet/10 to-transparent"></div>
+                                    <img
+                                        src="https://images.unsplash.com/photo-1566008885218-90abf9200ddb?w=600&h=400&fit=crop"
+                                        alt="Van Service"
+                                        className="w-full h-64 object-cover rounded-2xl mb-6"
+                                    />
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-sm text-gray-500 mb-1">Cobertura actual</p>
+                                            <p className="text-2xl font-bold gradient-text">Santiago Centro + 15km</p>
+                                        </div>
+                                        <div className="w-16 h-16 rounded-full border-2 border-neon-violet/30 flex items-center justify-center">
+                                            <span className="text-neon-violet font-bold">50+</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Floating stats */}
+                                <div className="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-4">
+                                    <p className="text-xs text-gray-500 mb-1">Tiempo promedio</p>
+                                    <p className="text-xl font-bold text-white">45 min</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Contact Section
+        const ContactSection = () => {
+            return (
+                <section id="contact" className="py-24 px-8">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="glass-card rounded-3xl p-8 md:p-12">
+                            <div className="text-center mb-10">
+                                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                                    Inicia tu <span className="gradient-text">Experiencia</span>
+                                </h2>
+                                <p className="text-gray-400">
+                                    Agenda tu primera cita o consulta por nuestros servicios corporativos.
+                                </p>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label className="block text-sm text-gray-400 mb-2">Nombre</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-4 py-3 rounded-xl glass border border-white/10 text-white placeholder-gray-600 focus:border-neon-cyan/50 focus:outline-none transition-colors"
+                                        placeholder="Tu nombre"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-400 mb-2">Email</label>
+                                    <input
+                                        type="email"
+                                        className="w-full px-4 py-3 rounded-xl glass border border-white/10 text-white placeholder-gray-600 focus:border-neon-cyan/50 focus:outline-none transition-colors"
+                                        placeholder="tu@email.com"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mb-8">
+                                <label className="block text-sm text-gray-400 mb-2">Mensaje</label>
+                                <textarea
+                                    className="w-full px-4 py-3 rounded-xl glass border border-white/10 text-white placeholder-gray-600 focus:border-neon-cyan/50 focus:outline-none transition-colors resize-none h-32"
+                                    placeholder="¿En qué podemos ayudarte?"
+                                ></textarea>
+                            </div>
+
+                            <button className="btn-glow w-full py-4 rounded-xl bg-gradient-to-r from-neon-cyan/20 to-neon-violet/20 border border-neon-cyan/40 text-white font-semibold hover:border-neon-cyan/60 transition-all">
+                                Enviar mensaje
+                            </button>
+
+                            <div className="flex justify-center gap-8 mt-10 pt-8 border-t border-white/10">
+                                {[
+                                    { label: 'Teléfono', value: '+56 9 1234 5678' },
+                                    { label: 'Email', value: 'hola@mariascut.cl' },
+                                    { label: 'Horario', value: 'Lun-Sab 9:00-19:00' },
+                                ].map((item, i) => (
+                                    <div key={i} className="text-center">
+                                        <p className="text-xs text-gray-500 mb-1">{item.label}</p>
+                                        <p className="text-sm text-white">{item.value}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Footer
+        const Footer = () => {
+            return (
+                <footer className="py-12 px-8 border-t border-white/5">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                            {/* Logo */}
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-violet/20 flex items-center justify-center">
+                                    <svg className="w-4 h-4 text-neon-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <span className="text-lg font-semibold tracking-wider">
+                                    MARIA'S <span className="gradient-text">CUT</span>
+                                </span>
+                            </div>
+
+                            {/* Links */}
+                            <div className="flex items-center gap-6 text-sm text-gray-500">
+                                <a href="#" className="hover:text-white transition-colors">Términos</a>
+                                <a href="#" className="hover:text-white transition-colors">Privacidad</a>
+                                <a href="#" className="hover:text-white transition-colors">Cookies</a>
+                            </div>
+
+                            {/* Social */}
+                            <div className="flex items-center gap-4">
+                                {['instagram', 'facebook', 'twitter'].map((social) => (
+                                    <a
+                                        key={social}
+                                        href="#"
+                                        className="w-10 h-10 rounded-lg glass flex items-center justify-center hover:bg-neon-cyan/10 hover:border-neon-cyan/30 transition-all"
+                                    >
+                                        <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            {social === 'instagram' && <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />}
+                                            {social === 'facebook' && <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />}
+                                            {social === 'twitter' && <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />}
+                                        </svg>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="text-center mt-8 pt-8 border-t border-white/5">
+                            <p className="text-xs text-gray-600">
+                                © 2024 Maria's Cut. Todos los derechos reservados. Tecnología aplicada al cuidado animal.
+                            </p>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+
+        // Main App
+        const App = () => {
+            const [activeSection, setActiveSection] = useState('home');
+
+            useEffect(() => {
+                // Smooth scroll to section
+                if (activeSection !== 'home') {
+                    const element = document.getElementById(activeSection);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, [activeSection]);
+
+            return (
+                <div className="relative">
+                    <ParticleBackground />
+                    <div className="grid-pattern"></div>
+
+                    <div className="relative z-10">
+                        <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+                        <HeroSection setActiveSection={setActiveSection} />
+                        <StoreSection />
+                        <ServicesSection />
+                        <VansSection />
+                        <ContactSection />
+                        <Footer />
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+
+    <!-- ========== MODAL DE REGISTRO DESKTOP ========== -->
+    <div id="login-modal-desktop" class="modal-overlay-desktop hidden">
+        <div class="modal-content-desktop">
+            <button onclick="hideLoginModalDesktop()" class="modal-close-btn">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="modal-header-desktop">
+                <div class="modal-logo-desktop">
+                    <img src="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG" alt="Logo"
+                        class="w-16 h-16 rounded-2xl object-cover">
+                </div>
+                <h2 class="text-2xl font-bold mt-4" style="color: #4B3621;">¡Bienvenido a Maria's Cut!</h2>
+                <p class="text-sm mt-2" style="color: #6D5D4E;">Cuéntanos un poco sobre ti y tu peludo para reservar</p>
+            </div>
+
+            <form id="register-form-desktop" class="modal-form-desktop">
+                <div class="form-row-desktop">
+                    <div class="form-group-desktop">
+                        <label class="form-label-desktop">Tu nombre completo</label>
+                        <input type="text" id="owner-name-desktop" class="form-input-desktop"
+                            placeholder="Ej: María García" required>
+                    </div>
+
+                    <div class="form-group-desktop">
+                        <label class="form-label-desktop">Teléfono de contacto</label>
+                        <input type="tel" id="owner-phone-desktop" class="form-input-desktop"
+                            placeholder="Ej: +56 9 1234 5678" required>
+                    </div>
+                </div>
+
+                <div class="form-group-desktop">
+                    <label class="form-label-desktop">Nombre de tu mascota</label>
+                    <div id="pets-container-desktop">
+                        <input type="text" class="form-input-desktop pet-input-desktop mb-2" placeholder="Ej: Luna"
+                            required>
+                    </div>
+                    <button type="button" onclick="addPetFieldDesktop()" class="add-pet-btn-desktop">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Añadir otra mascota
+                    </button>
+                </div>
+
+                <button type="submit" class="submit-btn-desktop">
+                    Guardar y Continuar con la Reserva
+                </button>
+            </form>
+
+            <button onclick="skipLoginDesktop()" class="skip-btn-desktop">
+                Ahora no, solo estoy mirando
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Overlay Desktop */
+        .modal-overlay-desktop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(75, 54, 33, 0.5);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 40px;
+        }
+
+        .modal-overlay-desktop.hidden {
+            display: none;
+        }
+
+        /* Modal Content Desktop */
+        .modal-content-desktop {
+            background: #F9F7F2;
+            border-radius: 28px;
+            border: 2px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 30px 80px rgba(75, 54, 33, 0.25), 0 12px 32px rgba(197, 160, 89, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideInDesktop 0.4s ease-out;
+        }
+
+        @keyframes modalSlideInDesktop {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(197, 160, 89, 0.15) !important;
+            border: none !important;
+            border-radius: 12px !important;
+            width: 40px !important;
+            height: 40px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5D4037;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(197, 160, 89, 0.3) !important;
+        }
+
+        .modal-header-desktop {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .modal-logo-desktop {
+            display: inline-flex;
+            padding: 12px;
+            background: #FFFDF5;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.2);
+        }
+
+        /* Form Styles Desktop */
+        .modal-form-desktop {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row-desktop {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group-desktop {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label-desktop {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #5D4037;
+            margin-bottom: 8px;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .form-input-desktop {
+            background: #FFFDF5 !important;
+            border: 2px solid rgba(197, 160, 89, 0.25) !important;
+            border-radius: 16px !important;
+            padding: 14px 18px !important;
+            font-size: 1rem !important;
+            color: #4B3621 !important;
+            font-family: 'Quicksand', sans-serif !important;
+            transition: all 0.2s ease !important;
+            width: 100%;
+        }
+
+        .form-input-desktop:focus {
+            border-color: #C5A059 !important;
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15) !important;
+            outline: none !important;
+        }
+
+        .form-input-desktop::placeholder {
+            color: #A69580 !important;
+        }
+
+        .add-pet-btn-desktop {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent !important;
+            border: 2px dashed rgba(197, 160, 89, 0.4) !important;
+            border-radius: 14px !important;
+            padding: 12px 20px !important;
+            font-size: 0.9rem !important;
+            color: #C5A059 !important;
+            font-weight: 600 !important;
+            font-family: 'Quicksand', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .add-pet-btn-desktop:hover {
+            background: rgba(252, 238, 167, 0.3) !important;
+            border-color: #C5A059 !important;
+        }
+
+        .submit-btn-desktop {
+            background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%) !important;
+            border: none !important;
+            border-radius: 50px !important;
+            padding: 16px 32px !important;
+            font-size: 1.1rem !important;
+            font-weight: 700 !important;
+            color: #FFFDF5 !important;
+            font-family: 'Quicksand', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.35);
+            margin-top: 12px;
+        }
+
+        .submit-btn-desktop:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.45);
+        }
+
+        .skip-btn-desktop {
+            background: transparent !important;
+            border: none !important;
+            color: #8B7355 !important;
+            font-size: 0.9rem !important;
+            font-weight: 500 !important;
+            font-family: 'Quicksand', sans-serif !important;
+            cursor: pointer;
+            margin-top: 20px;
+            padding: 10px !important;
+            width: 100%;
+            text-align: center;
+            transition: color 0.2s ease;
+        }
+
+        .skip-btn-desktop:hover {
+            color: #5D4037 !important;
+            text-decoration: underline;
+        }
+
+        .pet-input-wrapper-desktop {
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .pet-input-wrapper-desktop .form-input-desktop {
+            padding-right: 48px !important;
+        }
+
+        .remove-pet-btn-desktop {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(197, 160, 89, 0.2) !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 28px !important;
+            height: 28px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5D4037;
+            transition: all 0.2s ease;
+        }
+
+        .remove-pet-btn-desktop:hover {
+            background: rgba(197, 160, 89, 0.4) !important;
+        }
+
+        @media (max-width: 600px) {
+            .form-row-desktop {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content-desktop {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+
+    <script>
+        // ========== LOGIN/REGISTRO SYSTEM DESKTOP ==========
+
+        // Check if user is logged in (shared with mobile)
+        function isLoggedInDesktop() {
+            const userData = localStorage.getItem('mariascut_user');
+            return userData !== null;
+        }
+
+        // Show login modal
+        function showLoginModalDesktop() {
+            document.getElementById('login-modal-desktop').classList.remove('hidden');
+        }
+
+        // Hide login modal
+        function hideLoginModalDesktop() {
+            document.getElementById('login-modal-desktop').classList.add('hidden');
+        }
+
+        // Skip login (just browsing)
+        function skipLoginDesktop() {
+            hideLoginModalDesktop();
+        }
+
+        // Add new pet field
+        function addPetFieldDesktop() {
+            const container = document.getElementById('pets-container-desktop');
+            const petCount = container.querySelectorAll('.pet-input-desktop, .pet-input-wrapper-desktop').length;
+
+            if (petCount >= 5) {
+                alert('Máximo 5 mascotas');
+                return;
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pet-input-wrapper-desktop';
+            wrapper.innerHTML = `
+                <input type="text" class="form-input-desktop pet-input-desktop" placeholder="Nombre de mascota ${petCount + 1}" required>
+                <button type="button" class="remove-pet-btn-desktop" onclick="removePetFieldDesktop(this)">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(wrapper);
+        }
+
+        // Remove pet field
+        function removePetFieldDesktop(btn) {
+            btn.parentElement.remove();
+        }
+
+        // Handle form submission
+        document.getElementById('register-form-desktop').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const ownerName = document.getElementById('owner-name-desktop').value.trim();
+            const ownerPhone = document.getElementById('owner-phone-desktop').value.trim();
+            const petInputs = document.querySelectorAll('.pet-input-desktop');
+            const pets = [];
+
+            petInputs.forEach(input => {
+                if (input.value.trim()) {
+                    pets.push(input.value.trim());
+                }
+            });
+
+            if (!ownerName || !ownerPhone || pets.length === 0) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            // Save to localStorage (shared with mobile)
+            const userData = {
+                ownerName: ownerName,
+                ownerPhone: ownerPhone,
+                pets: pets,
+                registeredAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('mariascut_user', JSON.stringify(userData));
+
+            // Hide modal and show success
+            hideLoginModalDesktop();
+            alert('¡Registro completado! 🎉\n\nAhora puedes explorar nuestros servicios. Te contactaremos pronto.');
+        });
+
+        // Handle reservar button click (called from React)
+        window.handleReservar = function () {
+            if (!isLoggedInDesktop()) {
+                showLoginModalDesktop();
+            } else {
+                const userData = JSON.parse(localStorage.getItem('mariascut_user'));
+                alert(`¡Hola ${userData.ownerName}! 🐕\n\nGracias por reservar. Te contactaremos pronto para confirmar la cita de ${userData.pets.join(', ')}.`);
+            }
+        };
+    </script>
+</body>
+
+</html>

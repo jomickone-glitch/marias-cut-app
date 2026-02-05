@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Maria's Cut - Estética Animal</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Maria's Cut">
+    <meta name="theme-color" content="#C5A059">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Maria's Cut">
+
+    <!-- PWA Icons & Manifest -->
+    <link rel="apple-touch-icon" href="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG">
+    <link rel="manifest" href="manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#C5A059',
+                        primaryDark: '#A88B45',
+                        secondary: '#D4B896',
+                        secondaryDark: '#B89C7A',
+                        accent: '#FCEEA7',
+                        background: '#F9F7F2',
+                    },
+                    fontFamily: {
+                        sans: ['Quicksand', 'Poppins', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* === DESKTOP VIEW (Simulator with iPhone frame) === */
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #E8E4DE;
+            font-family: 'Quicksand', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+        }
+
+        /* === MOBILE VIEW (Real devices - No frame, fullscreen app) === */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 0;
+                margin: 0;
+                background: #F9F7F2;
+                display: block;
+            }
+
+            .phone-frame {
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                /* Dynamic viewport height for mobile browsers */
+                border-radius: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: #F9F7F2 !important;
+            }
+
+            .phone-notch {
+                display: none !important;
+            }
+
+            .screen {
+                border-radius: 0 !important;
+            }
+
+            /* Adjust header for safe area on notched phones */
+            .header-gradient {
+                padding-top: max(3rem, env(safe-area-inset-top)) !important;
+            }
+
+            /* Adjust bottom nav for home indicator */
+            .bottom-nav {
+                padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+            }
+
+            /* Slightly smaller text for real mobile screens */
+            .text-xl {
+                font-size: 1.15rem !important;
+            }
+
+            .text-2xl {
+                font-size: 1.35rem !important;
+            }
+
+            .text-3xl {
+                font-size: 1.65rem !important;
+            }
+
+            /* Smaller logo on mobile */
+            .header-gradient .w-14 {
+                width: 2.75rem !important;
+                height: 2.75rem !important;
+            }
+        }
+
+        /* Very small screens (iPhone SE, etc.) */
+        @media screen and (max-width: 375px) {
+            .service-card .p-5 {
+                padding: 1rem !important;
+            }
+
+            .text-xl {
+                font-size: 1rem !important;
+            }
+        }
+
+        /* iPhone Frame - BLACK */
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #F9F7F2;
+            border-radius: 50px;
+            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            border: 12px solid #1a1a1a;
+        }
+
+        /* Notch - BLACK */
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background: #1a1a1a;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 100;
+        }
+
+        /* Screen - Crema */
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            background: #F9F7F2;
+        }
+
+        .screen.hidden {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .screen.active {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .screen::-webkit-scrollbar {
+            width: 0;
+        }
+
+        /* Header - Beige to Gold gradient */
+        .header-gradient {
+            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
+        }
+
+        /* Service Cards - Cream/Beige with gold border */
+        .service-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px !important;
+            background: #F0EAD6 !important;
+            border: 1px solid rgba(197, 160, 89, 0.25) !important;
+        }
+
+        .service-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 15px rgba(75, 54, 33, 0.1);
+        }
+
+        /* Buttons - Pill shape */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+            border-radius: 50px !important;
+        }
+
+        .btn-ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(230, 200, 139, 0.4);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-ripple:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Input fields */
+        .input-field {
+            transition: all 0.3s ease;
+            border-radius: 16px !important;
+            background: #FFFDF5 !important;
+            border: 2px solid rgba(197, 160, 89, 0.25) !important;
+        }
+
+        .input-field:focus {
+            border-color: #C5A059 !important;
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15) !important;
+        }
+
+        /* Pet Card */
+        .pet-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 24px !important;
+            background: #F0EAD6 !important;
+            border: 1px solid rgba(197, 160, 89, 0.2) !important;
+        }
+
+        .pet-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(75, 54, 33, 0.1);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .status-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #F9F7F2;
+            border-top: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: 20px;
+            z-index: 50;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .check-animation {
+            animation: checkmark 0.5s ease-out;
+        }
+
+        /* === PALETA UNIFICADA MARIA'S CUT === */
+
+        /* Textos - Marrón Café */
+        .text-gray-800,
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #4B3621 !important;
+        }
+
+        .text-gray-700 {
+            color: #5D4037 !important;
+        }
+
+        .text-gray-600 {
+            color: #6D5D4E !important;
+        }
+
+        .text-gray-500 {
+            color: #7D6D5E !important;
+        }
+
+        .text-gray-400 {
+            color: #8B7355 !important;
+        }
+
+        /* Primary - Dorado */
+        .text-primary {
+            color: #C5A059 !important;
+        }
+
+        .bg-primary {
+            background-color: #C5A059 !important;
+        }
+
+        .border-primary {
+            border-color: #C5A059 !important;
+        }
+
+        .hover\:bg-primaryDark:hover {
+            background-color: #A88B45 !important;
+        }
+
+        /* Secondary - Beige cálido */
+        .text-secondary {
+            color: #D4B896 !important;
+        }
+
+        .bg-secondary {
+            background: #D4B896 !important;
+        }
+
+        .border-secondary {
+            border-color: #D4B896 !important;
+        }
+
+        .hover\:bg-secondaryDark:hover {
+            background: #B89C7A !important;
+        }
+
+        /* Gradient Cards - Beige to Gold */
+        .from-primary {
+            --tw-gradient-from: #D4B896 !important;
+        }
+
+        .to-primaryDark {
+            --tw-gradient-to: #C5A059 !important;
+        }
+
+        .from-secondary {
+            --tw-gradient-from: #F0EAD6 !important;
+        }
+
+        .to-secondaryDark {
+            --tw-gradient-to: #D4B896 !important;
+        }
+
+        .bg-gradient-to-br.from-primary.to-primaryDark {
+            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 50%, #C5A059 100%) !important;
+        }
+
+        .bg-gradient-to-br.from-secondary.to-secondaryDark {
+            background: linear-gradient(135deg, #F0EAD6 0%, #E6C88B 50%, #D4B896 100%) !important;
+        }
+
+        /* Accent Backgrounds - Warm tones */
+        .bg-orange-50 {
+            background-color: #FFFDF5 !important;
+        }
+
+        .bg-orange-100 {
+            background-color: #F9F7F2 !important;
+        }
+
+        .border-orange-100 {
+            border-color: rgba(197, 160, 89, 0.2) !important;
+        }
+
+        .bg-teal-50 {
+            background-color: #F5F3EE !important;
+        }
+
+        .bg-green-50 {
+            background-color: #F5F3EE !important;
+        }
+
+        .bg-green-100 {
+            background-color: #F0EAD6 !important;
+        }
+
+        .bg-green-500 {
+            background-color: #8B9A5B !important;
+        }
+
+        .bg-amber-50 {
+            background-color: #FFFDF5 !important;
+        }
+
+        .border-amber-100 {
+            border-color: rgba(197, 160, 89, 0.25) !important;
+        }
+
+        /* All Buttons - Pill Shape */
+        button,
+        [role="button"] {
+            border-radius: 50px !important;
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 600 !important;
+        }
+
+        /* Rounded Corners */
+        .rounded-2xl {
+            border-radius: 24px !important;
+        }
+
+        .rounded-3xl {
+            border-radius: 28px !important;
+        }
+
+        .rounded-xl {
+            border-radius: 20px !important;
+        }
+
+        .rounded-lg {
+            border-radius: 16px !important;
+        }
+
+        .rounded-full {
+            border-radius: 50px !important;
+        }
+
+        /* White Backgrounds - Cream instead */
+        .bg-white {
+            background: #FFFDF5 !important;
+        }
+
+        /* Shadows - Warm coffee tones */
+        .shadow-lg {
+            box-shadow: 0 10px 30px rgba(75, 54, 33, 0.08), 0 4px 12px rgba(197, 160, 89, 0.06) !important;
+        }
+
+        .shadow-md {
+            box-shadow: 0 6px 20px rgba(75, 54, 33, 0.06), 0 3px 8px rgba(197, 160, 89, 0.04) !important;
+        }
+
+        /* Progress Bar */
+        .bg-gray-200 {
+            background: #F0EAD6 !important;
+        }
+
+        /* Selected State - Golden Border */
+        .border-primary {
+            border-color: #C5A059 !important;
+            border-width: 2px !important;
+        }
+
+        /* Add button - Dashed Golden */
+        .border-dashed.border-primary {
+            border-color: #C5A059 !important;
+        }
+
+        .border-dashed.border-primary:hover {
+            background-color: #FCEEA7 !important;
+        }
+
+        /* Typography */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        span,
+        label,
+        button {
+            font-family: 'Quicksand', 'Poppins', sans-serif !important;
+        }
+
+        /* Wave SVG path */
+        .header-gradient svg path {
+            fill: #F9F7F2 !important;
+        }
+
+        /* Text white override for headers */
+        .text-white {
+            color: #4B3621 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+
+        <!-- SCREEN 1: HOME -->
+        <div id="screen-home" class="screen active">
+            <div class="header-gradient pt-12 pb-4 px-6 relative overflow-hidden">
+                <div class="absolute top-16 right-4 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+                <div class="flex items-center justify-center">
+                    <div
+                        class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg mr-3 overflow-hidden">
+                        <img src="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG" alt="Maria's Cut Logo"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">Maria's Cut</h1>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0">
+                    <svg viewBox="0 0 375 30" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+                        class="w-full h-6">
+                        <path d="M0 30V15C62.5 30 125 0 187.5 0C250 0 312.5 30 375 15V30H0Z" fill="white" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="px-5 pb-24 pt-4">
+                <p class="text-gray-800 font-semibold mb-3 text-base">¿Cómo prefieres reservar?</p>
+
+                <!-- Local Service Card -->
+                <div onclick="showScreen('screen-booking-local')"
+                    class="service-card btn-ripple mb-4 rounded-3xl overflow-hidden shadow-lg cursor-pointer">
+                    <div class="bg-gradient-to-br from-primary to-primaryDark p-5 flex items-center">
+                        <div
+                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-md mr-4 flex-shrink-0">
+                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-white/70 text-xs uppercase tracking-wider font-medium mb-1">Ven a nuestra
+                                sede</p>
+                            <h3 class="text-white font-bold text-xl mb-1">Reserva en Local</h3>
+                            <p class="text-white/80 text-sm">Instalaciones especializadas con todo el equipamiento</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-xs text-white/90 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Todos los servicios
+                                </span>
+                            </div>
+                        </div>
+                        <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Van Service Card -->
+                <div onclick="showScreen('screen-booking-van')"
+                    class="service-card btn-ripple mb-4 rounded-3xl overflow-hidden shadow-lg cursor-pointer">
+                    <div class="bg-gradient-to-br from-secondary to-secondaryDark p-5 flex items-center">
+                        <div
+                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-md mr-4 flex-shrink-0">
+                            <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-white/70 text-xs uppercase tracking-wider font-medium mb-1">Nosotros vamos a
+                                ti</p>
+                            <h3 class="text-white font-bold text-xl mb-1">Reserva a Domicilio</h3>
+                            <p class="text-white/80 text-sm">Furgoneta equipada que llega hasta tu casa</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-xs text-white/90 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Sin salir de casa
+                                </span>
+                            </div>
+                        </div>
+                        <svg class="w-6 h-6 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="bg-orange-50 border border-orange-100 rounded-2xl p-4 flex items-start">
+                    <svg class="w-5 h-5 text-primary mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                        <p class="text-gray-800 font-medium text-sm">¿Necesitas ayuda?</p>
+                        <p class="text-gray-500 text-xs mt-1">Llámanos al <span class="text-primary font-medium">+56 9
+                                1234 5678</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav flex justify-around items-center py-3 px-2">
+                <div class="flex flex-col items-center text-primary">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Inicio</span>
+                </div>
+                <div onclick="showScreen('screen-pet-profile')"
+                    class="flex flex-col items-center text-gray-400 cursor-pointer">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Mascotas</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Citas</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Perfil</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: BOOKING VAN -->
+        <div id="screen-booking-van" class="screen hidden">
+            <div class="bg-white border-b border-gray-100 pt-12 pb-4 px-5 flex items-center sticky top-0 z-20">
+                <button onclick="showScreen('screen-home')"
+                    class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <h1 class="text-lg font-semibold text-gray-800 ml-2">Reserva a Domicilio</h1>
+            </div>
+
+            <div class="bg-gray-200 h-1">
+                <div class="bg-secondary h-full w-1/4 transition-all duration-500"></div>
+            </div>
+
+            <div class="px-5 pb-24 pt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Verifica tu ubicación</h2>
+                <p class="text-gray-500 mb-6">Necesitamos validar que estás dentro de nuestra zona de cobertura</p>
+
+                <div class="bg-white rounded-3xl shadow-lg p-6 mb-6 text-center">
+                    <div class="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Servicio a Domicilio</h3>
+                    <p class="text-gray-500 text-sm mb-6">Nuestras furgonetas cubren un radio de <span
+                            class="font-semibold text-secondary">15 km</span></p>
+
+                    <button onclick="validateLocation()" id="btn-validate"
+                        class="btn-ripple w-full bg-secondary hover:bg-secondaryDark text-white font-semibold py-4 rounded-2xl flex items-center justify-center gap-2 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Usar mi ubicación actual
+                    </button>
+                </div>
+
+                <div id="validation-result" class="hidden mb-6">
+                    <div id="validation-success" class="hidden bg-green-50 border border-green-200 rounded-2xl p-4">
+                        <div class="flex items-center">
+                            <div
+                                class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center mr-3 check-animation">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-green-800 font-semibold">¡Perfecto!</p>
+                                <p class="text-green-600 text-sm">Estás a <span class="font-bold">4.2 km</span> de
+                                    nuestra Furgoneta Luna</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="address-form" class="hidden">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Confirma tu dirección</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Calle</label>
+                            <input type="text" value="Av. Providencia"
+                                class="input-field w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-800 focus:outline-none"
+                                readonly>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Número</label>
+                                <input type="text" value="1234"
+                                    class="input-field w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-800 focus:outline-none">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Depto</label>
+                                <input type="text" placeholder="502"
+                                    class="input-field w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-800 focus:outline-none">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Instrucciones</label>
+                            <textarea placeholder="Ej: Tocar timbre, perro alerta..."
+                                class="input-field w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-800 focus:outline-none resize-none h-20"></textarea>
+                        </div>
+                    </div>
+                    <button onclick="showSuccessMessage()"
+                        class="btn-ripple w-full bg-secondary hover:bg-secondaryDark text-white font-semibold py-4 rounded-2xl mt-6 transition-colors">
+                        Continuar
+                    </button>
+                </div>
+
+                <div id="success-message" class="hidden text-center py-8">
+                    <div
+                        class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 check-animation">
+                        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">¡Ubicación confirmada!</h3>
+                    <p class="text-gray-500 mb-6">Selecciona fecha y hora para tu cita</p>
+
+                    <div class="bg-white rounded-2xl shadow-md p-4 mb-4">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Selecciona una fecha</p>
+                        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                            <div
+                                class="flex-shrink-0 w-14 h-16 bg-secondary text-white rounded-xl flex flex-col items-center justify-center cursor-pointer">
+                                <span class="text-xs">Lun</span>
+                                <span class="text-lg font-bold">5</span>
+                            </div>
+                            <div
+                                class="flex-shrink-0 w-14 h-16 bg-gray-100 text-gray-600 rounded-xl flex flex-col items-center justify-center cursor-pointer">
+                                <span class="text-xs">Mar</span>
+                                <span class="text-lg font-bold">6</span>
+                            </div>
+                            <div
+                                class="flex-shrink-0 w-14 h-16 bg-gray-100 text-gray-600 rounded-xl flex flex-col items-center justify-center cursor-pointer">
+                                <span class="text-xs">Mié</span>
+                                <span class="text-lg font-bold">7</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-md p-4">
+                        <p class="text-sm font-medium text-gray-700 mb-3">Horarios disponibles</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button
+                                class="py-2 px-3 bg-secondary text-white rounded-lg text-sm font-medium">09:00</button>
+                            <button class="py-2 px-3 bg-gray-100 text-gray-600 rounded-lg text-sm">09:30</button>
+                            <button class="py-2 px-3 bg-gray-100 text-gray-600 rounded-lg text-sm">10:00</button>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmBooking('van')"
+                        class="btn-ripple w-full bg-secondary hover:bg-secondaryDark text-white font-semibold py-4 rounded-2xl mt-6 transition-colors">
+                        Confirmar Reserva
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: PET PROFILE -->
+        <div id="screen-pet-profile" class="screen hidden">
+            <div
+                class="bg-white border-b border-gray-100 pt-12 pb-4 px-5 flex items-center justify-between sticky top-0 z-20">
+                <div class="flex items-center">
+                    <button onclick="showScreen('screen-home')"
+                        class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <h1 class="text-lg font-semibold text-gray-800 ml-2">Mis Mascotas</h1>
+                </div>
+                <button class="w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-md">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="px-5 pb-24 pt-4">
+                <p class="text-gray-500 text-sm mb-4">1 mascota registrada</p>
+
+                <div class="pet-card bg-white rounded-3xl shadow-lg overflow-hidden mb-6">
+                    <div class="relative h-48 bg-gradient-to-br from-orange-100 to-orange-50">
+                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&h=300&fit=crop"
+                            alt="Luna" class="w-full h-full object-cover">
+                        <div
+                            class="absolute bottom-3 right-3 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800">Luna</h2>
+                                <p class="text-gray-500">Golden Retriever</p>
+                            </div>
+                            <span
+                                class="bg-orange-100 text-primary px-3 py-1 rounded-full text-sm font-medium">Hembra</span>
+                        </div>
+
+                        <div class="flex gap-4 mb-4">
+                            <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs text-gray-500">Peso</p>
+                                    <p class="font-semibold text-gray-800">28 kg</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center bg-gray-50 rounded-xl px-4 py-2">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <div>
+                                    <p class="text-xs text-gray-500">Edad</p>
+                                    <p class="font-semibold text-gray-800">3 años</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-amber-500 mt-0.5 mr-2 flex-shrink-0" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <div>
+                                    <p class="text-sm font-medium text-amber-800 mb-1">Notas especiales</p>
+                                    <p class="text-sm text-amber-700">Es nerviosa con extraños. No le gusta el agua muy
+                                        caliente.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 mt-5">
+                            <button
+                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                                Editar
+                            </button>
+                            <button onclick="showScreen('screen-booking-van')"
+                                class="flex-1 bg-primary hover:bg-primaryDark text-white font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                Agendar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button
+                    class="w-full border-2 border-dashed border-primary text-primary font-medium py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-orange-50 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Agregar otra mascota
+                </button>
+            </div>
+
+            <div class="bottom-nav flex justify-around items-center py-3 px-2">
+                <div onclick="showScreen('screen-home')"
+                    class="flex flex-col items-center text-gray-400 cursor-pointer">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Inicio</span>
+                </div>
+                <div class="flex flex-col items-center text-primary">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Mascotas</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Citas</span>
+                </div>
+                <div class="flex flex-col items-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span class="text-xs mt-1 font-medium">Perfil</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: BOOKING LOCAL -->
+        <div id="screen-booking-local" class="screen hidden">
+            <div class="bg-white border-b border-gray-100 pt-12 pb-4 px-5 flex items-center sticky top-0 z-20">
+                <button onclick="showScreen('screen-home')"
+                    class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
+                <h1 class="text-lg font-semibold text-gray-800 ml-2">Reserva en Local</h1>
+            </div>
+
+            <div class="bg-gray-200 h-1">
+                <div class="bg-primary h-full w-1/3 transition-all duration-500"></div>
+            </div>
+
+            <div class="px-5 pb-24 pt-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Selecciona un servicio</h2>
+                <p class="text-gray-500 mb-6">Elige el servicio que mejor se adapte a tu mascota</p>
+
+                <div class="space-y-4">
+                    <div class="bg-white rounded-2xl shadow-md p-4 border-2 border-primary cursor-pointer">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-semibold text-gray-800 text-lg">Baño Completo</h3>
+                                <p class="text-gray-500 text-sm mt-1">Baño, secado, cepillado y corte de uñas</p>
+                                <div class="flex items-center mt-2 text-gray-400 text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    45 minutos
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-primary">$25.000</p>
+                                <svg class="w-6 h-6 text-primary mt-1 ml-auto" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-2xl shadow-md p-4 border-2 border-transparent hover:border-gray-200 cursor-pointer transition-colors">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-semibold text-gray-800 text-lg">Grooming Premium</h3>
+                                <p class="text-gray-500 text-sm mt-1">Baño completo + corte de pelo estilizado</p>
+                                <div class="flex items-center mt-2 text-gray-400 text-sm">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    90 minutos
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-primary">$45.000</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-800 mt-6 mb-3">¿Cuál mascota?</h3>
+                <div class="bg-white rounded-2xl shadow-md p-4 border-2 border-primary cursor-pointer">
+                    <div class="flex items-center">
+                        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop"
+                            alt="Luna" class="w-14 h-14 rounded-xl object-cover">
+                        <div class="ml-4 flex-1">
+                            <h4 class="font-semibold text-gray-800">Luna</h4>
+                            <p class="text-gray-500 text-sm">Golden Retriever • 28 kg</p>
+                        </div>
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+
+                <button onclick="confirmBooking('local')"
+                    class="btn-ripple w-full bg-primary hover:bg-primaryDark text-white font-semibold py-4 rounded-2xl mt-6 transition-colors">
+                    Confirmar Reserva
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN: LOADING (Pantalla de carga intermedia) -->
+        <div id="screen-loading" class="screen hidden">
+            <div class="flex flex-col items-center justify-center h-full bg-background">
+                <div
+                    class="w-24 h-24 bg-white rounded-3xl flex items-center justify-center shadow-lg mb-6 overflow-hidden">
+                    <img src="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG" alt="Maria's Cut Logo"
+                        class="w-full h-full object-cover">
+                </div>
+                <!-- Spinner dorado elegante -->
+                <div class="loading-spinner mb-6"></div>
+                <p class="text-gray-600 text-base font-medium">Tu mascota, en las mejores manos...</p>
+            </div>
+        </div>
+
+        <!-- SCREEN: BOOKING CONFIRMED -->
+        <div id="screen-confirmed" class="screen hidden">
+            <div class="flex flex-col items-center justify-center h-full bg-background px-8">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 check-animation">
+                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2 text-center">¡Reserva Confirmada!</h2>
+                <p class="text-gray-500 text-center mb-8">Te esperamos pronto. Tu mascota está en las mejores manos.</p>
+                <button onclick="showScreen('screen-home')"
+                    class="btn-ripple bg-primary hover:bg-primaryDark text-white font-semibold py-4 px-8 rounded-2xl transition-colors">
+                    Volver al Inicio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Spinner dorado elegante */
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #F0EAD6;
+            border-top: 4px solid #C5A059;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    </style>
+
+    <script>
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function confirmBooking(type) {
+            // Mostrar pantalla de carga
+            showScreen('screen-loading');
+
+            // Después de 2 segundos, mostrar confirmación
+            setTimeout(() => {
+                showScreen('screen-confirmed');
+            }, 2000);
+        }
+
+        function validateLocation() {
+            const btn = document.getElementById('btn-validate');
+            btn.innerHTML = '<svg class="w-5 h-5 spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Validando...';
+
+            setTimeout(() => {
+                document.getElementById('validation-result').classList.remove('hidden');
+                document.getElementById('validation-success').classList.remove('hidden');
+                document.getElementById('address-form').classList.remove('hidden');
+                btn.style.display = 'none';
+            }, 1500);
+        }
+
+        function showSuccessMessage() {
+            document.getElementById('address-form').classList.add('hidden');
+            document.getElementById('validation-result').classList.add('hidden');
+            document.getElementById('success-message').classList.remove('hidden');
+        }
+    </script>
+
+    <!-- ========== MODAL DE REGISTRO ========== -->
+    <div id="login-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <img src="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG" alt="Logo"
+                        class="w-12 h-12 rounded-xl object-cover">
+                </div>
+                <h2 class="text-xl font-bold text-gray-800 mt-3">¡Bienvenido a Maria's Cut!</h2>
+                <p class="text-gray-500 text-sm mt-1">Cuéntanos un poco sobre ti y tu peludo</p>
+            </div>
+
+            <form id="register-form" class="modal-form">
+                <div class="form-group">
+                    <label class="form-label">Tu nombre completo</label>
+                    <input type="text" id="owner-name" class="form-input" placeholder="Ej: María García" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Teléfono de contacto</label>
+                    <input type="tel" id="owner-phone" class="form-input" placeholder="Ej: +56 9 1234 5678" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nombre de tu mascota</label>
+                    <div id="pets-container">
+                        <input type="text" class="form-input pet-input mb-2" placeholder="Ej: Luna" required>
+                    </div>
+                    <button type="button" onclick="addPetField()" class="add-pet-btn">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Añadir otra mascota
+                    </button>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    Guardar y Continuar
+                </button>
+            </form>
+
+            <button onclick="skipLogin()" class="skip-btn">
+                Ahora no, solo estoy mirando
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(75, 54, 33, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background: #F9F7F2;
+            border-radius: 24px;
+            border: 2px solid rgba(197, 160, 89, 0.4);
+            box-shadow: 0 20px 60px rgba(75, 54, 33, 0.2), 0 8px 24px rgba(197, 160, 89, 0.15);
+            padding: 28px 24px;
+            width: 100%;
+            max-width: 340px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-logo {
+            display: inline-flex;
+            padding: 8px;
+            background: #FFFDF5;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.15);
+        }
+
+        /* Form Styles */
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5D4037;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            background: #FFFDF5 !important;
+            border: 2px solid rgba(197, 160, 89, 0.25) !important;
+            border-radius: 14px !important;
+            padding: 12px 16px !important;
+            font-size: 0.95rem !important;
+            color: #4B3621 !important;
+            font-family: 'Quicksand', sans-serif !important;
+            transition: all 0.2s ease !important;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: #C5A059 !important;
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15) !important;
+            outline: none !important;
+        }
+
+        .form-input::placeholder {
+            color: #A69580 !important;
+        }
+
+        .add-pet-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent !important;
+            border: 2px dashed rgba(197, 160, 89, 0.4) !important;
+            border-radius: 12px !important;
+            padding: 10px 16px !important;
+            font-size: 0.85rem !important;
+            color: #C5A059 !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        .add-pet-btn:hover {
+            background: rgba(252, 238, 167, 0.3) !important;
+            border-color: #C5A059 !important;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%) !important;
+            border: none !important;
+            border-radius: 50px !important;
+            padding: 14px 24px !important;
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            color: #FFFDF5 !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
+        }
+
+        .skip-btn {
+            background: transparent !important;
+            border: none !important;
+            color: #8B7355 !important;
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            cursor: pointer;
+            margin-top: 16px;
+            padding: 8px !important;
+            width: 100%;
+            text-align: center;
+            transition: color 0.2s ease;
+        }
+
+        .skip-btn:hover {
+            color: #5D4037 !important;
+            text-decoration: underline;
+        }
+
+        /* Remove pet button */
+        .remove-pet-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(197, 160, 89, 0.2) !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 24px !important;
+            height: 24px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5D4037;
+        }
+
+        .pet-input-wrapper {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .pet-input-wrapper .form-input {
+            padding-right: 40px !important;
+        }
+    </style>
+
+    <script>
+        // ========== LOGIN/REGISTRO SYSTEM ==========
+
+        // Check if user is logged in
+        function isLoggedIn() {
+            const userData = localStorage.getItem('mariascut_user');
+            return userData !== null;
+        }
+
+        // Get user data
+        function getUserData() {
+            const userData = localStorage.getItem('mariascut_user');
+            return userData ? JSON.parse(userData) : null;
+        }
+
+        // Show login modal
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        // Hide login modal
+        function hideLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        // Skip login (just browsing)
+        function skipLogin() {
+            hideLoginModal();
+        }
+
+        // Add new pet field
+        function addPetField() {
+            const container = document.getElementById('pets-container');
+            const petCount = container.querySelectorAll('.pet-input, .pet-input-wrapper').length;
+
+            if (petCount >= 5) {
+                alert('Máximo 5 mascotas');
+                return;
+            }
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'pet-input-wrapper';
+            wrapper.innerHTML = `
+                <input type="text" class="form-input pet-input" placeholder="Nombre de mascota ${petCount + 1}" required>
+                <button type="button" class="remove-pet-btn" onclick="removePetField(this)">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(wrapper);
+        }
+
+        // Remove pet field
+        function removePetField(btn) {
+            btn.parentElement.remove();
+        }
+
+        // Handle form submission
+        document.getElementById('register-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const ownerName = document.getElementById('owner-name').value.trim();
+            const ownerPhone = document.getElementById('owner-phone').value.trim();
+            const petInputs = document.querySelectorAll('.pet-input');
+            const pets = [];
+
+            petInputs.forEach(input => {
+                if (input.value.trim()) {
+                    pets.push(input.value.trim());
+                }
+            });
+
+            if (!ownerName || !ownerPhone || pets.length === 0) {
+                alert('Por favor, completa todos los campos');
+                return;
+            }
+
+            // Save to localStorage
+            const userData = {
+                ownerName: ownerName,
+                ownerPhone: ownerPhone,
+                pets: pets,
+                registeredAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('mariascut_user', JSON.stringify(userData));
+
+            // Hide modal and proceed with booking
+            hideLoginModal();
+            proceedWithBooking();
+        });
+
+        // Proceed with booking after login
+        function proceedWithBooking() {
+            showScreen('screen-loading');
+            setTimeout(() => {
+                showScreen('screen-confirmed');
+            }, 2000);
+        }
+
+        // Modified confirmBooking function - checks login first
+        function confirmBooking(type) {
+            if (!isLoggedIn()) {
+                // Show login modal first
+                showLoginModal();
+            } else {
+                // Already logged in, proceed directly
+                proceedWithBooking();
+            }
+        }
+    </script>
+</body>
+
+</html>
