@@ -3,14 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Maria's Cut - Estética Animal</title>
 
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Maria's Cut">
-    <meta name="theme-color" content="#C5A059">
+    <meta name="theme-color" content="#F0EAD6">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Maria's Cut">
 
@@ -63,6 +64,18 @@
 
         /* === MOBILE VIEW (Real devices - No frame, fullscreen app) === */
         @media screen and (max-width: 768px) {
+
+            /* Prevent rubber-banding/overscroll */
+            html,
+            body {
+                overscroll-behavior: none;
+                -webkit-overflow-scrolling: touch;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
+
             body {
                 padding: 0;
                 margin: 0;
@@ -72,31 +85,54 @@
 
             .phone-frame {
                 width: 100% !important;
-                height: 100vh !important;
-                height: 100dvh !important;
-                /* Dynamic viewport height for mobile browsers */
+                height: 100% !important;
                 border-radius: 0 !important;
                 border: none !important;
                 box-shadow: none !important;
                 background: #F9F7F2 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
             }
 
             .phone-notch {
                 display: none !important;
             }
 
+            /* Screen container - flex layout for fixed header/footer */
             .screen {
                 border-radius: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100% !important;
+                overflow: hidden !important;
             }
 
-            /* Adjust header for safe area on notched phones */
+            /* Header stays at top with safe area */
             .header-gradient {
-                padding-top: max(3rem, env(safe-area-inset-top)) !important;
+                flex-shrink: 0 !important;
+                padding-top: max(3rem, calc(env(safe-area-inset-top) + 12px)) !important;
+                /* Background extends into status bar */
+                margin-top: calc(-1 * env(safe-area-inset-top));
+                padding-top: calc(env(safe-area-inset-top) + 3rem) !important;
             }
 
-            /* Adjust bottom nav for home indicator */
+            /* Main content area - scrollable */
+            .screen>div:not(.header-gradient):not(.bottom-nav) {
+                flex: 1 !important;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior-y: contain !important;
+            }
+
+            /* Fixed bottom navigation with safe area */
             .bottom-nav {
-                padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+                position: relative !important;
+                flex-shrink: 0 !important;
+                padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+                background: #F9F7F2 !important;
+                border-top: 1px solid rgba(197, 160, 89, 0.2) !important;
             }
 
             /* Slightly smaller text for real mobile screens */
@@ -116,6 +152,13 @@
             .header-gradient .w-14 {
                 width: 2.75rem !important;
                 height: 2.75rem !important;
+            }
+
+            /* Sticky headers inside scrollable content */
+            .sticky {
+                position: sticky !important;
+                top: 0 !important;
+                z-index: 20 !important;
             }
         }
 
