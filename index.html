@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Maria's Cut</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,7 +13,9 @@
     <link rel="apple-touch-icon" href="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG">
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -34,14 +38,20 @@
         }
     </script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html, body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
             width: 100%;
             height: 100dvh;
             overflow: hidden;
             font-family: 'Quicksand', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #F9F7F2;
+            touch-action: manipulation;
         }
 
         #app-container {
@@ -79,13 +89,19 @@
             flex-direction: column;
             background: #F9F7F2;
             overflow: hidden;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
         .screen.hidden {
-            transform: translateX(100%);
             opacity: 0;
             pointer-events: none;
+            z-index: -1;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 1;
         }
 
         .screen-content {
@@ -101,6 +117,7 @@
             background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
             justify-content: center;
             padding: 24px;
+            z-index: 100;
         }
 
         .login-logo {
@@ -170,7 +187,7 @@
             background: rgba(197, 160, 89, 0.1);
         }
 
-        /* ========== NUEVA BARRA DE NAVEGACIÓN CON BOTÓN CENTRAL ========== */
+        /* ========== NAVIGATION ========== */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -181,6 +198,11 @@
             padding-bottom: env(safe-area-inset-bottom, 0px);
             z-index: 100;
             height: 80px;
+            transition: transform 0.3s ease;
+        }
+
+        .bottom-nav.hidden {
+            transform: translateY(100%);
         }
 
         .nav-container {
@@ -201,10 +223,14 @@
             flex: 1;
         }
 
-        .nav-item.active { color: #C5A059; }
-        .nav-item:not(.active) { color: #8B7355; }
+        .nav-item.active {
+            color: #C5A059;
+        }
 
-        /* BOTÓN CENTRAL DESTACADO - PELUQUERÍA */
+        .nav-item:not(.active) {
+            color: #8B7355;
+        }
+
         .nav-center-btn {
             position: relative;
             top: -28px;
@@ -217,29 +243,17 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.5), 
-                        0 4px 16px rgba(197, 160, 89, 0.4),
-                        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.5),
+                0 4px 16px rgba(197, 160, 89, 0.4),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3);
             border: 3px solid #FFFDF5;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
             z-index: 10;
         }
 
-        .nav-center-btn:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.6), 
-                        0 6px 20px rgba(197, 160, 89, 0.5);
-        }
-
         .nav-center-btn:active {
-            transform: translateY(-2px) scale(0.98);
-        }
-
-        .nav-center-btn.active {
-            background: linear-gradient(135deg, #B8941F 0%, #A88B45 50%, #9A7D1A 100%);
-            box-shadow: 0 6px 24px rgba(184, 148, 31, 0.6), 
-                        inset 0 2px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95);
         }
 
         .nav-center-label {
@@ -251,7 +265,7 @@
             white-space: nowrap;
         }
 
-        /* Social Feed Styles */
+        /* ========== STORIES ========== */
         .stories-rail {
             display: flex;
             overflow-x: auto;
@@ -261,7 +275,9 @@
             border-bottom: 1px solid rgba(197, 160, 89, 0.1);
         }
 
-        .stories-rail::-webkit-scrollbar { display: none; }
+        .stories-rail::-webkit-scrollbar {
+            display: none;
+        }
 
         .story-item {
             display: flex;
@@ -279,6 +295,23 @@
             background: linear-gradient(45deg, #F0EAD6, #C5A059, #D4B896);
         }
 
+        .story-avatar-ring.unseen {
+            background: linear-gradient(45deg, #D4AF37, #C5A059, #D4B896);
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(197, 160, 89, 0);
+            }
+        }
+
         .story-avatar {
             width: 100%;
             height: 100%;
@@ -287,6 +320,325 @@
             object-fit: cover;
         }
 
+        /* ========== CAMERA UI ========== */
+        .camera-overlay {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 500;
+            display: none;
+            flex-direction: column;
+        }
+
+        .camera-overlay.active {
+            display: flex;
+        }
+
+        .camera-preview {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .camera-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-canvas {
+            display: none;
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding: 0 24px;
+        }
+
+        .camera-btn-capture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.1s;
+        }
+
+        .camera-btn-capture:active {
+            transform: scale(0.9);
+        }
+
+        .camera-btn-capture::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #C5A059;
+        }
+
+        .camera-btn-gallery {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .camera-btn-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-btn-close {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 20px);
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .camera-mode-switch {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 20px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 16px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .camera-mode-btn {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .camera-mode-btn.active {
+            opacity: 1;
+        }
+
+        /* ========== POST EDITOR MODAL ========== */
+        .post-editor-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 600;
+            display: none;
+            flex-direction: column;
+        }
+
+        .post-editor-modal.active {
+            display: flex;
+        }
+
+        .post-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+        }
+
+        .post-editor-preview {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .post-editor-preview img,
+        .post-editor-preview video {
+            max-width: 100%;
+            max-height: 50vh;
+            border-radius: 16px;
+            object-fit: contain;
+        }
+
+        .post-editor-footer {
+            padding: 20px;
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+            background: #1a1a1a;
+        }
+
+        .post-editor-input {
+            width: 100%;
+            background: #2a2a2a;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+            font-size: 16px;
+            resize: none;
+            margin-bottom: 16px;
+        }
+
+        .post-editor-input::placeholder {
+            color: #888;
+        }
+
+        .post-editor-submit {
+            width: 100%;
+            padding: 16px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* ========== STORY VIEWER ========== */
+        .story-viewer {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 700;
+            display: none;
+            flex-direction: column;
+        }
+
+        .story-viewer.active {
+            display: flex;
+        }
+
+        .story-progress-container {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 12px);
+            left: 12px;
+            right: 12px;
+            display: flex;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .story-progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .story-progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .story-progress-fill.active {
+            animation: progress 10s linear forwards;
+        }
+
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        .story-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .story-content img,
+        .story-content video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .story-nav {
+            position: absolute;
+            inset: 0;
+            display: flex;
+        }
+
+        .story-nav-prev,
+        .story-nav-next {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .story-header {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 30px);
+            left: 16px;
+            right: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .story-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+        }
+
+        .story-user-info {
+            color: white;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .story-close {
+            position: absolute;
+            top: calc(env(safe-area-inset-top, 0px) + 30px);
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            z-index: 10;
+        }
+
+        /* ========== SOCIAL CARD ========== */
         .social-card {
             background: #FFFDF5;
             border-radius: 24px;
@@ -301,7 +653,7 @@
             object-fit: cover;
         }
 
-        /* Chat Styles */
+        /* ========== CHAT ========== */
         .chat-container {
             flex: 1;
             display: flex;
@@ -328,8 +680,15 @@
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .chat-bubble.bot {
@@ -373,8 +732,6 @@
             padding: 10px 0;
         }
 
-        .chat-input::placeholder { color: #8B7355; }
-
         .chat-send-btn {
             width: 40px;
             height: 40px;
@@ -387,7 +744,7 @@
             cursor: pointer;
         }
 
-        /* Shop Styles */
+        /* ========== SHOP ========== */
         .product-card {
             background: #FFFDF5;
             border-radius: 16px;
@@ -401,6 +758,7 @@
             font-size: 0.85rem;
             font-weight: 500;
             white-space: nowrap;
+            cursor: pointer;
         }
 
         .category-pill.active {
@@ -414,10 +772,16 @@
             border: 1px solid rgba(197, 160, 89, 0.2);
         }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
 
-        /* ========== ESTILOS PANTALLA PELUQUERÍA ========== */
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* ========== GROOMING ========== */
         .grooming-header {
             background: linear-gradient(135deg, #FFFDF5 0%, #F5EFE0 100%);
             border-bottom: 1px solid rgba(197, 160, 89, 0.2);
@@ -429,12 +793,6 @@
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .announcement-card:hover {
-            border-color: rgba(197, 160, 89, 0.5);
-            box-shadow: 0 4px 16px rgba(197, 160, 89, 0.1);
         }
 
         .portfolio-ring {
@@ -465,11 +823,6 @@
             cursor: pointer;
         }
 
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(197, 160, 89, 0.5);
-        }
-
         .cta-button-gold {
             background: linear-gradient(135deg, #D4AF37 0%, #C5A059 50%, #B8941F 100%);
             color: white;
@@ -484,76 +837,27 @@
             width: 100%;
         }
 
-        .cta-button-gold:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.6);
+        /* ========== PROFILE ========== */
+        .profile-header {
+            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
+            padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+            padding-bottom: 30px;
         }
 
-        /* ========== ESTILOS MÓDULO RESERVAS ========== */
-        .service-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 24px !important;
-            background: #F0EAD6 !important;
-            border: 1px solid rgba(197, 160, 89, 0.25) !important;
+        /* ========== LOADING OVERLAY ========== */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(249, 247, 242, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .service-card:active {
-            transform: scale(0.98);
-            box-shadow: 0 4px 15px rgba(75, 54, 33, 0.1);
-        }
-
-        .btn-ripple {
-            position: relative;
-            overflow: hidden;
-            border-radius: 50px !important;
-        }
-
-        .btn-ripple::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(230, 200, 139, 0.4);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-
-        .btn-ripple:active::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        .input-field {
-            transition: all 0.3s ease;
-            border-radius: 16px !important;
-            background: #FFFDF5 !important;
-            border: 2px solid rgba(197, 160, 89, 0.25) !important;
-        }
-
-        .input-field:focus {
-            border-color: #C5A059 !important;
-            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15) !important;
-        }
-
-        @keyframes checkmark {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .check-animation {
-            animation: checkmark 0.5s ease-out;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .spinner {
-            animation: spin 1s linear infinite;
+        .loading-overlay.active {
+            display: flex;
         }
 
         .loading-spinner {
@@ -565,822 +869,745 @@
             animation: spin 1s linear infinite;
         }
 
-        /* Perfil Styles */
-        .profile-header {
-            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
-            padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
-            padding-bottom: 30px;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        /* Action Sheet */
-        .action-sheet {
+        /* ========== TOAST ========== */
+        .toast {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 24px 24px 0 0;
-            padding: 20px;
-            z-index: 200;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .action-sheet.open {
-            transform: translateY(0);
-        }
-
-        .action-sheet-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 199;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .action-sheet-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .action-item {
-            padding: 16px;
-            text-align: center;
-            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .action-item:last-child {
-            border-bottom: none;
-        }
-
-        .action-item.danger {
-            color: #ef4444;
-        }
-
-        /* Upload Progress */
-        .upload-progress {
-            position: fixed;
-            top: 50%;
+            bottom: 100px;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 24px 32px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            z-index: 300;
-            text-align: center;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        .upload-progress.hidden {
-            display: none;
-        }
-
-        .progress-bar {
-            width: 200px;
-            height: 8px;
-            background: #F0EAD6;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%);
-            transition: width 0.3s ease;
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
+
 <body>
     <div id="app-container">
         <!-- ============================================================ -->
-        <!-- SCREEN: LOGIN (mc-login) -->
+        <!-- SCREEN: LOGIN -->
         <!-- ============================================================ -->
-        <div id="mc-login" class="screen login-screen">
+        <div id="screen-login" class="screen login-screen active">
             <div class="text-center mb-8">
                 <div class="login-logo">
                     <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
                     </svg>
                 </div>
                 <h1 class="text-2xl font-bold text-[#4B3621] font-serif mb-2">Maria's Cut</h1>
                 <p class="text-[#6D5D4E]">Peluquería Canina Premium</p>
             </div>
 
-            <div class="max-w-sm mx-auto w-full">
-                <input type="text" id="login-name" class="login-input" placeholder="Tu nombre">
+            <div class="space-y-3">
+                <!-- LOGIN FIELDS (Always Visible) -->
                 <input type="email" id="login-email" class="login-input" placeholder="Correo electrónico">
                 <input type="password" id="login-password" class="login-input" placeholder="Contraseña">
-                <input type="text" id="login-pet" class="login-input" placeholder="Nombre de tu mascota">
-                <input type="tel" id="login-phone" class="login-input" placeholder="Teléfono">
-                
-                <button onclick="handleLogin()" class="login-btn">Entrar / Registrar</button>
-                <button onclick="handleSkip()" class="login-btn-secondary">Omitir (Modo Invitado)</button>
-                
-                <p id="login-error" class="text-red-500 text-sm text-center mt-4 hidden"></p>
+
+                <!-- REGISTER FIELDS (Hidden by default) -->
+                <div id="register-fields" class="hidden space-y-3">
+                    <input type="text" id="login-name" class="login-input" placeholder="Tu nombre">
+                    <input type="text" id="login-pet" class="login-input" placeholder="Nombre de tu mascota">
+                    <input type="tel" id="login-phone" class="login-input" placeholder="Teléfono">
+                </div>
+
+                <!-- LOGIN ACTIONS -->
+                <div id="login-actions">
+                    <button id="btn-login" class="login-btn">Iniciar Sesión</button>
+                    <button id="btn-show-register" class="login-btn-secondary text-sm mt-2">¿No tienes cuenta?
+                        Regístrate aquí</button>
+                </div>
+
+                <!-- REGISTER ACTIONS (Hidden by default) -->
+                <div id="register-actions" class="hidden">
+                    <button id="btn-register" class="login-btn">Registrarse</button>
+                    <button id="btn-show-login" class="login-btn-secondary text-sm mt-2">¿Ya tienes cuenta? Inicia
+                        Sesión</button>
+                </div>
+
+                <button id="btn-skip"
+                    class="text-[#8B7355] text-xs font-semibold mt-6 underline hover:text-[#4B3621] transition-colors">Entrar
+                    como Invitado</button>
             </div>
+
+            <p id="login-error" class="text-red-600 text-sm text-center mt-4 hidden bg-white/80 p-2 rounded-lg"></p>
         </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: PROFILE PHOTO (mc-profile-photo) -->
-        <!-- ============================================================ -->
-        <div id="mc-profile-photo" class="screen hidden" style="background: #F9F7F2;">
-            <div class="flex-1 flex flex-col items-center justify-center px-6">
-                <h2 class="text-2xl font-bold text-[#4B3621] mb-2">¡Una foto de perfil!</h2>
-                <p class="text-[#6D5D4E] mb-8 text-center">Sube una foto de tu mascota para personalizar tu perfil</p>
-                
-                <div class="relative mb-8">
-                    <div id="photo-preview" class="w-40 h-40 rounded-full bg-[#F0EAD6] flex items-center justify-center border-4 border-[#C5A059] overflow-hidden">
-                        <svg class="w-16 h-16 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <button onclick="document.getElementById('profile-photo-input').click()" class="absolute bottom-0 right-0 w-12 h-12 bg-[#C5A059] rounded-full flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                    </button>
-                </div>
-                
-                <input type="file" id="profile-photo-input" class="hidden" accept="image/*" onchange="handleProfilePhotoSelect(event)">
-                
-                <button onclick="saveProfilePhoto()" id="save-photo-btn" class="login-btn max-w-xs" disabled>Continuar</button>
-                <button onclick="skipProfilePhoto()" class="login-btn-secondary max-w-xs mt-3">Saltar por ahora</button>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: HOME (SOCIAL CLUB) -->
-        <!-- ============================================================ -->
-        <div id="screen-home" class="screen hidden">
-            <div class="header-gradient px-4 flex justify-between items-center">
-                <div>
-                    <h1 class="text-lg font-bold text-[#4B3621]">Maria's Social Club</h1>
-                    <p class="text-xs text-[#C5A059] font-medium">Comunidad Exclusiva</p>
-                </div>
-                <div class="w-9 h-9 bg-white/50 rounded-full flex items-center justify-center cursor-pointer" onclick="showActionSheet()">
-                    <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                    </svg>
-                </div>
-            </div>
-
-            <div class="screen-content">
-                <div class="stories-rail" id="stories-container">
-                    <div class="story-item" onclick="document.getElementById('story-input').click()">
-                        <div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;">
-                            <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                                <svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span>
-                    </div>
-                    <!-- Stories se cargarán dinámicamente -->
-                </div>
-
-                <div id="feed-container"></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: SHOP (BOUTIQUE) -->
-        <!-- ============================================================ -->
-        <div id="screen-shop" class="screen hidden">
-            <div class="safe-header px-4 flex justify-between items-center">
-                <h1 class="text-lg font-bold text-[#4B3621]">Boutique Maria's Cut</h1>
-                <div class="relative">
-                    <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                    </svg>
-                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">2</span>
-                </div>
-            </div>
-
-            <div class="screen-content">
-                <div class="px-4 py-3">
-                    <div class="relative">
-                        <input type="text" placeholder="Buscar productos..." class="w-full bg-[#FFFDF5] border border-[rgba(197,160,89,0.2)] rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#C5A059]">
-                        <svg class="w-5 h-5 text-[#8B7355] absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
-                    <button class="category-pill active">Todo</button>
-                    <button class="category-pill">Alimentación</button>
-                    <button class="category-pill">Juguetes</button>
-                    <button class="category-pill">Higiene</button>
-                    <button class="category-pill">Accesorios</button>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3 px-4 pb-4">
-                    <div class="product-card">
-                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?w=400&h=400&fit=crop" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-medium text-[#4B3621]">Perrarina Premium</h3>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">$54.99</span>
-                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-medium text-[#4B3621]">Collar GPS</h3>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">$129.99</span>
-                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?w=400&h=400&fit=crop" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-medium text-[#4B3621]">Juguete Resistente</h3>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">$24.50</span>
-                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=400&fit=crop" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3">
-                            <h3 class="text-sm font-medium text-[#4B3621]">Champú Orgánico</h3>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">$18.90</span>
-                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: GROOMING (EL STUDIO DE MARÍA) - NUEVO HUB CENTRAL -->
-        <!-- ============================================================ -->
-        <div id="mc-screen-grooming" class="screen hidden">
-            <!-- Header -->
-            <div class="safe-header grooming-header px-4 flex justify-between items-center">
-                <div>
-                    <h1 class="text-xl font-bold text-[#4B3621] font-serif">El Studio de María</h1>
-                    <p class="text-xs text-[#C5A059] font-medium">Peluquería Canina Premium</p>
-                </div>
-                <button onclick="showScreen('mc-screen-booking-local')" class="cta-button flex items-center gap-2 text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    Agendar Cita
-                </button>
-            </div>
-
-            <div class="screen-content">
-                <!-- Sección Portafolio (Stories-style) -->
-                <div class="bg-white py-4">
-                    <div class="px-4 mb-3">
-                        <h2 class="text-sm font-bold text-[#4B3621] uppercase tracking-wide">Trabajos Recientes</h2>
-                    </div>
-                    <div class="flex overflow-x-auto gap-4 px-4 pb-2 no-scrollbar">
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 1">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Luna</span>
-                        </div>
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 2">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Max</span>
-                        </div>
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 3">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Bella</span>
-                        </div>
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 4">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Rocky</span>
-                        </div>
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1596492784531-6e6eb5ea9205?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 5">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Coco</span>
-                        </div>
-                        <div class="flex flex-col items-center flex-shrink-0">
-                            <div class="portfolio-ring">
-                                <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=200&h=200&fit=crop" class="portfolio-avatar" alt="Trabajo 6">
-                            </div>
-                            <span class="text-xs text-[#4B3621] mt-2 font-medium">Daisy</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sección Avisos de María (Twitter-style) -->
-                <div class="px-4 py-6">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-                            </svg>
-                        </div>
-                        <h2 class="text-lg font-bold text-[#4B3621]">Avisos de María</h2>
-                    </div>
-
-                    <!-- Anuncio 1 -->
-                    <div class="announcement-card">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">M</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-[#4B3621]">María</span>
-                                    <span class="text-xs text-[#8B7355]">• Hace 2 horas</span>
-                                </div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">
-                                    📢 <span class="font-semibold">¡Atención!</span> La próxima semana (Miércoles 12) tenemos <span class="text-[#C5A059] font-semibold">10% de descuento</span> en Baños Medicados. ¡Agenda tu cita! 🐕✨
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Anuncio 2 -->
-                    <div class="announcement-card">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">M</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-[#4B3621]">María</span>
-                                    <span class="text-xs text-[#8B7355]">• Ayer</span>
-                                </div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">
-                                    🚐 Nuestra Furgoneta Luna estará en <span class="font-semibold">Las Condes</span> este viernes. ¡Reserva tu cita a domicilio! Cupos limitados.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Anuncio 3 -->
-                    <div class="announcement-card">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">M</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-[#4B3621]">María</span>
-                                    <span class="text-xs text-[#8B7355]">• Hace 3 días</span>
-                                </div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">
-                                    💅 Nuevo servicio: <span class="font-semibold">Spa de Uñas</span> para perros pequeños. Incluye limado, cutícula y esmalte pet-friendly. ¡Pregunta por el paquete completo!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Anuncio 4 -->
-                    <div class="announcement-card">
-                        <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                                <span class="text-white font-bold text-sm">M</span>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-bold text-[#4B3621]">María</span>
-                                    <span class="text-xs text-[#8B7355]">• Hace 5 días</span>
-                                </div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">
-                                    🎉 ¡Felicitaciones a todos los clientes que participaron en nuestro concurso de fotos! Las ganadoras serán anunciadas este fin de semana. ¡Estén atentos!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Servicios Rápidos -->
-                <div class="px-4 pb-6">
-                    <h2 class="text-sm font-bold text-[#4B3621] uppercase tracking-wide mb-4">Nuestros Servicios</h2>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
-                            <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-[#4B3621] text-sm">Baño & Corte</h3>
-                            <p class="text-xs text-[#8B7355] mt-1">Desde $35.000</p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
-                            <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-[#4B3621] text-sm">Spa Deluxe</h3>
-                            <p class="text-xs text-[#8B7355] mt-1">Desde $55.000</p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
-                            <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-[#4B3621] text-sm">A Domicilio</h3>
-                            <p class="text-xs text-[#8B7355] mt-1">Furgoneta VIP</p>
-                        </div>
-                        <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
-                            <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg>
-                            </div>
-                            <h3 class="font-semibold text-[#4B3621] text-sm">Tratamientos</h3>
-                            <p class="text-xs text-[#8B7355] mt-1">Piel & Pelo</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: ASSISTANT (CHAT IA) -->
-        <!-- ============================================================ -->
-        <div id="screen-assistant" class="screen hidden">
-            <div class="safe-header px-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-[#4B3621]">Asistente Maria's Cut</h1>
-                        <p class="text-xs text-[#C5A059]">Experto en bienestar animal</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-container">
-                <div id="chat-messages" class="chat-messages">
-                    <div class="chat-bubble bot">
-                        Hola, soy la IA de Maria's Cut. ¿En qué puedo ayudarte hoy con tu mascota? 🐾
-                    </div>
-                </div>
-
-                <div class="chat-input-area">
-                    <div class="chat-input-wrapper">
-                        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje..." onkeypress="handleChatKeyPress(event)">
-                        <button class="chat-send-btn" onclick="sendChatMessage()">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- SCREEN: PROFILE (PERFIL) -->
-        <!-- ============================================================ -->
-        <div id="screen-profile" class="screen hidden">
-            <div class="profile-header px-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 bg-white rounded-full p-1 shadow-lg overflow-hidden">
-                        <img id="profile-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop" class="w-full h-full rounded-full object-cover">
-                    </div>
-                    <div>
-                        <h1 id="profile-name" class="text-xl font-bold text-[#4B3621]">Cargando...</h1>
-                        <p id="profile-pet" class="text-sm text-[#8B7355]">...</p>
-                        <div class="flex items-center gap-1 mt-1">
-                            <svg class="w-4 h-4 text-[#C5A059]" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                            </svg>
-                            <span class="text-sm text-[#4B3621] font-medium">4.9 (128 reseñas)</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="screen-content">
-                <!-- Stats -->
-                <div class="flex justify-around py-4 bg-white border-b border-[rgba(197,160,89,0.15)]">
-                    <div class="text-center">
-                        <p class="text-xl font-bold text-[#C5A059]">1</p>
-                        <p class="text-xs text-[#8B7355]">Mascota</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-xl font-bold text-[#C5A059]">0</p>
-                        <p class="text-xs text-[#8B7355]">Citas</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-xl font-bold text-[#C5A059]">0</p>
-                        <p class="text-xs text-[#8B7355]">Posts</p>
-                    </div>
-                </div>
-
-                <!-- Menu Items -->
-                <div class="px-4 py-4 space-y-2">
-                    <div class="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[rgba(197,160,89,0.15)]">
-                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-[#4B3621]">Mis Datos</h3>
-                            <p class="text-xs text-[#8B7355]">Información personal</p>
-                        </div>
-                        <svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[rgba(197,160,89,0.15)]">
-                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-[#4B3621]">Mis Citas</h3>
-                            <p class="text-xs text-[#8B7355]">Historial y próximas</p>
-                        </div>
-                        <svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-
-                    <div class="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[rgba(197,160,89,0.15)]" onclick="handleLogout()">
-                        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                            </svg>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-red-500">Cerrar Sesión</h3>
-                            <p class="text-xs text-[#8B7355]">Salir de la cuenta</p>
-                        </div>
-                        <svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- PANTALLAS DE RESERVAS (INTEGRADAS DEL BACKUP) -->
-        <!-- ============================================================ -->
-
-        <!-- SCREEN: BOOKING LOCAL (Reserva en Local) -->
-        <div id="mc-screen-booking-local" class="screen hidden">
-            <div class="safe-header border-b border-gray-100 pb-4 px-5 flex items-center">
-                <button onclick="showScreen('mc-screen-grooming')" class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
-                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-                <h1 class="text-lg font-semibold text-gray-800 ml-2">Reserva en Local</h1>
-            </div>
-
-            <div class="screen-content px-5 pt-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">Selecciona un servicio</h2>
-
-                <!-- Grooming Card -->
-                <div class="bg-white rounded-2xl shadow-md p-4 border-2 border-transparent hover:border-gray-200 cursor-pointer mb-4 transition-colors" onclick="selectService('banio', 35000)">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-semibold text-gray-800 text-lg">Baño & Corte Pro</h3>
-                            <p class="text-gray-500 text-sm mt-1">Shampoo orgánico, corte a tijera</p>
-                            <div class="flex items-center mt-2 text-gray-400 text-sm">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                60 min
-                            </div>
-                        </div>
-                        <p class="text-xl font-bold text-[#C5A059]">$35.000</p>
-                    </div>
-                </div>
-
-                <!-- Spa Card -->
-                <div class="bg-white rounded-2xl shadow-md p-4 border-2 border-[#C5A059] cursor-pointer mb-6" onclick="selectService('spa', 55000)">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-semibold text-gray-800 text-lg">Spa Deluxe</h3>
-                            <p class="text-gray-500 text-sm mt-1">Hidromasaje + Aromaterapia</p>
-                            <div class="flex items-center mt-2 text-gray-400 text-sm">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                90 min
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xl font-bold text-[#C5A059]">$55.000</p>
-                            <span class="bg-[#C5A059]/10 text-[#C5A059] text-xs px-2 py-1 rounded-full font-bold">Popular</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pet Selector -->
-                <div class="mb-6">
-                    <p class="text-gray-700 font-medium mb-2">Para tu mascota</p>
-                </div>
-
-                <!-- Confirm Button -->
-                <button onclick="goToPayment()" class="btn-ripple w-full bg-[#C5A059] hover:bg-[#A88B45] text-white font-semibold py-4 rounded-2xl transition-colors shadow-lg">Continuar al Pago</button>
-            </div>
-        </div>
-
-        <!-- SCREEN: PAYMENT (Stripe) -->
-        <div id="mc-screen-payment" class="screen hidden">
-            <div class="safe-header border-b border-gray-100 pb-4 px-5 flex items-center">
-                <button onclick="showScreen('mc-screen-booking-local')" class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
-                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-                <h1 class="text-lg font-semibold text-gray-800 ml-2">Confirmar y Pagar</h1>
-            </div>
-
-            <div class="screen-content px-5 pt-6">
-                <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-16 h-16 bg-[#F0EAD6] rounded-xl flex items-center justify-center">
-                            <svg class="w-8 h-8 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 id="payment-service-name" class="font-bold text-gray-800 text-lg">Spa Deluxe</h3>
-                            <p class="text-gray-500 text-sm">Servicio Premium</p>
-                        </div>
-                    </div>
-                    <div class="border-t border-gray-100 pt-4">
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600">Subtotal</span>
-                            <span id="payment-subtotal" class="font-medium">$55.000</span>
-                        </div>
-                        <div class="flex justify-between mb-2">
-                            <span class="text-gray-600">IVA (19%)</span>
-                            <span id="payment-iva" class="font-medium">$10.450</span>
-                        </div>
-                        <div class="flex justify-between pt-2 border-t border-gray-100">
-                            <span class="font-bold text-gray-800">Total</span>
-                            <span id="payment-total" class="font-bold text-[#C5A059] text-xl">$65.450</span>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="handleStripePayment()" class="cta-button-gold flex items-center justify-center gap-3">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                    </svg>
-                    Pagar Ahora y Confirmar
-                </button>
-
-                <button onclick="showScreen('mc-screen-grooming')" class="login-btn-secondary mt-4">Cancelar</button>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!-- NUEVA BARRA DE NAVEGACIÓN CON 5 ELEMENTOS -->
-        <!-- ============================================================ -->
-        <div class="bottom-nav" id="main-nav">
-            <div class="nav-container">
-                <!-- Club (Izquierda) -->
-                <div class="nav-item" onclick="showScreen('screen-home', this)">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
-                    </svg>
-                    <span class="text-xs mt-1">Club</span>
-                </div>
-
-                <!-- Tienda (Izquierda) -->
-                <div class="nav-item" onclick="showScreen('screen-shop', this)">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                    </svg>
-                    <span class="text-xs mt-1">Tienda</span>
-                </div>
-
-                <!-- PELUQUERÍA (Centro - DESTACADO) -->
-                <div class="nav-center-btn" onclick="showScreen('mc-screen-grooming', this)" id="nav-grooming">
-                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/>
-                    </svg>
-                    <span class="nav-center-label">Peluquería</span>
-                </div>
-
-                <!-- Asistente (Derecha) -->
-                <div class="nav-item" onclick="showScreen('screen-assistant', this)">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    <span class="text-xs mt-1">Asistente</span>
-                </div>
-
-                <!-- Perfil (Derecha) -->
-                <div class="nav-item" onclick="showScreen('screen-profile', this)">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                    <span class="text-xs mt-1">Perfil</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Sheet -->
-        <div class="action-sheet-overlay" id="action-overlay" onclick="hideActionSheet()"></div>
-        <div class="action-sheet" id="action-sheet">
-            <div class="action-item" onclick="document.getElementById('post-input').click()">
-                📷 Subir Foto
-            </div>
-            <div class="action-item" onclick="document.getElementById('post-video-input').click()">
-                🎥 Subir Video
-            </div>
-            <div class="action-item danger" onclick="hideActionSheet()">
-                Cancelar
-            </div>
-        </div>
-
-        <!-- Upload Progress -->
-        <div class="upload-progress hidden" id="upload-progress">
-            <p class="text-[#4B3621] font-medium">Subiendo...</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
-            </div>
-            <p class="text-sm text-[#8B7355] mt-2" id="progress-text">0%</p>
-        </div>
-
-        <!-- Hidden File Inputs -->
-        <input type="file" id="story-input" class="hidden" accept="image/*,video/*" onchange="handleStoryUpload(event)">
-        <input type="file" id="post-input" class="hidden" accept="image/*" onchange="handlePostUpload(event)">
-        <input type="file" id="post-video-input" class="hidden" accept="video/*" onchange="handlePostUpload(event)">
     </div>
 
     <!-- ============================================================ -->
-    <!-- FIREBASE SDK & APP LOGIC -->
+    <!-- SCREEN: HOME (SOCIAL CLUB) -->
+    <!-- ============================================================ -->
+    <div id="screen-home" class="screen hidden">
+        <div class="header-gradient px-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-lg font-bold text-[#4B3621]">Maria's Social Club</h1>
+                <p class="text-xs text-[#C5A059] font-medium">Comunidad Exclusiva</p>
+            </div>
+            <button id="btn-add-content" class="w-9 h-9 bg-white/50 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="screen-content">
+            <div class="stories-rail" id="stories-container">
+                <!-- Stories loaded dynamically -->
+            </div>
+            <div id="feed-container"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: SHOP -->
+    <!-- ============================================================ -->
+    <div id="screen-shop" class="screen hidden">
+        <div class="safe-header px-4 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-[#4B3621]">Boutique Maria's Cut</h1>
+            <div class="relative">
+                <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span
+                    class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">2</span>
+            </div>
+        </div>
+        <div class="screen-content">
+            <div class="px-4 py-3">
+                <div class="relative">
+                    <input type="text" placeholder="Buscar productos..."
+                        class="w-full bg-[#FFFDF5] border border-[rgba(197,160,89,0.2)] rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#C5A059]">
+                    <svg class="w-5 h-5 text-[#8B7355] absolute left-3 top-3" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
+                <button class="category-pill active">Todo</button>
+                <button class="category-pill">Alimentación</button>
+                <button class="category-pill">Juguetes</button>
+                <button class="category-pill">Higiene</button>
+                <button class="category-pill">Accesorios</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3 px-4 pb-4">
+                <div class="product-card">
+                    <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?w=400&h=400&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3">
+                        <h3 class="text-sm font-medium text-[#4B3621]">Perrarina Premium</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-[#C5A059] font-bold">$54.99</span>
+                            <button
+                                class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3">
+                        <h3 class="text-sm font-medium text-[#4B3621]">Collar GPS</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-[#C5A059] font-bold">$129.99</span>
+                            <button
+                                class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?w=400&h=400&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3">
+                        <h3 class="text-sm font-medium text-[#4B3621]">Juguete Resistente</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-[#C5A059] font-bold">$24.50</span>
+                            <button
+                                class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=400&fit=crop"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3">
+                        <h3 class="text-sm font-medium text-[#4B3621]">Champú Orgánico</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-[#C5A059] font-bold">$18.90</span>
+                            <button
+                                class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: GROOMING (HUB CENTRAL) -->
+    <!-- ============================================================ -->
+    <div id="screen-grooming" class="screen hidden">
+        <div class="safe-header grooming-header px-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-[#4B3621] font-serif">El Studio de María</h1>
+                <p class="text-xs text-[#C5A059] font-medium">Peluquería Canina Premium</p>
+            </div>
+            <button id="btn-booking" class="cta-button flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Agendar Cita
+            </button>
+        </div>
+
+        <div class="screen-content">
+            <div class="bg-white py-4">
+                <div class="px-4 mb-3">
+                    <h2 class="text-sm font-bold text-[#4B3621] uppercase tracking-wide">Trabajos Recientes</h2>
+                </div>
+                <div class="flex overflow-x-auto gap-4 px-4 pb-2 no-scrollbar">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="portfolio-ring">
+                            <img src="https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=200&h=200&fit=crop"
+                                class="portfolio-avatar">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-2 font-medium">Luna</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="portfolio-ring">
+                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=200&fit=crop"
+                                class="portfolio-avatar">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-2 font-medium">Max</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="portfolio-ring">
+                            <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=200&h=200&fit=crop"
+                                class="portfolio-avatar">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-2 font-medium">Bella</span>
+                    </div>
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <div class="portfolio-ring">
+                            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=200&h=200&fit=crop"
+                                class="portfolio-avatar">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-2 font-medium">Rocky</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 py-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <div
+                        class="w-8 h-8 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold text-[#4B3621]">Avisos de María</h2>
+                </div>
+
+                <div class="announcement-card">
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-[#4B3621]">María</span>
+                                <span class="text-xs text-[#8B7355]">• Hace 2 horas</span>
+                            </div>
+                            <p class="text-[#4B3621] text-sm leading-relaxed">
+                                📢 <span class="font-semibold">¡Atención!</span> La próxima semana tenemos <span
+                                    class="text-[#C5A059] font-semibold">10% de descuento</span> en Baños Medicados.
+                                🐕✨
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="announcement-card">
+                    <div class="flex items-start gap-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-[#4B3621]">María</span>
+                                <span class="text-xs text-[#8B7355]">• Ayer</span>
+                            </div>
+                            <p class="text-[#4B3621] text-sm leading-relaxed">
+                                🚐 Nuestra Furgoneta Luna estará en <span class="font-semibold">Las Condes</span>
+                                este viernes. ¡Cupos limitados!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-4 pb-6">
+                <h2 class="text-sm font-bold text-[#4B3621] uppercase tracking-wide mb-4">Nuestros Servicios</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
+                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-[#4B3621] text-sm">Baño & Corte</h3>
+                        <p class="text-xs text-[#8B7355] mt-1">Desde $35.000</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
+                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-[#4B3621] text-sm">Spa Deluxe</h3>
+                        <p class="text-xs text-[#8B7355] mt-1">Desde $55.000</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
+                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-[#4B3621] text-sm">A Domicilio</h3>
+                        <p class="text-xs text-[#8B7355] mt-1">Furgoneta VIP</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
+                        <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="font-semibold text-[#4B3621] text-sm">Tratamientos</h3>
+                        <p class="text-xs text-[#8B7355] mt-1">Piel & Pelo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: ASSISTANT -->
+    <!-- ============================================================ -->
+    <div id="screen-assistant" class="screen hidden">
+        <div class="safe-header px-4">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-[#4B3621]">Asistente Maria's Cut</h1>
+                    <p class="text-xs text-[#C5A059]">Experto en bienestar animal</p>
+                </div>
+            </div>
+        </div>
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="chat-bubble bot">Hola, soy la IA de Maria's Cut. ¿En qué puedo ayudarte hoy con tu
+                    mascota? 🐾</div>
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje...">
+                    <button id="btn-send-chat" class="chat-send-btn">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: PROFILE -->
+    <!-- ============================================================ -->
+    <div id="screen-profile" class="screen hidden">
+        <div class="profile-header px-4">
+            <div class="flex items-center gap-4">
+                <div class="w-20 h-20 bg-white rounded-full p-1 shadow-lg overflow-hidden">
+                    <img id="profile-avatar"
+                        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop"
+                        class="w-full h-full rounded-full object-cover">
+                </div>
+                <div>
+                    <h1 id="profile-name" class="text-xl font-bold text-[#4B3621]">Cargando...</h1>
+                    <p id="profile-pet" class="text-sm text-[#8B7355]">...</p>
+                    <div class="flex items-center gap-1 mt-1">
+                        <svg class="w-4 h-4 text-[#C5A059]" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span class="text-sm text-[#4B3621] font-medium">4.9 (128 reseñas)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="screen-content">
+            <div class="flex justify-around py-4 bg-white border-b border-[rgba(197,160,89,0.15)]">
+                <div class="text-center">
+                    <p class="text-xl font-bold text-[#C5A059]">1</p>
+                    <p class="text-xs text-[#8B7355]">Mascota</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl font-bold text-[#C5A059]">0</p>
+                    <p class="text-xs text-[#8B7355]">Citas</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xl font-bold text-[#C5A059]">0</p>
+                    <p class="text-xs text-[#8B7355]">Posts</p>
+                </div>
+            </div>
+            <div class="px-4 py-4 space-y-2">
+                <div class="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[rgba(197,160,89,0.15)]">
+                    <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-[#4B3621]">Mis Datos</h3>
+                        <p class="text-xs text-[#8B7355]">Información personal</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[rgba(197,160,89,0.15)]"
+                    id="btn-logout">
+                    <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-red-500">Cerrar Sesión</h3>
+                        <p class="text-xs text-[#8B7355]">Salir de la cuenta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: BOOKING -->
+    <!-- ============================================================ -->
+    <div id="screen-booking" class="screen hidden">
+        <div class="safe-header border-b border-gray-100 pb-4 px-5 flex items-center">
+            <button id="btn-back-grooming" class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800 ml-2">Reserva en Local</h1>
+        </div>
+        <div class="screen-content px-5 pt-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Selecciona un servicio</h2>
+            <div class="bg-white rounded-2xl shadow-md p-4 border-2 border-[#C5A059] cursor-pointer mb-6"
+                id="select-spa">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="font-semibold text-gray-800 text-lg">Spa Deluxe</h3>
+                        <p class="text-gray-500 text-sm mt-1">Hidromasaje + Aromaterapia</p>
+                        <div class="flex items-center mt-2 text-gray-400 text-sm">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            90 min
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-[#C5A059]">$55.000</p>
+                        <span
+                            class="bg-[#C5A059]/10 text-[#C5A059] text-xs px-2 py-1 rounded-full font-bold">Popular</span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-continue-payment"
+                class="btn-ripple w-full bg-[#C5A059] hover:bg-[#A88B45] text-white font-semibold py-4 rounded-2xl transition-colors shadow-lg">Continuar
+                al Pago</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCREEN: PAYMENT -->
+    <!-- ============================================================ -->
+    <div id="screen-payment" class="screen hidden">
+        <div class="safe-header border-b border-gray-100 pb-4 px-5 flex items-center">
+            <button id="btn-back-booking" class="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <h1 class="text-lg font-semibold text-gray-800 ml-2">Confirmar y Pagar</h1>
+        </div>
+        <div class="screen-content px-5 pt-6">
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-16 h-16 bg-[#F0EAD6] rounded-xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Spa Deluxe</h3>
+                        <p class="text-gray-500 text-sm">Servicio Premium</p>
+                    </div>
+                </div>
+                <div class="border-t border-gray-100 pt-4">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium">$55.000</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">IVA (19%)</span>
+                        <span class="font-medium">$10.450</span>
+                    </div>
+                    <div class="flex justify-between pt-2 border-t border-gray-100">
+                        <span class="font-bold text-gray-800">Total</span>
+                        <span class="font-bold text-[#C5A059] text-xl">$65.450</span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-stripe-pay" class="cta-button-gold flex items-center justify-center gap-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Pagar Ahora y Confirmar
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ============================================================ -->
+    <nav id="bottom-nav" class="bottom-nav hidden">
+        <div class="nav-container">
+            <div class="nav-item" data-screen="screen-home">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path
+                        d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                </svg>
+                <span class="text-xs mt-1">Club</span>
+            </div>
+            <div class="nav-item" data-screen="screen-shop">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span class="text-xs mt-1">Tienda</span>
+            </div>
+            <div class="nav-center-btn" data-screen="screen-grooming">
+                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                </svg>
+                <span class="nav-center-label">Peluquería</span>
+            </div>
+            <div class="nav-item" data-screen="screen-assistant">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="text-xs mt-1">Asistente</span>
+            </div>
+            <div class="nav-item" data-screen="screen-profile">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="text-xs mt-1">Perfil</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- CAMERA OVERLAY -->
+    <!-- ============================================================ -->
+    <div id="camera-overlay" class="camera-overlay">
+        <div class="camera-preview">
+            <video id="camera-video" class="camera-video" autoplay playsinline></video>
+            <canvas id="camera-canvas" class="camera-canvas"></canvas>
+
+            <button id="camera-close" class="camera-btn-close">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <div class="camera-mode-switch">
+                <button class="camera-mode-btn active" data-mode="story">Historia</button>
+                <button class="camera-mode-btn" data-mode="post">Publicación</button>
+            </div>
+        </div>
+
+        <div class="camera-controls">
+            <div class="camera-btn-gallery" id="camera-gallery-btn">
+                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop"
+                    alt="Gallery">
+            </div>
+            <button id="camera-capture" class="camera-btn-capture"></button>
+            <div style="width: 50px;"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- POST EDITOR MODAL -->
+    <!-- ============================================================ -->
+    <div id="post-editor-modal" class="post-editor-modal">
+        <div class="post-editor-header">
+            <button id="editor-cancel" class="text-white font-medium">Cancelar</button>
+            <span id="editor-title" class="text-white font-semibold">Nueva Historia</span>
+            <div style="width: 60px;"></div>
+        </div>
+        <div class="post-editor-preview">
+            <img id="editor-preview-img" src="" alt="Preview">
+            <video id="editor-preview-video" class="hidden" controls></video>
+        </div>
+        <div class="post-editor-footer">
+            <textarea id="editor-caption" class="post-editor-input" rows="2"
+                placeholder="Escribe un pie de foto..."></textarea>
+            <button id="editor-submit" class="post-editor-submit">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                        clip-rule="evenodd" />
+                </svg>
+                Dejar Huella
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- STORY VIEWER -->
+    <!-- ============================================================ -->
+    <div id="story-viewer" class="story-viewer">
+        <div class="story-progress-container" id="story-progress-container"></div>
+        <div class="story-header">
+            <img id="story-viewer-avatar" src="" class="story-avatar-small">
+            <div class="story-user-info">
+                <p id="story-viewer-name" class="font-semibold"></p>
+                <p id="story-viewer-time" class="text-xs opacity-80"></p>
+            </div>
+        </div>
+        <button id="story-close" class="story-close">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <div class="story-content">
+            <img id="story-viewer-media" src="" class="hidden">
+            <video id="story-viewer-video" class="hidden" autoplay></video>
+        </div>
+        <div class="story-nav">
+            <div id="story-nav-prev" class="story-nav-prev"></div>
+            <div id="story-nav-next" class="story-nav-next"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LOADING OVERLAY -->
+    <!-- ============================================================ -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p id="loading-text" class="mt-4 text-[#4B3621] font-medium">Cargando...</p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TOAST -->
+    <!-- ============================================================ -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Hidden file input for gallery -->
+    <input type="file" id="gallery-input" class="hidden" accept="image/*,video/*">
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FIREBASE & APP LOGIC -->
     <!-- ============================================================ -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
+        import {
+            getAuth,
+            onAuthStateChanged,
             createUserWithEmailAndPassword,
             signInWithEmailAndPassword,
             signInAnonymously,
             signOut,
             updateProfile
         } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc, 
+        import {
+            getFirestore,
+            doc,
+            setDoc,
             getDoc,
             collection,
             addDoc,
@@ -1389,9 +1616,9 @@
             orderBy,
             serverTimestamp
         } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-        import { 
-            getStorage, 
-            ref, 
+        import {
+            getStorage,
+            ref,
             uploadBytesResumable,
             getDownloadURL
         } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
@@ -1413,336 +1640,481 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Global state
-        let currentUser = null;
-        let userData = null;
-        let selectedService = { name: 'Spa Deluxe', price: 55000 };
-        let pendingPhotoFile = null;
+        // ============================================
+        // STATE MANAGEMENT
+        // ============================================
+        const AppState = {
+            currentUser: null,
+            userData: null,
+            isGuest: false,
+            currentScreen: 'login',
+            cameraMode: 'story', // 'story' or 'post'
+            capturedMedia: null,
+            stories: [],
+            currentStoryIndex: 0,
+            storyTimer: null,
+            mediaStream: null
+        };
 
-        // Make functions global
-        window.auth = auth;
-        window.db = db;
-        window.storage = storage;
-        window.currentUser = currentUser;
-        window.userData = userData;
-        window.selectedService = selectedService;
-        window.pendingPhotoFile = pendingPhotoFile;
+        // ============================================
+        // UI HELPERS
+        // ============================================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                s.classList.add('hidden');
+            });
+            const screen = document.getElementById(screenId);
+            if (screen) {
+                screen.classList.remove('hidden');
+                screen.classList.add('active');
+            }
+            AppState.currentScreen = screenId;
+            updateNavState();
+        }
 
-        // Auth State Listener
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                window.currentUser = user;
-                
-                // Get user data from Firestore
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                if (userDoc.exists()) {
-                    userData = userDoc.data();
-                    window.userData = userData;
-                    updateProfileUI();
+        function updateNavState() {
+            const nav = document.getElementById('bottom-nav');
+            const navItems = document.querySelectorAll('.nav-item, .nav-center-btn');
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.screen === AppState.currentScreen) {
+                    item.classList.add('active');
                 }
-                
-                // Show main app
-                showScreen('mc-screen-grooming');
-                document.getElementById('main-nav').style.display = 'block';
-                
-                // Load feed
+            });
+        }
+
+        function showLoading(text = 'Cargando...') {
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('loading-overlay').classList.add('active');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.remove('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================
+        // AUTH STATE MANAGEMENT
+        // ============================================
+        function updateAppState(user) {
+            const nav = document.getElementById('bottom-nav');
+
+            if (!user && !AppState.isGuest) {
+                // No session - show login, hide nav
+                showScreen('screen-login');
+                nav.classList.add('hidden');
+            } else {
+                // Has session or guest mode - show main app, show nav
+                AppState.currentUser = user;
+                loadUserData();
+                showScreen('screen-grooming');
+                nav.classList.remove('hidden');
                 loadFeed();
                 loadStories();
-            } else {
-                // Show login
-                showScreen('mc-login');
-                document.getElementById('main-nav').style.display = 'none';
             }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            updateAppState(user);
         });
 
-        // Login Handler
-        window.handleLogin = async () => {
-            const name = document.getElementById('login-name').value.trim();
+        async function loadUserData() {
+            if (!AppState.currentUser) return;
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', AppState.currentUser.uid));
+                if (userDoc.exists()) {
+                    AppState.userData = userDoc.data();
+                    document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario';
+                    document.getElementById('profile-pet').textContent = AppState.userData.petName ? `🐕 ${AppState.userData.petName}` : '';
+                    if (AppState.currentUser.photoURL) {
+                        document.getElementById('profile-avatar').src = AppState.currentUser.photoURL;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+            }
+        }
+
+        // ============================================
+        // LOGIN HANDLERS
+        // ============================================
+        // ============================================
+        // LOGIN & REGISTER LOGIC (SEPARATED)
+        // ============================================
+
+        // --- UI TOGGLES ---
+        const loginActions = document.getElementById('login-actions');
+        const registerActions = document.getElementById('register-actions');
+        const registerFields = document.getElementById('register-fields');
+        const errorEl = document.getElementById('login-error');
+
+        document.getElementById('btn-show-register').addEventListener('click', () => {
+            loginActions.classList.add('hidden');
+            registerActions.classList.remove('hidden');
+            registerFields.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+        });
+
+        document.getElementById('btn-show-login').addEventListener('click', () => {
+            registerActions.classList.add('hidden');
+            loginActions.classList.remove('hidden');
+            registerFields.classList.add('hidden');
+            errorEl.classList.add('hidden');
+        });
+
+        // --- LOGIN HANDLER ---
+        document.getElementById('btn-login').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
-            const pet = document.getElementById('login-pet').value.trim();
-            const phone = document.getElementById('login-phone').value.trim();
-            const errorEl = document.getElementById('login-error');
 
             if (!email || !password) {
-                errorEl.textContent = 'Email y contraseña son requeridos';
-                errorEl.classList.remove('hidden');
+                showError('Ingresa tu email y contraseña');
                 return;
             }
 
-            try {
-                // Try to sign in first
-                let userCredential;
-                try {
-                    userCredential = await signInWithEmailAndPassword(auth, email, password);
-                } catch (signInError) {
-                    // If sign in fails, create new account
-                    userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    
-                    // Save user data to Firestore
-                    await setDoc(doc(db, 'users', userCredential.user.uid), {
-                        name: name || 'Usuario',
-                        email: email,
-                        petName: pet || 'Mi Mascota',
-                        phone: phone || '',
-                        createdAt: serverTimestamp()
-                    });
-                    
-                    // Update profile
-                    await updateProfile(userCredential.user, {
-                        displayName: name || 'Usuario'
-                    });
-                    
-                    // Show profile photo screen for new users
-                    showScreen('mc-profile-photo');
-                    return;
-                }
-                
-                // Existing user - will be handled by onAuthStateChanged
-            } catch (error) {
-                errorEl.textContent = error.message;
-                errorEl.classList.remove('hidden');
-            }
-        };
+            showLoading('Iniciando sesión...');
+            hideError();
 
-        // Skip Login (Anonymous)
-        window.handleSkip = async () => {
             try {
+                // STRICT LOGIN ONLY
+                await signInWithEmailAndPassword(auth, email, password);
+                // Success handled by onAuthStateChanged
+            } catch (error) {
+                hideLoading();
+                console.error("Login Error:", error.code);
+
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                    showError('Usuario o contraseña incorrectos');
+                } else if (error.code === 'auth/too-many-requests') {
+                    showError('Demasiados intentos. Espera un momento.');
+                } else {
+                    showError('Error al entrar: ' + error.message);
+                }
+            }
+        });
+
+        // --- REGISTER HANDLER ---
+        document.getElementById('btn-register').addEventListener('click', async () => {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const name = document.getElementById('login-name').value.trim();
+            const pet = document.getElementById('login-pet').value.trim();
+            const phone = document.getElementById('login-phone').value.trim();
+
+            // Strict Validation
+            if (!email || !password || !name) {
+                showError('Email, contraseña y nombre son obligatorios');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+
+            showLoading('Creando cuenta...');
+            hideError();
+
+            try {
+                // STRICT REGISTER ONLY
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+                // Save extra data
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name,
+                    email: email,
+                    petName: pet || 'Mi Mascota',
+                    phone: phone || '',
+                    createdAt: serverTimestamp()
+                });
+
+                await updateProfile(userCredential.user, {
+                    displayName: name
+                });
+
+                // Success handled by onAuthStateChanged
+
+            } catch (error) {
+                hideLoading();
+                console.error("Register Error:", error.code);
+
+                if (error.code === 'auth/email-already-in-use') {
+                    showError('Este correo ya está registrado. Intenta iniciar sesión.');
+                } else if (error.code === 'auth/weak-password') {
+                    showError('La contraseña es muy débil.');
+                } else if (error.code === 'auth/invalid-email') {
+                    showError('El correo electrónico no es válido.');
+                } else {
+                    showError('Error al registrar: ' + error.message);
+                }
+            }
+        });
+
+        function showError(msg) {
+            errorEl.textContent = msg;
+            errorEl.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorEl.classList.add('hidden');
+        }
+
+        document.getElementById('btn-skip').addEventListener('click', async () => {
+            showLoading('Entrando como invitado...');
+            try {
+                AppState.isGuest = true;
                 await signInAnonymously(auth);
             } catch (error) {
-                console.error('Anonymous auth error:', error);
+                hideLoading();
+                showToast('Error al entrar como invitado');
             }
-        };
+        });
 
-        // Logout
-        window.handleLogout = async () => {
+        document.getElementById('btn-logout').addEventListener('click', async () => {
             try {
                 await signOut(auth);
+                AppState.isGuest = false;
+                AppState.currentUser = null;
+                AppState.userData = null;
             } catch (error) {
-                console.error('Logout error:', error);
+                showToast('Error al cerrar sesión');
             }
-        };
+        });
 
-        // Profile Photo Selection
-        window.handleProfilePhotoSelect = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            pendingPhotoFile = file;
-            window.pendingPhotoFile = file;
-            
-            // Preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('photo-preview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
-                document.getElementById('save-photo-btn').disabled = false;
-            };
-            reader.readAsDataURL(file);
-        };
-
-        // Save Profile Photo
-        window.saveProfilePhoto = async () => {
-            if (!pendingPhotoFile || !currentUser) return;
-            
-            const progressEl = document.getElementById('upload-progress');
-            const progressFill = document.getElementById('progress-fill');
-            const progressText = document.getElementById('progress-text');
-            
-            progressEl.classList.remove('hidden');
-            
-            const storageRef = ref(storage, `profile_pics/${currentUser.uid}`);
-            const uploadTask = uploadBytesResumable(storageRef, pendingPhotoFile);
-            
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressFill.style.width = progress + '%';
-                    progressText.textContent = Math.round(progress) + '%';
-                },
-                (error) => {
-                    console.error('Upload error:', error);
-                    progressEl.classList.add('hidden');
-                    alert('Error al subir la foto');
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    
-                    // Update user profile
-                    await updateProfile(currentUser, { photoURL: downloadURL });
-                    
-                    // Update Firestore
-                    await setDoc(doc(db, 'users', currentUser.uid), {
-                        photoURL: downloadURL
-                    }, { merge: true });
-                    
-                    progressEl.classList.add('hidden');
-                    showScreen('mc-screen-grooming');
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        document.querySelectorAll('.nav-item, .nav-center-btn').forEach(item => {
+            item.addEventListener('click', () => {
+                const screenId = item.dataset.screen;
+                if (screenId) {
+                    showScreen(screenId);
                 }
-            );
-        };
+            });
+        });
 
-        // Skip Profile Photo
-        window.skipProfilePhoto = () => {
-            showScreen('mc-screen-grooming');
-        };
+        // ============================================
+        // CAMERA FUNCTIONALITY
+        // ============================================
+        const cameraOverlay = document.getElementById('camera-overlay');
+        const cameraVideo = document.getElementById('camera-video');
+        const cameraCanvas = document.getElementById('camera-canvas');
 
-        // Update Profile UI
-        window.updateProfileUI = () => {
-            if (userData) {
-                document.getElementById('profile-name').textContent = userData.name || 'Usuario';
-                document.getElementById('profile-pet').textContent = userData.petName ? `🐕 ${userData.petName}` : '';
+        async function startCamera() {
+            try {
+                AppState.mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' },
+                    audio: false
+                });
+                cameraVideo.srcObject = AppState.mediaStream;
+                cameraOverlay.classList.add('active');
+            } catch (error) {
+                console.error('Camera error:', error);
+                showToast('No se pudo acceder a la cámara');
+                // Fallback to gallery
+                document.getElementById('gallery-input').click();
             }
-            if (currentUser?.photoURL) {
-                document.getElementById('profile-avatar').src = currentUser.photoURL;
-            }
-        };
+        }
 
-        // Story Upload
-        window.handleStoryUpload = async (event) => {
-            const file = event.target.files[0];
-            if (!file || !currentUser) return;
-            
-            const progressEl = document.getElementById('upload-progress');
-            const progressFill = document.getElementById('progress-fill');
-            const progressText = document.getElementById('progress-text');
-            
-            progressEl.classList.remove('hidden');
-            
-            const fileName = `stories/${currentUser.uid}_${Date.now()}.${file.name.split('.').pop()}`;
-            const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressFill.style.width = progress + '%';
-                    progressText.textContent = Math.round(progress) + '%';
-                },
-                (error) => {
-                    console.error('Upload error:', error);
-                    progressEl.classList.add('hidden');
-                    alert('Error al subir la historia');
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    
-                    // Create story document
+        function stopCamera() {
+            if (AppState.mediaStream) {
+                AppState.mediaStream.getTracks().forEach(track => track.stop());
+                AppState.mediaStream = null;
+            }
+            cameraOverlay.classList.remove('active');
+        }
+
+        document.getElementById('btn-add-content').addEventListener('click', startCamera);
+        document.getElementById('camera-close').addEventListener('click', stopCamera);
+
+        // Camera mode switch
+        document.querySelectorAll('.camera-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.camera-mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                AppState.cameraMode = btn.dataset.mode;
+            });
+        });
+
+        // Capture photo
+        document.getElementById('camera-capture').addEventListener('click', () => {
+            const context = cameraCanvas.getContext('2d');
+            cameraCanvas.width = cameraVideo.videoWidth;
+            cameraCanvas.height = cameraVideo.videoHeight;
+            context.drawImage(cameraVideo, 0, 0);
+
+            cameraCanvas.toBlob((blob) => {
+                AppState.capturedMedia = {
+                    blob,
+                    type: 'image'
+                };
+                stopCamera();
+                openPostEditor();
+            }, 'image/jpeg', 0.9);
+        });
+
+        // Gallery button
+        document.getElementById('camera-gallery-btn').addEventListener('click', () => {
+            document.getElementById('gallery-input').click();
+        });
+
+        document.getElementById('gallery-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                AppState.capturedMedia = {
+                    blob: file,
+                    type: file.type.startsWith('video') ? 'video' : 'image'
+                };
+                stopCamera();
+                openPostEditor();
+            }
+        });
+
+        // ============================================
+        // POST EDITOR
+        // ============================================
+        function openPostEditor() {
+            const modal = document.getElementById('post-editor-modal');
+            const previewImg = document.getElementById('editor-preview-img');
+            const previewVideo = document.getElementById('editor-preview-video');
+            const title = document.getElementById('editor-title');
+            const caption = document.getElementById('editor-caption');
+
+            title.textContent = AppState.cameraMode === 'story' ? 'Nueva Historia' : 'Nueva Publicación';
+            caption.value = '';
+
+            if (AppState.capturedMedia.type === 'image') {
+                previewImg.classList.remove('hidden');
+                previewVideo.classList.add('hidden');
+                previewImg.src = URL.createObjectURL(AppState.capturedMedia.blob);
+            } else {
+                previewImg.classList.add('hidden');
+                previewVideo.classList.remove('hidden');
+                previewVideo.src = URL.createObjectURL(AppState.capturedMedia.blob);
+            }
+
+            modal.classList.add('active');
+        }
+
+        document.getElementById('editor-cancel').addEventListener('click', () => {
+            document.getElementById('post-editor-modal').classList.remove('active');
+            AppState.capturedMedia = null;
+        });
+
+        document.getElementById('editor-submit').addEventListener('click', async () => {
+            const caption = document.getElementById('editor-caption').value.trim();
+            const modal = document.getElementById('post-editor-modal');
+
+            if (!AppState.capturedMedia) return;
+
+            modal.classList.remove('active');
+            showLoading('Subiendo...');
+
+            try {
+                const isStory = AppState.cameraMode === 'story';
+                const folder = isStory ? 'stories' : 'posts';
+                const fileName = `${folder}/${Date.now()}_${AppState.currentUser?.uid || 'guest'}.jpg`;
+
+                const storageRef = ref(storage, fileName);
+                const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed',
+                        null,
+                        (error) => reject(error),
+                        () => resolve()
+                    );
+                });
+
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+                if (isStory) {
                     await addDoc(collection(db, 'stories'), {
-                        userId: currentUser.uid,
-                        userName: userData?.name || 'Usuario',
-                        userPhoto: currentUser.photoURL || '',
+                        userId: AppState.currentUser?.uid || 'guest',
+                        userName: AppState.userData?.name || 'Invitado',
+                        userPhoto: AppState.currentUser?.photoURL || '',
                         mediaUrl: downloadURL,
-                        mediaType: file.type.startsWith('video') ? 'video' : 'image',
-                        createdAt: serverTimestamp()
+                        mediaType: AppState.capturedMedia.type,
+                        caption: caption,
+                        createdAt: serverTimestamp(),
+                        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
                     });
-                    
-                    progressEl.classList.add('hidden');
-                    alert('¡Historia subida exitosamente!');
-                }
-            );
-        };
-
-        // Post Upload
-        window.handlePostUpload = async (event) => {
-            const file = event.target.files[0];
-            if (!file || !currentUser) return;
-            
-            hideActionSheet();
-            
-            const progressEl = document.getElementById('upload-progress');
-            const progressFill = document.getElementById('progress-fill');
-            const progressText = document.getElementById('progress-text');
-            
-            progressEl.classList.remove('hidden');
-            
-            const fileName = `posts/${currentUser.uid}_${Date.now()}.${file.name.split('.').pop()}`;
-            const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    progressFill.style.width = progress + '%';
-                    progressText.textContent = Math.round(progress) + '%';
-                },
-                (error) => {
-                    console.error('Upload error:', error);
-                    progressEl.classList.add('hidden');
-                    alert('Error al subir el post');
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    
-                    // Create post document
+                    showToast('¡Historia publicada!');
+                } else {
                     await addDoc(collection(db, 'posts'), {
-                        userId: currentUser.uid,
-                        userName: userData?.name || 'Usuario',
-                        userPhoto: currentUser.photoURL || '',
+                        userId: AppState.currentUser?.uid || 'guest',
+                        userName: AppState.userData?.name || 'Invitado',
+                        userPhoto: AppState.currentUser?.photoURL || '',
                         mediaUrl: downloadURL,
-                        mediaType: file.type.startsWith('video') ? 'video' : 'image',
-                        caption: 'Nueva publicación 🐾',
+                        mediaType: AppState.capturedMedia.type,
+                        caption: caption || '🐾',
                         likes: 0,
                         createdAt: serverTimestamp()
                     });
-                    
-                    progressEl.classList.add('hidden');
-                    alert('¡Publicación creada exitosamente!');
+                    showToast('¡Publicación creada!');
                 }
-            );
-        };
 
-        // Load Feed (Real-time)
-        window.loadFeed = () => {
+                AppState.capturedMedia = null;
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('Error al subir. Intenta de nuevo.');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // ============================================
+        // FEED & STORIES
+        // ============================================
+        function loadFeed() {
             const feedContainer = document.getElementById('feed-container');
             const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
-            
+
             onSnapshot(postsQuery, (snapshot) => {
                 let html = '';
                 snapshot.forEach((doc) => {
                     const post = doc.data();
                     html += `
                         <div class="social-card">
-                            <div class="flex items-center justify-between p-3">
-                                <div class="flex items-center gap-2">
-                                    <img src="${post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="w-8 h-8 rounded-full object-cover">
-                                    <div>
-                                        <h4 class="text-sm font-bold text-[#4B3621]">${post.userName}</h4>
-                                        <p class="text-xs text-[#8B7355]">Maria's Social Club</p>
-                                    </div>
+                            <div class="flex items-center p-3">
+                                <img src="${post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="w-8 h-8 rounded-full object-cover mr-2">
+                                <div>
+                                    <h4 class="text-sm font-bold text-[#4B3621]">${post.userName}</h4>
                                 </div>
                             </div>
-                            ${post.mediaType === 'video' 
-                                ? `<video src="${post.mediaUrl}" class="post-media" controls></video>`
-                                : `<img src="${post.mediaUrl}" class="post-media">`
-                            }
+                            ${post.mediaType === 'video'
+                            ? `<video src="${post.mediaUrl}" class="post-media" controls></video>`
+                            : `<img src="${post.mediaUrl}" class="post-media">`
+                        }
                             <div class="p-3">
-                                <div class="flex gap-4 mb-2">
-                                    <svg class="w-6 h-6 text-[#4B3621] cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                    </svg>
-                                    <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                    </svg>
-                                </div>
-                                <p class="text-xs font-bold text-[#4B3621]">${post.likes || 0} Me gusta</p>
-                                <p class="text-sm text-[#4B3621] mt-1"><span class="font-bold">${post.userName}</span> ${post.caption}</p>
+                                <p class="text-sm text-[#4B3621]"><span class="font-bold">${post.userName}</span> ${post.caption}</p>
                             </div>
                         </div>
                     `;
                 });
                 feedContainer.innerHTML = html;
+            }, (error) => {
+                console.error('Feed error:', error);
             });
-        };
+        }
 
-        // Load Stories (Real-time)
-        window.loadStories = () => {
+        function loadStories() {
             const storiesContainer = document.getElementById('stories-container');
             const storiesQuery = query(collection(db, 'stories'), orderBy('createdAt', 'desc'));
-            
+
             onSnapshot(storiesQuery, (snapshot) => {
+                AppState.stories = [];
                 let html = `
-                    <div class="story-item" onclick="document.getElementById('story-input').click()">
+                    <div class="story-item" id="btn-add-story">
                         <div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;">
                             <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
                                 <svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1753,99 +2125,145 @@
                         <span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span>
                     </div>
                 `;
-                
+
                 snapshot.forEach((doc) => {
-                    const story = doc.data();
+                    const story = { id: doc.id, ...doc.data() };
+                    AppState.stories.push(story);
                     html += `
-                        <div class="story-item" onclick="viewStory('${story.userName}')">
-                            <div class="story-avatar-ring">
-                                <img src="${story.mediaUrl}" class="story-avatar" alt="${story.userName}">
+                        <div class="story-item" data-story-id="${story.id}">
+                            <div class="story-avatar-ring unseen">
+                                <img src="${story.mediaUrl}" class="story-avatar">
                             </div>
                             <span class="text-xs text-[#4B3621] mt-1 font-medium">${story.userName}</span>
                         </div>
                     `;
                 });
-                
+
                 storiesContainer.innerHTML = html;
+
+                // Add click handlers
+                document.getElementById('btn-add-story').addEventListener('click', startCamera);
+                document.querySelectorAll('.story-item[data-story-id]').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const storyId = item.dataset.storyId;
+                        const index = AppState.stories.findIndex(s => s.id === storyId);
+                        if (index !== -1) {
+                            openStoryViewer(index);
+                        }
+                    });
+                });
+            }, (error) => {
+                console.error('Stories error:', error);
             });
-        };
+        }
 
-        // Service Selection
-        window.selectService = (type, price) => {
-            selectedService = { 
-                name: type === 'spa' ? 'Spa Deluxe' : 'Baño & Corte Pro', 
-                price: price 
-            };
-            window.selectedService = selectedService;
-        };
+        // ============================================
+        // STORY VIEWER
+        // ============================================
+        function openStoryViewer(startIndex = 0) {
+            if (AppState.stories.length === 0) return;
 
-        // Go to Payment
-        window.goToPayment = () => {
-            const subtotal = selectedService.price;
-            const iva = Math.round(subtotal * 0.19);
-            const total = subtotal + iva;
-            
-            document.getElementById('payment-service-name').textContent = selectedService.name;
-            document.getElementById('payment-subtotal').textContent = `$${subtotal.toLocaleString()}`;
-            document.getElementById('payment-iva').textContent = `$${iva.toLocaleString()}`;
-            document.getElementById('payment-total').textContent = `$${total.toLocaleString()}`;
-            
-            showScreen('mc-screen-payment');
-        };
+            AppState.currentStoryIndex = startIndex;
+            const viewer = document.getElementById('story-viewer');
+            viewer.classList.add('active');
 
-        // Stripe Payment
-        window.handleStripePayment = () => {
-            window.open('https://buy.stripe.com/14A8wH1Yjd6E0The7Adby00', '_blank');
-        };
+            // Create progress bars
+            const progressContainer = document.getElementById('story-progress-container');
+            progressContainer.innerHTML = AppState.stories.map((_, i) => `
+                <div class="story-progress-bar">
+                    <div class="story-progress-fill ${i === startIndex ? 'active' : ''}" id="progress-${i}"></div>
+                </div>
+            `).join('');
 
-        // Navigation
-        window.showScreen = (screenId, navElement) => {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.add('hidden');
-                s.classList.remove('active');
-            });
-            
-            const targetScreen = document.getElementById(screenId);
-            if (targetScreen) {
-                targetScreen.classList.remove('hidden');
-                targetScreen.classList.add('active');
+            showCurrentStory();
+        }
+
+        function showCurrentStory() {
+            const story = AppState.stories[AppState.currentStoryIndex];
+            if (!story) {
+                closeStoryViewer();
+                return;
             }
 
-            if (navElement) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.querySelectorAll('.nav-center-btn').forEach(n => n.classList.remove('active'));
-                
-                if (navElement.classList.contains('nav-item')) {
-                    navElement.classList.add('active');
-                } else if (navElement.classList.contains('nav-center-btn')) {
-                    navElement.classList.add('active');
+            // Update progress bars
+            AppState.stories.forEach((_, i) => {
+                const fill = document.getElementById(`progress-${i}`);
+                if (fill) {
+                    fill.classList.remove('active');
+                    fill.style.width = i < AppState.currentStoryIndex ? '100%' : '0%';
                 }
+            });
+
+            const currentFill = document.getElementById(`progress-${AppState.currentStoryIndex}`);
+            if (currentFill) {
+                currentFill.classList.add('active');
             }
-        };
 
-        // Action Sheet
-        window.showActionSheet = () => {
-            document.getElementById('action-overlay').classList.add('open');
-            document.getElementById('action-sheet').classList.add('open');
-        };
+            // Update content
+            document.getElementById('story-viewer-name').textContent = story.userName;
+            document.getElementById('story-viewer-avatar').src = story.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
 
-        window.hideActionSheet = () => {
-            document.getElementById('action-overlay').classList.remove('open');
-            document.getElementById('action-sheet').classList.remove('open');
-        };
+            const mediaImg = document.getElementById('story-viewer-media');
+            const mediaVideo = document.getElementById('story-viewer-video');
 
-        // Chat
-        window.handleChatKeyPress = (e) => {
+            if (story.mediaType === 'video') {
+                mediaImg.classList.add('hidden');
+                mediaVideo.classList.remove('hidden');
+                mediaVideo.src = story.mediaUrl;
+                mediaVideo.play();
+            } else {
+                mediaVideo.classList.add('hidden');
+                mediaImg.classList.remove('hidden');
+                mediaImg.src = story.mediaUrl;
+            }
+
+            // Start timer
+            clearTimeout(AppState.storyTimer);
+            AppState.storyTimer = setTimeout(() => {
+                nextStory();
+            }, 10000);
+        }
+
+        function nextStory() {
+            if (AppState.currentStoryIndex < AppState.stories.length - 1) {
+                AppState.currentStoryIndex++;
+                showCurrentStory();
+            } else {
+                closeStoryViewer();
+            }
+        }
+
+        function prevStory() {
+            if (AppState.currentStoryIndex > 0) {
+                AppState.currentStoryIndex--;
+                showCurrentStory();
+            }
+        }
+
+        function closeStoryViewer() {
+            clearTimeout(AppState.storyTimer);
+            document.getElementById('story-viewer').classList.remove('active');
+            document.getElementById('story-viewer-video').pause();
+        }
+
+        document.getElementById('story-close').addEventListener('click', closeStoryViewer);
+        document.getElementById('story-nav-next').addEventListener('click', nextStory);
+        document.getElementById('story-nav-prev').addEventListener('click', prevStory);
+
+        // ============================================
+        // CHAT
+        // ============================================
+        document.getElementById('btn-send-chat').addEventListener('click', sendChatMessage);
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendChatMessage();
-        };
+        });
 
-        window.sendChatMessage = () => {
+        function sendChatMessage() {
             const input = document.getElementById('chat-input');
             const msg = input.value.trim();
             if (!msg) return;
 
             const container = document.getElementById('chat-messages');
-            
             container.innerHTML += `<div class="chat-bubble user">${msg}</div>`;
             input.value = '';
             container.scrollTop = container.scrollHeight;
@@ -1861,11 +2279,25 @@
                 container.innerHTML += `<div class="chat-bubble bot">${resp}</div>`;
                 container.scrollTop = container.scrollHeight;
             }, 800);
-        };
+        }
 
-        window.viewStory = (name) => {
-            alert(`Viendo historia de ${name}`);
-        };
+        // ============================================
+        // BOOKING & PAYMENT
+        // ============================================
+        document.getElementById('btn-booking').addEventListener('click', () => showScreen('screen-booking'));
+        document.getElementById('btn-back-grooming').addEventListener('click', () => showScreen('screen-grooming'));
+        document.getElementById('btn-back-booking').addEventListener('click', () => showScreen('screen-booking'));
+        document.getElementById('btn-continue-payment').addEventListener('click', () => showScreen('screen-payment'));
+
+        document.getElementById('btn-stripe-pay').addEventListener('click', () => {
+            window.open('https://buy.stripe.com/14A8wH1Yjd6E0The7Adby00', '_blank');
+        });
+
+        // ============================================
+        // INIT
+        // ============================================
+        console.log('Maria\'s Cut App initialized');
     </script>
 </body>
+
 </html>
