@@ -1,28 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Maria's Cut - Estética Animal</title>
-
-    <!-- PWA Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Maria's Cut</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Maria's Cut">
-    <meta name="theme-color" content="#F0EAD6">
+    <meta name="theme-color" content="#F9F7F2">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Maria's Cut">
-
-    <!-- PWA Icons & Manifest -->
     <link rel="apple-touch-icon" href="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG">
     <link rel="manifest" href="manifest.json">
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -32,7 +21,6 @@
                         primaryDark: '#A88B45',
                         secondary: '#D4B896',
                         secondaryDark: '#B89C7A',
-                        accent: '#FCEEA7',
                         background: '#F9F7F2',
                     },
                     fontFamily: {
@@ -43,251 +31,52 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* === DESKTOP VIEW (Simulator with iPhone frame) === */
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #E8E4DE;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            width: 100%;
+            height: 100dvh;
+            overflow: hidden;
             font-family: 'Quicksand', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 20px;
-        }
-
-        /* ================================================================
-           PWA LAYOUT ARCHITECTURE - iOS Native-like Experience
-           ================================================================ */
-
-        /* === APP CONTAINER - Nuevo contenedor estanco === */
-        .app-container {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* === MOBILE VIEW (Real devices - Fullscreen PWA) === */
-        @media screen and (max-width: 768px) {
-
-            /* ========================================
-               1. CONQUISTA TOTAL DE BARRA DE ESTADO
-               ======================================== */
-
-            /* HTML con fondo beige para que el notch/isla dinámica sea del mismo color */
-            html {
-                background-color: #F9F7F2 !important;
-                height: 100% !important;
-                overflow: hidden !important;
-            }
-
-            /* Body sin márgenes, fondo beige, altura completa */
-            body {
-                background-color: #F9F7F2 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                height: 100% !important;
-                overflow: hidden !important;
-            }
-
-            /* ========================================
-               2. CONTENEDOR ESTANCO PRINCIPAL
-               ======================================== */
-
-            .app-container {
-                position: fixed !important;
-                inset: 0 !important;
-                overflow: hidden !important;
-                display: flex !important;
-                justify-content: center !important;
-                align-items: center !important;
-            }
-
-            /* Phone frame: contenedor flex con altura 100dvh */
-            .phone-frame {
-                position: relative !important;
-                width: 100% !important;
-                height: 100dvh !important;
-                border-radius: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-                background: #F9F7F2 !important;
-                overflow: hidden !important;
-                display: flex !important;
-                flex-direction: column !important;
-            }
-
-            .phone-notch {
-                display: none !important;
-            }
-
-            /* ========================================
-               3. SISTEMA DE PANTALLAS (SCREENS)
-               ======================================== */
-
-            /* Screen stack - contenedor de pantallas */
-            .screen-stack {
-                flex: 1 !important;
-                position: relative !important;
-                overflow: hidden !important;
-                display: flex !important;
-                flex-direction: column !important;
-            }
-
-            /* Cada screen ocupa todo el viewport */
-            .screen {
-                position: absolute !important;
-                inset: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                background: #F9F7F2 !important;
-                border-radius: 0 !important;
-                overflow: hidden !important;
-            }
-
-            /* ========================================
-               4. HEADERS CON SAFE AREA UNIFICADA
-               ======================================== */
-
-            /* Clase unificada para todos los headers */
-            .safe-header {
-                padding-top: calc(env(safe-area-inset-top, 20px) + 10px) !important;
-                background-color: #FFFDF5 !important;
-                position: sticky !important;
-                top: 0 !important;
-                z-index: 50 !important;
-                flex-shrink: 0 !important;
-            }
-
-            /* Header gradient (Home) - mantiene su estilo especial */
-            .header-gradient {
-                flex-shrink: 0 !important;
-                padding-top: calc(env(safe-area-inset-top, 20px) + 12px) !important;
-                position: relative !important;
-                z-index: 10 !important;
-            }
-
-            /* ========================================
-               5. ÁREA DE CONTENIDO SCROLLABLE
-               ======================================== */
-
-            /* Contenido principal - única área con scroll */
-            .screen>div.px-5 {
-                flex: 1 !important;
-                overflow-y: auto !important;
-                overflow-x: hidden !important;
-                -webkit-overflow-scrolling: touch !important;
-                overscroll-behavior-y: none !important;
-                background: #F9F7F2 !important;
-            }
-
-            /* ========================================
-               6. TAB BAR FIJA EN BOTTOM
-               ======================================== */
-
-            .bottom-nav {
-                flex-shrink: 0 !important;
-                position: relative !important;
-                z-index: 100 !important;
-                background: #F9F7F2 !important;
-                border-top: 1px solid rgba(197, 160, 89, 0.2) !important;
-                /* Safe area inferior para Home Indicator */
-                padding-bottom: env(safe-area-inset-bottom, 20px) !important;
-            }
-
-            /* ========================================
-               7. AJUSTES DE TIPOGRAFÍA MOBILE
-               ======================================== */
-
-            .text-xl {
-                font-size: 1.15rem !important;
-            }
-
-            .text-2xl {
-                font-size: 1.35rem !important;
-            }
-
-            .text-3xl {
-                font-size: 1.65rem !important;
-            }
-
-            /* Logo más pequeño en mobile */
-            .header-gradient .w-14 {
-                width: 2.75rem !important;
-                height: 2.75rem !important;
-            }
-        }
-
-        /* Very small screens (iPhone SE, etc.) */
-        @media screen and (max-width: 375px) {
-            .service-card .p-5 {
-                padding: 1rem !important;
-            }
-
-            .text-xl {
-                font-size: 1rem !important;
-            }
-        }
-
-        /* iPhone Frame - BLACK (Desktop view) */
-        .phone-frame {
-            width: 375px;
-            height: 812px;
             background: #F9F7F2;
-            border-radius: 50px;
-            box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.4), 0 30px 60px -30px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            position: relative;
-            border: 12px solid #1a1a1a;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Notch - BLACK */
-        .phone-notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 30px;
-            background: #1a1a1a;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-            z-index: 100;
-        }
-
-        /* Screen Stack */
-        .screen-stack {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Screen */
-        .screen {
+        #app-container {
             width: 100%;
             height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            position: relative;
+            overflow: hidden;
             background: #F9F7F2;
+        }
+
+        .safe-header {
+            padding-top: calc(env(safe-area-inset-top, 0px) + 10px);
+            padding-bottom: 12px;
+            background: #FFFDF5;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
+            padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+            padding-bottom: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .screen {
+            position: absolute;
+            inset: 0;
             display: flex;
             flex-direction: column;
+            background: #F9F7F2;
+            overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
         .screen.hidden {
@@ -296,178 +85,45 @@
             pointer-events: none;
         }
 
-        .screen.active {
-            transform: translateX(0);
-            opacity: 1;
+        .screen-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 80px);
         }
 
-        .screen::-webkit-scrollbar {
-            width: 0;
-        }
-
-        /* Header - Beige to Gold gradient */
-        .header-gradient {
-            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%);
-        }
-
-        /* Buttons - Pill shape */
-        .btn-ripple {
-            position: relative;
-            overflow: hidden;
-            border-radius: 50px !important;
-        }
-
-        .btn-ripple::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(230, 200, 139, 0.4);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.5s, height 0.5s;
-        }
-
-        .btn-ripple:active::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        /* Bottom Nav - Tab Bar estilo Instagram */
         .bottom-nav {
-            position: relative;
-            background: #F9F7F2;
-            border-top: 1px solid rgba(197, 160, 89, 0.25);
-            padding-bottom: 20px;
-            z-index: 9999;
-            /* Fondo sólido, sin transparencia */
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FFFDF5;
+            border-top: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            z-index: 100;
         }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: color 0.2s ease;
         }
 
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .nav-item.active { color: #C5A059; }
+        .nav-item:not(.active) { color: #8B7355; }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        /* === PALETA UNIFICADA MARIA'S CUT === */
-
-        /* Textos - Marrón Café */
-        .text-gray-800, h1, h2, h3, h4 {
-            color: #4B3621 !important;
-        }
-
-        .text-gray-700 { color: #5D4037 !important; }
-        .text-gray-600 { color: #6D5D4E !important; }
-        .text-gray-500 { color: #7D6D5E !important; }
-        .text-gray-400 { color: #8B7355 !important; }
-
-        /* Primary - Dorado */
-        .text-primary { color: #C5A059 !important; }
-        .bg-primary { background-color: #C5A059 !important; }
-        .border-primary { border-color: #C5A059 !important; }
-        .hover\:bg-primaryDark:hover { background-color: #A88B45 !important; }
-
-        /* Secondary - Beige cálido */
-        .text-secondary { color: #D4B896 !important; }
-        .bg-secondary { background: #D4B896 !important; }
-        .border-secondary { border-color: #D4B896 !important; }
-        .hover\:bg-secondaryDark:hover { background: #B89C7A !important; }
-
-        /* Gradient Cards - Beige to Gold */
-        .from-primary { --tw-gradient-from: #D4B896 !important; }
-        .to-primaryDark { --tw-gradient-to: #C5A059 !important; }
-        .from-secondary { --tw-gradient-from: #F0EAD6 !important; }
-        .to-secondaryDark { --tw-gradient-to: #D4B896 !important; }
-
-        .bg-gradient-to-br.from-primary.to-primaryDark {
-            background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 50%, #C5A059 100%) !important;
-        }
-
-        .bg-gradient-to-br.from-secondary.to-secondaryDark {
-            background: linear-gradient(135deg, #F0EAD6 0%, #E6C88B 50%, #D4B896 100%) !important;
-        }
-
-        /* Accent Backgrounds - Warm tones */
-        .bg-orange-50 { background-color: #FFFDF5 !important; }
-        .bg-orange-100 { background-color: #F9F7F2 !important; }
-        .border-orange-100 { border-color: rgba(197, 160, 89, 0.2) !important; }
-        .bg-teal-50 { background-color: #F5F3EE !important; }
-        .bg-green-50 { background-color: #F5F3EE !important; }
-        .bg-green-100 { background-color: #F0EAD6 !important; }
-        .bg-green-500 { background-color: #8B9A5B !important; }
-        .bg-amber-50 { background-color: #FFFDF5 !important; }
-        .border-amber-100 { border-color: rgba(197, 160, 89, 0.25) !important; }
-
-        /* All Buttons - Pill Shape */
-        button, [role="button"] {
-            border-radius: 50px !important;
-            font-family: 'Quicksand', sans-serif !important;
-            font-weight: 600 !important;
-        }
-
-        /* Rounded Corners */
-        .rounded-2xl { border-radius: 24px !important; }
-        .rounded-3xl { border-radius: 28px !important; }
-        .rounded-xl { border-radius: 20px !important; }
-        .rounded-lg { border-radius: 16px !important; }
-        .rounded-full { border-radius: 50px !important; }
-
-        /* White Backgrounds - Cream instead */
-        .bg-white { background: #FFFDF5 !important; }
-
-        /* Shadows - Warm coffee tones */
-        .shadow-lg {
-            box-shadow: 0 10px 30px rgba(75, 54, 33, 0.08), 0 4px 12px rgba(197, 160, 89, 0.06) !important;
-        }
-
-        .shadow-md {
-            box-shadow: 0 6px 20px rgba(75, 54, 33, 0.06), 0 3px 8px rgba(197, 160, 89, 0.04) !important;
-        }
-
-        /* Progress Bar */
-        .bg-gray-200 { background: #F0EAD6 !important; }
-
-        /* Selected State - Golden Border */
-        .border-primary {
-            border-color: #C5A059 !important;
-            border-width: 2px !important;
-        }
-
-        /* Typography */
-        h1, h2, h3, h4, h5, h6, p, span, label, button {
-            font-family: 'Quicksand', 'Poppins', sans-serif !important;
-        }
-
-        /* Wave SVG path */
-        .header-gradient svg path { fill: #F9F7F2 !important; }
-
-        /* Text white override for headers */
-        .text-white { color: #4B3621 !important; }
-
-        /* === SOCIAL FEED STYLES === */
-
-        /* Stories Rail - Horizontal Scroll */
+        /* Social Feed Styles */
         .stories-rail {
             display: flex;
             overflow-x: auto;
-            gap: 16px;
-            padding: 16px 20px;
-            scroll-behavior: smooth;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #FFFDF5;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
         }
 
         .stories-rail::-webkit-scrollbar { display: none; }
@@ -477,145 +133,70 @@
             flex-direction: column;
             align-items: center;
             flex-shrink: 0;
-            cursor: pointer;
         }
 
         .story-avatar-ring {
-            width: 68px;
-            height: 68px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             padding: 3px;
             background: linear-gradient(45deg, #F0EAD6, #C5A059, #D4B896);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-
-        .story-item:active .story-avatar-ring { transform: scale(0.9); }
 
         .story-avatar {
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 3px solid #F9F7F2;
+            border: 3px solid #FFFDF5;
             object-fit: cover;
         }
 
-        /* Feed Post */
         .social-card {
             background: #FFFDF5;
-            border-radius: 32px;
+            border-radius: 24px;
+            margin: 16px;
             overflow: hidden;
-            margin-bottom: 32px;
-            box-shadow: 0 10px 40px -10px rgba(75, 54, 33, 0.08);
-            border: 1px solid rgba(197, 160, 89, 0.15);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px;
+            box-shadow: 0 4px 20px rgba(75, 54, 33, 0.06);
         }
 
         .post-media {
             width: 100%;
-            height: 400px;
+            aspect-ratio: 1;
             object-fit: cover;
-            background: #F0EAD6;
         }
 
-        .action-bar {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            gap: 20px;
-        }
-
-        .action-icon {
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: #4B3621;
-        }
-
-        .action-icon:active { transform: scale(0.8); }
-
-        /* HeartPaw Animation */
-        .liked {
-            color: #E53935 !important;
-            animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes bounce {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        /* Paw heart shape custom */
-        .heart-paw-svg {
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-        }
-
-        .liked .heart-paw-svg {
-            fill: currentColor;
-            stroke: none;
-        }
-
-        /* Spinner dorado elegante */
-        .loading-spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #F0EAD6;
-            border-top: 4px solid #C5A059;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        /* === CHAT ASSISTANT STYLES === */
-        
+        /* Chat Styles */
         .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background: #F9F7F2;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
-        .chat-message {
+        .chat-bubble {
             max-width: 80%;
             padding: 12px 16px;
             border-radius: 20px;
             font-size: 0.95rem;
-            line-height: 1.5;
-            animation: messageSlideIn 0.3s ease-out;
+            line-height: 1.4;
+            animation: fadeInUp 0.3s ease;
         }
 
-        @keyframes messageSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .chat-message.bot {
+        .chat-bubble.bot {
             align-self: flex-start;
             background: #FFFDF5;
             color: #4B3621;
@@ -623,15 +204,15 @@
             border-bottom-left-radius: 4px;
         }
 
-        .chat-message.user {
+        .chat-bubble.user {
             align-self: flex-end;
             background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%);
-            color: #FFFDF5;
+            color: white;
             border-bottom-right-radius: 4px;
         }
 
         .chat-input-area {
-            padding: 12px 16px 20px;
+            padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 80px);
             background: #FFFDF5;
             border-top: 1px solid rgba(197, 160, 89, 0.15);
         }
@@ -642,7 +223,7 @@
             gap: 10px;
             background: #F9F7F2;
             border-radius: 50px;
-            padding: 4px 4px 4px 20px;
+            padding: 4px 4px 4px 16px;
             border: 1px solid rgba(197, 160, 89, 0.2);
         }
 
@@ -656,676 +237,355 @@
             padding: 10px 0;
         }
 
-        .chat-input::placeholder {
-            color: #8B7355;
-        }
+        .chat-input::placeholder { color: #8B7355; }
 
         .chat-send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50% !important;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%);
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .chat-send-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
-        }
-
-        .chat-send-btn:active {
-            transform: scale(0.95);
-        }
-
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 12px 16px;
+        /* Shop Styles */
+        .product-card {
             background: #FFFDF5;
-            border-radius: 20px;
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            border-bottom-left-radius: 4px;
-            align-self: flex-start;
-            width: fit-content;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(75, 54, 33, 0.05);
         }
 
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            background: #C5A059;
-            border-radius: 50%;
-            animation: typingBounce 1.4s infinite ease-in-out both;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        .quick-replies {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .quick-reply-btn {
+        .category-pill {
             padding: 8px 16px;
-            background: transparent;
-            border: 1px solid rgba(197, 160, 89, 0.4);
-            border-radius: 20px;
+            border-radius: 50px;
             font-size: 0.85rem;
-            color: #C5A059;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            white-space: nowrap;
         }
 
-        .quick-reply-btn:hover {
-            background: rgba(197, 160, 89, 0.1);
-            border-color: #C5A059;
+        .category-pill.active {
+            background: #C5A059;
+            color: white;
         }
+
+        .category-pill:not(.active) {
+            background: #FFFDF5;
+            color: #6D5D4E;
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-
 <body>
-    <div class="app-container">
-        <div class="phone-frame">
-            <div class="phone-notch"></div>
+    <div id="app-container">
+        <!-- SCREEN: HOME (SOCIAL CLUB) -->
+        <div id="screen-home" class="screen">
+            <div class="header-gradient px-4 flex justify-between items-center">
+                <div>
+                    <h1 class="text-lg font-bold text-[#4B3621]">Maria's Social Club</h1>
+                    <p class="text-xs text-[#C5A059] font-medium">Comunidad Exclusiva</p>
+                </div>
+                <div class="w-9 h-9 bg-white/50 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                </div>
+            </div>
 
-            <div class="screen-stack">
-                <!-- SCREEN 1: HOME (SOCIAL FEED) -->
-                <div id="mc-screen-home" class="screen active">
-                    <!-- Header Social Club -->
-                    <div class="header-gradient pt-12 pb-2 px-6 relative z-20 shadow-sm flex justify-between items-center">
-                        <div>
-                            <h1 class="text-xl font-bold text-gray-800 tracking-tight">Maria's Social Club</h1>
-                            <p class="text-xs text-primary font-medium tracking-wide uppercase">Comunidad Exclusiva</p>
+            <div class="screen-content">
+                <div class="stories-rail">
+                    <div class="story-item" onclick="alert('Pronto podrás subir historias')">
+                        <div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;">
+                            <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div
-                            class="w-10 h-10 bg-white/50 rounded-full flex items-center justify-center backdrop-blur-sm shadow-sm border border-white/60">
-                            <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                        </div>
+                        <span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span>
                     </div>
-
-                    <!-- Scrollable Content -->
-                    <div class="px-0 pb-32 pt-0 h-full overflow-y-auto" style="scrollbar-width: none;">
-
-                        <!-- Stories Rail -->
-                        <div class="stories-rail border-b border-gray-100 bg-white/50 backdrop-blur-sm">
-                            <!-- Injected by JS -->
-                            <div id="stories-container" class="flex gap-4"></div>
+                    <div class="story-item" onclick="viewStory('Max')">
+                        <div class="story-avatar-ring">
+                            <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop" class="story-avatar" alt="Max">
                         </div>
-
-                        <!-- Main Feed -->
-                        <div id="feed-container" class="px-4 pt-6 pb-32">
-                            <!-- Injected by JS -->
+                        <span class="text-xs text-[#4B3621] mt-1 font-medium">Max</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory('Bella')">
+                        <div class="story-avatar-ring">
+                            <img src="https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=150&h=150&fit=crop" class="story-avatar" alt="Bella">
                         </div>
+                        <span class="text-xs text-[#4B3621] mt-1 font-medium">Bella</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory('Luna')">
+                        <div class="story-avatar-ring">
+                            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=150&h=150&fit=crop" class="story-avatar" alt="Luna">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-1 font-medium">Luna</span>
+                    </div>
+                    <div class="story-item" onclick="viewStory('Rocky')">
+                        <div class="story-avatar-ring">
+                            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=150&h=150&fit=crop" class="story-avatar" alt="Rocky">
+                        </div>
+                        <span class="text-xs text-[#4B3621] mt-1 font-medium">Rocky</span>
                     </div>
                 </div>
 
-                <!-- SCREEN: AI ASSISTANT (Reemplaza Agendar) -->
-                <div id="mc-screen-assistant" class="screen hidden">
-                    <!-- Header -->
-                    <div class="safe-header border-b border-gray-100 pb-4 px-5">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h1 class="text-lg font-bold text-gray-800">Asistente Maria's Cut</h1>
-                                <p class="text-xs text-primary font-medium">Experto en bienestar animal</p>
+                <div id="feed-container"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN: ASSISTANT (CHAT IA) -->
+        <div id="screen-assistant" class="screen hidden">
+            <div class="safe-header px-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-[#4B3621]">Asistente Maria's Cut</h1>
+                        <p class="text-xs text-[#C5A059]">Experto en bienestar animal</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <div class="chat-bubble bot">
+                        Hola, soy la IA de Maria's Cut. ¿En qué puedo ayudarte hoy con tu mascota? 🐾
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje..." onkeypress="handleChatKeyPress(event)">
+                        <button class="chat-send-btn" onclick="sendChatMessage()">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: SHOP (BOUTIQUE) -->
+        <div id="screen-shop" class="screen hidden">
+            <div class="safe-header px-4 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-[#4B3621]">Boutique Maria's Cut</h1>
+                <div class="relative">
+                    <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">2</span>
+                </div>
+            </div>
+
+            <div class="screen-content">
+                <div class="px-4 py-3">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar productos..." class="w-full bg-[#FFFDF5] border border-[rgba(197,160,89,0.2)] rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#C5A059]">
+                        <svg class="w-5 h-5 text-[#8B7355] absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
+                    <button class="category-pill active">Todo</button>
+                    <button class="category-pill">Alimentación</button>
+                    <button class="category-pill">Juguetes</button>
+                    <button class="category-pill">Higiene</button>
+                    <button class="category-pill">Accesorios</button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 px-4 pb-4">
+                    <div class="product-card">
+                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?w=400&h=400&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-sm font-medium text-[#4B3621]">Perrarina Premium</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[#C5A059] font-bold">$54.99</span>
+                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Chat Container -->
-                    <div class="chat-container">
-                        <!-- Messages Area -->
-                        <div id="chat-messages" class="chat-messages">
-                            <!-- Welcome Message -->
-                            <div class="chat-message bot">
-                                Hola, soy la IA de Maria's Cut. ¿En qué puedo ayudarte hoy con tu mascota? 🐾
-                            </div>
-                            
-                            <!-- Quick Replies -->
-                            <div class="quick-replies">
-                                <button class="quick-reply-btn" onclick="sendQuickReply('¿Qué servicios ofrecen?')">¿Qué servicios ofrecen?</button>
-                                <button class="quick-reply-btn" onclick="sendQuickReply('Precios de baño y corte')">Precios de baño y corte</button>
-                                <button class="quick-reply-btn" onclick="sendQuickReply('Horarios de atención')">Horarios de atención</button>
-                                <button class="quick-reply-btn" onclick="sendQuickReply('¿Tienen servicio a domicilio?')">¿Tienen servicio a domicilio?</button>
+                    <div class="product-card">
+                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-sm font-medium text-[#4B3621]">Collar GPS</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[#C5A059] font-bold">$129.99</span>
+                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-
-                        <!-- Input Area -->
-                        <div class="chat-input-area">
-                            <div class="chat-input-wrapper">
-                                <input 
-                                    type="text" 
-                                    id="chat-input" 
-                                    class="chat-input" 
-                                    placeholder="Escribe tu mensaje..."
-                                    onkeypress="handleChatKeyPress(event)"
-                                >
-                                <button class="chat-send-btn" onclick="sendChatMessage()">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                    </div>
+                    <div class="product-card">
+                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?w=400&h=400&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-sm font-medium text-[#4B3621]">Juguete Resistente</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[#C5A059] font-bold">$24.50</span>
+                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="aspect-square bg-[#F0EAD6] overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=400&fit=crop" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="text-sm font-medium text-[#4B3621]">Champú Orgánico</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[#C5A059] font-bold">$18.90</span>
+                                <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                     </svg>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- SCREEN 3: SHOP -->
-                <div id="mc-screen-shop" class="screen hidden">
-                    <!-- Header -->
-                    <div class="safe-header border-b border-gray-100 pb-4 px-5 flex items-center justify-between">
-                        <h1 class="text-xl font-bold text-gray-800">Boutique Maria's Cut</h1>
-                        <div class="relative">
-                            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
-                        </div>
-                    </div>
-
-                    <!-- Scrollable Content -->
-                    <div class="px-5 pt-4 pb-32">
-                        <!-- Search -->
-                        <div class="relative mb-6">
-                            <input type="text" placeholder="Buscar productos..."
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-primary transition-colors">
-                            <svg class="w-5 h-5 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-
-                        <!-- Categories -->
-                        <div class="flex gap-3 overflow-x-auto pb-4 mb-2 no-scrollbar"
-                            style="-webkit-overflow-scrolling: touch;">
-                            <button
-                                class="whitespace-nowrap px-4 py-2 bg-primary text-white text-sm font-medium rounded-full shadow-sm">Todo</button>
-                            <button
-                                class="whitespace-nowrap px-4 py-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-full">Alimentación
-                                Premium</button>
-                            <button
-                                class="whitespace-nowrap px-4 py-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-full">Juguetes</button>
-                            <button
-                                class="whitespace-nowrap px-4 py-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-full">Gadgets</button>
-                            <button
-                                class="whitespace-nowrap px-4 py-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium rounded-full">Higiene</button>
-                        </div>
-
-                        <!-- Product Grid -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <!-- Product 1 -->
-                            <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
-                                <div class="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1589924691195-41432c84c161?w=400&h=400&fit=crop"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Perrarina Super Premium</h3>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-primary font-bold">54.99 €</span>
-                                    <button
-                                        class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Product 2 -->
-                            <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
-                                <div class="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=400&h=400&fit=crop"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Collar GPS</h3>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-primary font-bold">129.99 €</span>
-                                    <button
-                                        class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Product 3 -->
-                            <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
-                                <div class="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?w=400&h=400&fit=crop"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Juguete Indestructible</h3>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-primary font-bold">24.50 €</span>
-                                    <button
-                                        class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- Product 4 -->
-                            <div class="bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
-                                <div class="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=400&fit=crop"
-                                        class="w-full h-full object-cover">
-                                </div>
-                                <h3 class="text-sm font-medium text-gray-800 leading-tight mb-1">Champú Orgánico</h3>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-primary font-bold">18.90 €</span>
-                                    <button
-                                        class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
+        </div>
 
-            <!-- GLOBAL BOTTOM NAVIGATION - DENTRO DEL PHONE-FRAME -->
-            <div id="global-bottom-nav"
-                class="bottom-nav flex justify-around items-center py-3 px-2">
-                <!-- CLUB TAB -->
-                <div id="nav-item-club" class="nav-item flex flex-col items-center text-primary cursor-pointer active-tab"
-                    onclick="showScreen('mc-screen-home')">
-                    <svg class="w-6 h-6 icon-active hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <div class="flex justify-around items-center py-2">
+                <div class="nav-item active" onclick="showScreen('screen-home')">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
                     </svg>
-                    <svg class="w-6 h-6 icon-inactive block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span class="text-xs mt-1 font-medium">Club</span>
+                    <span class="text-xs mt-1">Club</span>
                 </div>
-
-                <!-- SHOP TAB -->
-                <div id="nav-item-shop" class="nav-item flex flex-col items-center text-gray-400 cursor-pointer"
-                    onclick="showScreen('mc-screen-shop')">
-                    <svg class="w-6 h-6 icon-active hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414c-.18 0-.35-.089-.448-.187l-.093-.093 1.258-5.032 6.72-.03c.532 0 1.006-.32 1.2-1.92l.004-.032a1.002 1.002 0 00-.766-1.12l-1.637-.206L11.558 3h-2.11l-1.282.68L4.654 3.03 4.22 1.297A1 1 0 003.25 1H3zM6 16a2 2 0 11-4 0 2 2 0 014 0zm9 2a2 2 0 100-4 2 2 0 000 4z" />
+                <div class="nav-item" onclick="showScreen('screen-shop')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                     </svg>
-                    <svg class="w-6 h-6 icon-inactive block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
-                    <span class="text-xs mt-1 font-medium">Tienda</span>
+                    <span class="text-xs mt-1">Tienda</span>
                 </div>
-
-                <!-- ASISTENTE TAB (Reemplaza Agendar) -->
-                <div id="nav-item-assistant" class="nav-item flex flex-col items-center text-gray-400 cursor-pointer"
-                    onclick="showScreen('mc-screen-assistant')">
-                    <svg class="w-6 h-6 icon-active hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 5a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1V8a1 1 0 011-1zm5-5a1 1 0 011 1v1h1a1 1 0 010 2h-1v1a1 1 0 11-2 0V6h-1a1 1 0 010-2h1V3a1 1 0 011-1zm0 5a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1V8a1 1 0 011-1z" clip-rule="evenodd"/>
-                    </svg>
-                    <svg class="w-6 h-6 icon-inactive block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="nav-item" onclick="showScreen('screen-assistant')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                     </svg>
-                    <span class="text-xs mt-1 font-medium">Asistente</span>
+                    <span class="text-xs mt-1">Asistente</span>
                 </div>
-
-                <!-- PERFIL TAB -->
-                <div id="nav-item-perfil" class="nav-item flex flex-col items-center text-gray-400 cursor-pointer">
-                    <svg class="w-6 h-6 icon-active hidden" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                <div class="nav-item">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
-                    <svg class="w-6 h-6 icon-inactive block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    <span class="text-xs mt-1 font-medium">Perfil</span>
+                    <span class="text-xs mt-1">Perfil</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ========== SCREEN NAVIGATION ==========
-        
+        // Navigation
         function showScreen(screenId) {
-            // Hide all screens
-            document.querySelectorAll('.screen').forEach(screen => {
-                screen.classList.add('hidden');
-                screen.classList.remove('active');
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.add('hidden');
+                s.classList.remove('active');
             });
+            document.getElementById(screenId).classList.remove('hidden');
+            document.getElementById(screenId).classList.add('active');
 
-            // Show target screen
-            if (document.getElementById(screenId)) {
-                document.getElementById(screenId).classList.remove('hidden');
-                document.getElementById(screenId).classList.add('active');
-            }
-
-            // Update Global Navigation State
-            updateGlobalNav(screenId);
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
-        function updateGlobalNav(screenId) {
-            // Reset all nav items to inactive state
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('text-primary');
-                item.classList.add('text-gray-400');
-
-                const iconActive = item.querySelector('.icon-active');
-                const iconInactive = item.querySelector('.icon-inactive');
-
-                if (iconActive && iconInactive) {
-                    iconActive.classList.add('hidden');
-                    iconInactive.classList.remove('hidden');
-                }
-            });
-
-            // Determine active tab ID based on screen ID
-            let activeTabId = '';
-            if (screenId === 'mc-screen-home') activeTabId = 'nav-item-club';
-            else if (screenId === 'mc-screen-shop') activeTabId = 'nav-item-shop';
-            else if (screenId === 'mc-screen-assistant') activeTabId = 'nav-item-assistant';
-
-            // Activate target tab
-            if (activeTabId) {
-                const activeItem = document.getElementById(activeTabId);
-                if (activeItem) {
-                    activeItem.classList.remove('text-gray-400');
-                    activeItem.classList.add('text-primary');
-
-                    const iconActive = activeItem.querySelector('.icon-active');
-                    const iconInactive = activeItem.querySelector('.icon-inactive');
-                    if (iconActive && iconInactive) {
-                        iconActive.classList.remove('hidden');
-                        iconInactive.classList.add('hidden');
-                    }
-                }
-            }
-        }
-
-        // ========== CHAT ASSISTANT LOGIC ==========
-
-        const chatResponses = {
-            'servicios': 'En Maria\'s Cut ofrecemos: 🛁 Baño completo, ✂️ Corte de pelo, 💅 Corte de uñas, 🧼 Spa deluxe con aromaterapia, 🚐 Servicio a domicilio con nuestra furgoneta equipada. ¿Cuál te interesa?',
-            'precios': 'Nuestros precios son: 🛁 Baño Completo $25.000, ✨ Baño & Corte Pro $35.000, 💎 Spa Deluxe $55.000, 🚐 Servicio a domicilio +$5.000. ¿Te gustaría agendar una cita?',
-            'horarios': 'Estamos abiertos de Lunes a Sábado: 🕘 9:00 AM - 7:00 PM. Los domingos solo servicio a domicilio con cita previa. ¿Qué día prefieres?',
-            'domicilio': '¡Sí! 🚐 Nuestra Furgoneta Luna llega hasta tu casa. Cubrimos un radio de 15km desde nuestra sede. El servicio tiene un recargo de $5.000. ¿Quieres verificar si llegamos a tu zona?',
-            'cita': '¡Con gusto te ayudo a agendar! 📅 Por favor contáctanos directamente al +56 9 1234 5678 o escríbenos por WhatsApp para coordinar tu cita.',
-            'ubicacion': 'Nuestra sede principal está en 📍 Av. Providencia 1234, Santiago. ¿Necesitas indicaciones para llegar?',
-            'contacto': 'Puedes contactarnos al: 📞 +56 9 1234 5678, 📧 hola@mariascut.cl, 💬 WhatsApp: +56 9 1234 5678',
-            'default': 'Entiendo. Para darte la mejor atención, te sugiero contactarnos directamente al +56 9 1234 5678 o visitarnos en Av. Providencia 1234. ¿Hay algo más en lo que pueda ayudarte?'
-        };
-
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendChatMessage();
-            }
-        }
-
-        function sendQuickReply(message) {
-            const input = document.getElementById('chat-input');
-            input.value = message;
-            sendChatMessage();
+        // Chat
+        function handleChatKeyPress(e) {
+            if (e.key === 'Enter') sendChatMessage();
         }
 
         function sendChatMessage() {
             const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            
-            if (!message) return;
+            const msg = input.value.trim();
+            if (!msg) return;
 
-            // Add user message
-            addMessage(message, 'user');
+            const container = document.getElementById('chat-messages');
+            
+            container.innerHTML += `<div class="chat-bubble user">${msg}</div>`;
             input.value = '';
+            container.scrollTop = container.scrollHeight;
 
-            // Show typing indicator
-            showTypingIndicator();
-
-            // Generate response after delay
             setTimeout(() => {
-                hideTypingIndicator();
-                const response = generateResponse(message);
-                addMessage(response, 'bot');
-            }, 1500);
+                const responses = [
+                    "Entiendo. Para más información, contáctanos al +56 9 1234 5678 📞",
+                    "¡Buena pregunta! Te sugiero visitar nuestra sede en Av. Providencia 1234 📍",
+                    "Perfecto, anotado. ¿Algo más en lo que pueda ayudarte?",
+                    "Claro, te recomiendo agendar una cita para que tu mascota reciba la mejor atención ✨"
+                ];
+                const resp = responses[Math.floor(Math.random() * responses.length)];
+                container.innerHTML += `<div class="chat-bubble bot">${resp}</div>`;
+                container.scrollTop = container.scrollHeight;
+            }, 800);
         }
 
-        function addMessage(text, sender) {
-            const messagesContainer = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `chat-message ${sender}`;
-            messageDiv.textContent = text;
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Social Feed
+        function viewStory(name) {
+            alert(`Viendo historia de ${name}`);
         }
-
-        function showTypingIndicator() {
-            const messagesContainer = document.getElementById('chat-messages');
-            const typingDiv = document.createElement('div');
-            typingDiv.id = 'typing-indicator';
-            typingDiv.className = 'typing-indicator';
-            typingDiv.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            messagesContainer.appendChild(typingDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function hideTypingIndicator() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-
-        function generateResponse(message) {
-            const lowerMessage = message.toLowerCase();
-            
-            if (lowerMessage.includes('servicio') || lowerMessage.includes('ofrecen') || lowerMessage.includes('hacen')) {
-                return chatResponses.servicios;
-            } else if (lowerMessage.includes('precio') || lowerMessage.includes('valor') || lowerMessage.includes('cuesta') || lowerMessage.includes('costo')) {
-                return chatResponses.precios;
-            } else if (lowerMessage.includes('horario') || lowerMessage.includes('abierto') || lowerMessage.includes('atienden')) {
-                return chatResponses.horarios;
-            } else if (lowerMessage.includes('domicilio') || lowerMessage.includes('casa') || lowerMessage.includes('furgoneta')) {
-                return chatResponses.domicilio;
-            } else if (lowerMessage.includes('cita') || lowerMessage.includes('agendar') || lowerMessage.includes('reservar')) {
-                return chatResponses.cita;
-            } else if (lowerMessage.includes('ubicacion') || lowerMessage.includes('direccion') || lowerMessage.includes('donde') || lowerMessage.includes('sede')) {
-                return chatResponses.ubicacion;
-            } else if (lowerMessage.includes('contacto') || lowerMessage.includes('telefono') || lowerMessage.includes('whatsapp') || lowerMessage.includes('llamar')) {
-                return chatResponses.contacto;
-            } else if (lowerMessage.includes('hola') || lowerMessage.includes('buenas') || lowerMessage.includes('hi')) {
-                return '¡Hola! 👋 Soy el asistente virtual de Maria\'s Cut. ¿En qué puedo ayudarte hoy?';
-            } else if (lowerMessage.includes('gracias')) {
-                return '¡De nada! 😊 Estamos aquí para consentir a tu mascota. ¿Algo más en lo que pueda ayudarte?';
-            } else {
-                return chatResponses.default;
-            }
-        }
-
-        // ========== SOCIAL FEED LOGIC ==========
-
-        const socialStories = [
-            { id: 1, name: "Max", img: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=150&h=150&fit=crop" },
-            { id: 2, name: "Bella", img: "https://images.unsplash.com/photo-1536590158209-e9d615d525e4?w=150&h=150&fit=crop" },
-            { id: 3, name: "Charlie", img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=150&h=150&fit=crop" },
-            { id: 4, name: "Luna", img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=150&h=150&fit=crop" },
-            { id: 5, name: "Rocky", img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=150&h=150&fit=crop" },
-            { id: 6, name: "Coco", img: "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=150&h=150&fit=crop" }
-        ];
 
         const feedPosts = [
-            {
-                id: 1,
-                user: "Familia García",
-                userType: "Cliente VIP",
-                userAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
-                location: "Furgón VIP",
-                img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&fit=crop",
-                caption: "¡Max quedó guapísimo! Increíble el servicio a domicilio, súper cómodo. 🐶✨",
-                likes: 24
-            },
-            {
-                id: 2,
-                user: "Roberto & Loki",
-                userType: "Nuevo",
-                userAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
-                location: "Sede Central",
-                img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&fit=crop",
-                caption: "Primer corte de Loki y se portó increíble. ¡Tía María tiene manos de ángel! ✂️💖",
-                likes: 56
-            },
-            {
-                id: 3,
-                user: "Sophie",
-                userType: "Fan Poodle",
-                userAvatar: "https://randomuser.me/api/portraits/women/68.jpg",
-                location: "Spa Day",
-                img: "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9205?w=800&fit=crop",
-                caption: "Día de relax total. El baño de espuma es su favorito. 🛁🧖‍♀️",
-                likes: 89
-            },
-            {
-                id: 4,
-                user: "Carlos M.",
-                userType: "Dueño de Rocky",
-                userAvatar: "https://randomuser.me/api/portraits/men/22.jpg",
-                location: "Furgón #2",
-                img: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=800&fit=crop",
-                caption: "¡Miren esa sonrisa! Rocky listo para el fin de semana. Gracias equipo. 🙌",
-                likes: 34
-            }
+            { user: "Familia García", avatar: "https://randomuser.me/api/portraits/women/44.jpg", location: "Furgón VIP", img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&fit=crop", caption: "¡Max quedó guapísimo! Increíble el servicio a domicilio 🐶✨", likes: 24 },
+            { user: "Roberto & Loki", avatar: "https://randomuser.me/api/portraits/men/32.jpg", location: "Sede Central", img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&fit=crop", caption: "Primer corte de Loki y se portó increíble ✂️💖", likes: 56 },
+            { user: "Sophie", avatar: "https://randomuser.me/api/portraits/women/68.jpg", location: "Spa Day", img: "https://images.unsplash.com/photo-1596492784531-6e6eb5ea9205?w=800&fit=crop", caption: "Día de relax total 🛁🧖‍♀️", likes: 89 }
         ];
 
-        function renderSocial() {
-            // Render Stories
-            const storiesContainer = document.getElementById('stories-container');
-            let storiesHTML = `
-                 <div class="story-item" onclick="alert('¡Pronto podrás subir tus historias!')">
-                    <div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;">
-                         <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                            </svg>
-                         </div>
-                    </div>
-                    <span class="text-xs text-gray-600 font-medium">Tu Historia</span>
-                </div>
-            `;
-
-            socialStories.forEach(story => {
-                storiesHTML += `
-                <div class="story-item" onclick="viewStory('${story.name}')">
-                    <div class="story-avatar-ring">
-                        <img src="${story.img}" class="story-avatar" alt="${story.name}">
-                    </div>
-                    <span class="text-xs text-gray-800 font-medium">${story.name}</span>
-                </div>
-                `;
-            });
-            storiesContainer.innerHTML = storiesHTML;
-
-            // Render Feed
-            const feedContainer = document.getElementById('feed-container');
-            let feedHTML = '';
-            feedPosts.forEach(post => {
-                feedHTML += `
-                <div class="social-card">
-                    <div class="post-header">
-                        <div class="flex items-center">
-                            <img src="${post.userAvatar}" class="w-10 h-10 rounded-full object-cover mr-3 border border-gray-100">
-                            <div>
-                                <h4 class="text-sm font-bold text-gray-800">${post.user}</h4>
-                                <p class="text-xs text-gray-500">${post.location}</p>
-                            </div>
+        document.getElementById('feed-container').innerHTML = feedPosts.map(post => `
+            <div class="social-card">
+                <div class="flex items-center justify-between p-3">
+                    <div class="flex items-center gap-2">
+                        <img src="${post.avatar}" class="w-8 h-8 rounded-full object-cover">
+                        <div>
+                            <h4 class="text-sm font-bold text-[#4B3621]">${post.user}</h4>
+                            <p class="text-xs text-[#8B7355]">${post.location}</p>
                         </div>
-                        <button class="text-gray-400 hover:text-gray-600">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <img src="${post.img}" class="post-media" loading="lazy" ondblclick="toggleLike(${post.id})">
-                    
-                    <div class="action-bar">
-                        <button class="action-icon" id="like-btn-${post.id}" onclick="toggleLike(${post.id})">
-                            <svg class="w-7 h-7 heart-paw-svg" viewBox="0 0 24 24">
-                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                               <path d="M12 7.5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor" opacity="0.5" transform="scale(0.5) translate(12, 12)"/>
-                            </svg>
-                        </button>
-                        <button class="action-icon hover:text-gray-600">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M19 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                            </svg>
-                        </button>
-                        <button class="action-icon hover:text-gray-600 ml-auto">
-                           <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <div class="px-5 pb-4">
-                        <p class="text-xs font-bold text-gray-800 mb-1" id="likes-count-${post.id}">${post.likes} Me gusta</p>
-                        <p class="text-sm text-gray-700">
-                            <span class="font-bold mr-1">${post.user}</span> ${post.caption}
-                        </p>
-                        <p class="text-xs text-gray-400 mt-2 uppercase tracking-wide">Hace 2 horas</p>
                     </div>
                 </div>
-                `;
-            });
-            feedContainer.innerHTML = feedHTML;
-        }
-
-        function toggleLike(id) {
-            const btn = document.getElementById(`like-btn-${id}`);
-            btn.classList.toggle('liked');
-
-            if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(50);
-            }
-        }
-
-        function viewStory(name) {
-            alert(`Viendo la historia de ${name} (Simulación de pantalla completa)`);
-        }
-
-        // Initialize Social Feed on Load
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSocial();
-        });
+                <img src="${post.img}" class="post-media">
+                <div class="p-3">
+                    <div class="flex gap-4 mb-2">
+                        <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        <svg class="w-6 h-6 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-bold text-[#4B3621]">${post.likes} Me gusta</p>
+                    <p class="text-sm text-[#4B3621] mt-1"><span class="font-bold">${post.user}</span> ${post.caption}</p>
+                </div>
+            </div>
+        `).join('');
     </script>
 </body>
-
 </html>
