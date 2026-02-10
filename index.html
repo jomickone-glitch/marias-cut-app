@@ -1591,7 +1591,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- FIREBASE & APP LOGIC -->
+    <!-- FIREBASE & APP LOGIC - CORREGIDO -->
     <!-- ============================================================ -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
@@ -1648,12 +1648,13 @@
             userData: null,
             isGuest: false,
             currentScreen: 'login',
-            cameraMode: 'story', // 'story' or 'post'
+            cameraMode: 'story',
             capturedMedia: null,
             stories: [],
             currentStoryIndex: 0,
             storyTimer: null,
-            mediaStream: null
+            mediaStream: null,
+            isInitializing: true
         };
 
         // ============================================
@@ -1674,9 +1675,7 @@
         }
 
         function updateNavState() {
-            const nav = document.getElementById('bottom-nav');
             const navItems = document.querySelectorAll('.nav-item, .nav-center-btn');
-
             navItems.forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.screen === AppState.currentScreen) {
@@ -1702,56 +1701,85 @@
         }
 
         // ============================================
-        // AUTH STATE MANAGEMENT
+        // LOGIC BLOCK 1: AUTH STATE WITH DATA PERSISTENCE
         // ============================================
-        function updateAppState(user) {
+        // CRITICAL FIX: Wait for Firestore data BEFORE showing the main screen
+        onAuthStateChanged(auth, async (user) => {
             const nav = document.getElementById('bottom-nav');
-
-            if (!user && !AppState.isGuest) {
-                // No session - show login, hide nav
-                showScreen('screen-login');
-                nav.classList.add('hidden');
-            } else {
-                // Has session or guest mode - show main app, show nav
-                AppState.currentUser = user;
-                loadUserData();
-                showScreen('screen-grooming');
-                nav.classList.remove('hidden');
-                loadFeed();
-                loadStories();
+            
+            if (AppState.isInitializing) {
+                showLoading('Iniciando aplicación...');
             }
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            updateAppState(user);
-        });
-
-        async function loadUserData() {
-            if (!AppState.currentUser) return;
 
             try {
-                const userDoc = await getDoc(doc(db, 'users', AppState.currentUser.uid));
+                if (!user && !AppState.isGuest) {
+                    // No session - show login, hide nav
+                    AppState.currentUser = null;
+                    AppState.userData = null;
+                    showScreen('screen-login');
+                    nav.classList.add('hidden');
+                } else {
+                    // Has session (authenticated or guest)
+                    AppState.currentUser = user;
+                    
+                    // CRITICAL: For authenticated users, wait for Firestore data
+                    if (user && !AppState.isGuest) {
+                        const userDataLoaded = await loadUserData(user.uid);
+                        if (!userDataLoaded) {
+                            console.warn('No se pudieron cargar los datos del usuario');
+                        }
+                    } else {
+                        // Guest mode - set default data
+                        AppState.userData = { name: 'Invitado', petName: '' };
+                    }
+                    
+                    // ONLY show main screen AFTER data is loaded
+                    showScreen('screen-grooming');
+                    nav.classList.remove('hidden');
+                    loadFeed();
+                    loadStories();
+                }
+            } catch (error) {
+                console.error('Error en onAuthStateChanged:', error);
+                showToast('Error al cargar la aplicación');
+                showScreen('screen-login');
+                nav.classList.add('hidden');
+            } finally {
+                // ALWAYS hide loading when done
+                hideLoading();
+                AppState.isInitializing = false;
+            }
+        });
+
+        async function loadUserData(uid) {
+            if (!uid) return false;
+
+            try {
+                const userDoc = await getDoc(doc(db, 'users', uid));
                 if (userDoc.exists()) {
                     AppState.userData = userDoc.data();
+                    // Update profile UI
                     document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario';
                     document.getElementById('profile-pet').textContent = AppState.userData.petName ? `🐕 ${AppState.userData.petName}` : '';
-                    if (AppState.currentUser.photoURL) {
+                    if (AppState.currentUser?.photoURL) {
                         document.getElementById('profile-avatar').src = AppState.currentUser.photoURL;
                     }
+                    return true;
+                } else {
+                    console.warn('Documento de usuario no encontrado');
+                    document.getElementById('profile-name').textContent = AppState.currentUser?.displayName || 'Usuario';
+                    document.getElementById('profile-pet').textContent = '';
+                    return false;
                 }
             } catch (error) {
                 console.error('Error loading user data:', error);
+                return false;
             }
         }
 
         // ============================================
-        // LOGIN HANDLERS
+        // LOGIC BLOCK 2: LOGIN & REGISTER WITH FINALLY
         // ============================================
-        // ============================================
-        // LOGIN & REGISTER LOGIC (SEPARATED)
-        // ============================================
-
-        // --- UI TOGGLES ---
         const loginActions = document.getElementById('login-actions');
         const registerActions = document.getElementById('register-actions');
         const registerFields = document.getElementById('register-fields');
@@ -1771,7 +1799,7 @@
             errorEl.classList.add('hidden');
         });
 
-        // --- LOGIN HANDLER ---
+        // --- LOGIN HANDLER WITH FINALLY ---
         document.getElementById('btn-login').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
@@ -1785,24 +1813,29 @@
             hideError();
 
             try {
-                // STRICT LOGIN ONLY
                 await signInWithEmailAndPassword(auth, email, password);
-                // Success handled by onAuthStateChanged
+                // Success - onAuthStateChanged will handle the rest
             } catch (error) {
-                hideLoading();
                 console.error("Login Error:", error.code);
-
+                
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
                     showError('Usuario o contraseña incorrectos');
                 } else if (error.code === 'auth/too-many-requests') {
                     showError('Demasiados intentos. Espera un momento.');
+                } else if (error.code === 'auth/invalid-email') {
+                    showError('El correo electrónico no es válido');
+                } else if (error.code === 'auth/user-disabled') {
+                    showError('Esta cuenta ha sido deshabilitada');
                 } else {
                     showError('Error al entrar: ' + error.message);
                 }
+            } finally {
+                // CRITICAL: Always hide loading
+                hideLoading();
             }
         });
 
-        // --- REGISTER HANDLER ---
+        // --- REGISTER HANDLER WITH FINALLY ---
         document.getElementById('btn-register').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
@@ -1810,7 +1843,7 @@
             const pet = document.getElementById('login-pet').value.trim();
             const phone = document.getElementById('login-phone').value.trim();
 
-            // Strict Validation
+            // Validation
             if (!email || !password || !name) {
                 showError('Email, contraseña y nombre son obligatorios');
                 return;
@@ -1825,10 +1858,10 @@
             hideError();
 
             try {
-                // STRICT REGISTER ONLY
+                // Create user
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-                // Save extra data
+                
+                // CRITICAL: Wait for Firestore document to be created
                 await setDoc(doc(db, 'users', userCredential.user.uid), {
                     name: name,
                     email: email,
@@ -1837,25 +1870,36 @@
                     createdAt: serverTimestamp()
                 });
 
+                // Update profile
                 await updateProfile(userCredential.user, {
                     displayName: name
                 });
 
-                // Success handled by onAuthStateChanged
+                // Set user data immediately
+                AppState.userData = {
+                    name: name,
+                    email: email,
+                    petName: pet || 'Mi Mascota',
+                    phone: phone || ''
+                };
 
+                // Success - onAuthStateChanged will handle the rest
+                showToast('¡Cuenta creada exitosamente!');
             } catch (error) {
-                hideLoading();
                 console.error("Register Error:", error.code);
-
+                
                 if (error.code === 'auth/email-already-in-use') {
                     showError('Este correo ya está registrado. Intenta iniciar sesión.');
                 } else if (error.code === 'auth/weak-password') {
-                    showError('La contraseña es muy débil.');
+                    showError('La contraseña es muy débil. Usa al menos 6 caracteres.');
                 } else if (error.code === 'auth/invalid-email') {
-                    showError('El correo electrónico no es válido.');
+                    showError('El correo electrónico no es válido');
                 } else {
                     showError('Error al registrar: ' + error.message);
                 }
+            } finally {
+                // CRITICAL: Always hide loading
+                hideLoading();
             }
         });
 
@@ -1868,14 +1912,20 @@
             errorEl.classList.add('hidden');
         }
 
+        // ============================================
+        // LOGIC BLOCK 3: GUEST MODE WITH PROTECTION
+        // ============================================
         document.getElementById('btn-skip').addEventListener('click', async () => {
             showLoading('Entrando como invitado...');
             try {
                 AppState.isGuest = true;
                 await signInAnonymously(auth);
+                // onAuthStateChanged will handle the redirect
             } catch (error) {
+                console.error('Guest login error:', error);
                 hideLoading();
                 showToast('Error al entrar como invitado');
+                AppState.isGuest = false;
             }
         });
 
@@ -1903,13 +1953,19 @@
         });
 
         // ============================================
-        // CAMERA FUNCTIONALITY
+        // CAMERA FUNCTIONALITY WITH GUEST PROTECTION
         // ============================================
         const cameraOverlay = document.getElementById('camera-overlay');
         const cameraVideo = document.getElementById('camera-video');
         const cameraCanvas = document.getElementById('camera-canvas');
 
         async function startCamera() {
+            // CRITICAL: Check if guest before opening camera
+            if (AppState.isGuest) {
+                showToast('Regístrate para publicar contenido');
+                return;
+            }
+            
             try {
                 AppState.mediaStream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: 'environment' },
@@ -1933,7 +1989,15 @@
             cameraOverlay.classList.remove('active');
         }
 
-        document.getElementById('btn-add-content').addEventListener('click', startCamera);
+        // CRITICAL: Guest protection for add content button
+        document.getElementById('btn-add-content').addEventListener('click', () => {
+            if (AppState.isGuest) {
+                showToast('Regístrate para publicar contenido');
+                return;
+            }
+            startCamera();
+        });
+        
         document.getElementById('camera-close').addEventListener('click', stopCamera);
 
         // Camera mode switch
@@ -1980,9 +2044,15 @@
         });
 
         // ============================================
-        // POST EDITOR
+        // POST EDITOR WITH GUEST PROTECTION
         // ============================================
         function openPostEditor() {
+            // Double-check guest protection
+            if (AppState.isGuest) {
+                showToast('Regístrate para publicar contenido');
+                return;
+            }
+            
             const modal = document.getElementById('post-editor-modal');
             const previewImg = document.getElementById('editor-preview-img');
             const previewVideo = document.getElementById('editor-preview-video');
@@ -2011,6 +2081,12 @@
         });
 
         document.getElementById('editor-submit').addEventListener('click', async () => {
+            // CRITICAL: Check guest before submitting
+            if (AppState.isGuest) {
+                showToast('Regístrate para publicar contenido');
+                return;
+            }
+            
             const caption = document.getElementById('editor-caption').value.trim();
             const modal = document.getElementById('post-editor-modal');
 
@@ -2039,20 +2115,20 @@
 
                 if (isStory) {
                     await addDoc(collection(db, 'stories'), {
-                        userId: AppState.currentUser?.uid || 'guest',
-                        userName: AppState.userData?.name || 'Invitado',
+                        userId: AppState.currentUser?.uid,
+                        userName: AppState.userData?.name || 'Usuario',
                         userPhoto: AppState.currentUser?.photoURL || '',
                         mediaUrl: downloadURL,
                         mediaType: AppState.capturedMedia.type,
                         caption: caption,
                         createdAt: serverTimestamp(),
-                        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+                        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
                     });
                     showToast('¡Historia publicada!');
                 } else {
                     await addDoc(collection(db, 'posts'), {
-                        userId: AppState.currentUser?.uid || 'guest',
-                        userName: AppState.userData?.name || 'Invitado',
+                        userId: AppState.currentUser?.uid,
+                        userName: AppState.userData?.name || 'Usuario',
                         userPhoto: AppState.currentUser?.photoURL || '',
                         mediaUrl: downloadURL,
                         mediaType: AppState.capturedMedia.type,
@@ -2141,8 +2217,15 @@
 
                 storiesContainer.innerHTML = html;
 
-                // Add click handlers
-                document.getElementById('btn-add-story').addEventListener('click', startCamera);
+                // Add click handlers with guest protection
+                document.getElementById('btn-add-story').addEventListener('click', () => {
+                    if (AppState.isGuest) {
+                        showToast('Regístrate para publicar contenido');
+                        return;
+                    }
+                    startCamera();
+                });
+                
                 document.querySelectorAll('.story-item[data-story-id]').forEach(item => {
                     item.addEventListener('click', () => {
                         const storyId = item.dataset.storyId;
@@ -2296,7 +2379,7 @@
         // ============================================
         // INIT
         // ============================================
-        console.log('Maria\'s Cut App initialized');
+        console.log('Maria\'s Cut App initialized - FIXED VERSION');
     </script>
 </body>
 
