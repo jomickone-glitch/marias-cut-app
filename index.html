@@ -65,6 +65,7 @@
         .story-item { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; cursor: pointer; }
         .story-avatar-ring { width: 64px; height: 64px; border-radius: 50%; padding: 3px; background: linear-gradient(45deg, #F0EAD6, #C5A059, #D4B896); }
         .story-avatar-ring.unseen { background: linear-gradient(45deg, #D4AF37, #C5A059, #D4B896); animation: pulse-ring 2s infinite; }
+        .story-avatar-ring.has-stories { background: linear-gradient(45deg, #D4AF37, #C5A059, #D4B896); animation: pulse-ring 2s infinite; }
         @keyframes pulse-ring { 0%, 100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); } 50% { box-shadow: 0 0 0 8px rgba(197, 160, 89, 0); } }
         .story-avatar { width: 100%; height: 100%; border-radius: 50%; border: 3px solid #FFFDF5; object-fit: cover; }
         .camera-overlay { position: fixed; inset: 0; background: black; z-index: 500; display: none; flex-direction: column; }
@@ -186,6 +187,7 @@
         .profile-icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: none; position: relative; }
         .profile-icon-btn:hover { background: white; transform: scale(1.05); }
         .profile-icon-btn .badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .profile-icon-btn .badge-dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; border: 2px solid white; }
         .profile-info { text-align: center; padding: 0 16px; }
         .profile-name { font-size: 1.25rem; font-weight: 700; color: #4B3621; margin-bottom: 4px; }
         .profile-pet-name { font-size: 0.9rem; color: #6D5D4E; }
@@ -307,6 +309,28 @@
         .alert-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; }
         .alert-btn.cancel { background: #F3F4F6; color: #4B3621; }
         .alert-btn.confirm { background: #EF4444; color: white; }
+
+        /* MODAL DE COMENTARIOS */
+        .comments-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 950; display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .comments-modal.active { display: flex; opacity: 1; }
+        .comments-sheet { background: white; width: 100%; height: 60vh; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
+        .comments-modal.active .comments-sheet { transform: translateY(0); }
+        .comments-header { padding: 16px 20px; border-bottom: 1px solid rgba(197, 160, 89, 0.15); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .comments-title { font-size: 1rem; font-weight: 700; color: #4B3621; }
+        .comments-list { flex: 1; overflow-y: auto; padding: 16px; }
+        .comment-item { display: flex; gap: 12px; margin-bottom: 16px; }
+        .comment-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        .comment-content { flex: 1; }
+        .comment-author { font-size: 0.85rem; font-weight: 600; color: #4B3621; }
+        .comment-text { font-size: 0.9rem; color: #6D5D4E; margin-top: 2px; line-height: 1.4; }
+        .comment-time { font-size: 0.75rem; color: #8B7355; margin-top: 4px; }
+        .comments-input-area { padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px); border-top: 1px solid rgba(197, 160, 89, 0.15); background: #FFFDF5; flex-shrink: 0; }
+        .comments-input-wrapper { display: flex; align-items: center; gap: 10px; }
+        .comments-input { flex: 1; padding: 12px 16px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 50px; font-size: 0.95rem; outline: none; background: white; }
+        .comments-input:focus { border-color: #C5A059; }
+        .comments-submit-btn { padding: 10px 20px; border-radius: 50px; background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%); color: white; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; }
+        .comments-empty { text-align: center; padding: 40px 20px; color: #8B7355; }
+        .comments-empty svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.5; }
     </style>
 </head>
 <body>
@@ -538,7 +562,7 @@
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
                         <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" strokelinejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
                         </div>
                         <h3 class="font-semibold text-[#4B3621] text-sm">A Domicilio</h3>
                         <p class="text-xs text-[#8B7355] mt-1">Furgoneta VIP</p>
@@ -598,7 +622,8 @@
                         <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
-                        <span id="notif-badge" class="badge">3</span>
+                        <span id="notif-badge" class="badge hidden">0</span>
+                        <span id="notif-badge-dot" class="badge-dot hidden"></span>
                     </button>
                     <button id="btn-menu" class="profile-icon-btn">
                         <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -844,6 +869,31 @@
         </div>
     </div>
 
+    <!-- MODAL: COMENTARIOS -->
+    <div id="modal-comments" class="comments-modal">
+        <div class="comments-sheet">
+            <div class="comments-header">
+                <h3 class="comments-title">Comentarios</h3>
+                <button class="modal-close" onclick="closeCommentsModal()">
+                    <svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="comments-list" id="comments-list">
+                <div class="comments-empty">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                    <p>Aun no hay comentarios</p>
+                    <p class="text-sm mt-2">¡Se el primero en comentar!</p>
+                </div>
+            </div>
+            <div class="comments-input-area">
+                <div class="comments-input-wrapper">
+                    <input type="text" id="comment-input" class="comments-input" placeholder="Escribe un comentario...">
+                    <button id="btn-submit-comment" class="comments-submit-btn">Publicar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ALERT: LOGOUT -->
     <div id="alert-logout" class="alert-overlay">
         <div class="alert-box">
@@ -1079,7 +1129,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, serverTimestamp, updateDoc, arrayUnion, arrayRemove, limit, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
         import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
         const firebaseConfig = {
@@ -1105,7 +1155,10 @@
             cameraMode: 'story',
             capturedMedia: null,
             stories: [],
+            storiesByUser: {},
             currentStoryIndex: 0,
+            currentStoryUserIndex: 0,
+            storyUsers: [],
             storyTimer: null,
             mediaStream: null,
             isInitializing: true,
@@ -1114,7 +1167,11 @@
             wizardStep: 1,
             wizardAnswers: {},
             wizardType: '',
-            likedPosts: new Set()
+            likedPosts: new Set(),
+            currentPostIdForComments: null,
+            notificationsUnsubscribe: null,
+            storiesUnsubscribe: null,
+            feedUnsubscribe: null
         };
 
         const CanvasState = {
@@ -1333,7 +1390,6 @@
             document.getElementById('avatar-input').click();
         });
 
-        // FIX 4: FOTO DE PERFIL - Try/catch/finally para asegurar que el spinner se detenga
         document.getElementById('avatar-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -1499,35 +1555,122 @@
             }
         });
 
-        // ===== NOTIFICACIONES =====
-        const mockNotifications = [
-            { id: 1, user: 'Maria', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', text: 'A <strong>Maria</strong> le gusto tu foto', time: 'Hace 5 min', unread: true },
-            { id: 2, user: 'Juan', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100', text: '<strong>Juan</strong> comento tu historia', time: 'Hace 1 hora', unread: true },
-            { id: 3, user: 'Ana', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100', text: '<strong>Ana</strong> comenzo a seguirte', time: 'Hace 3 horas', unread: true },
-            { id: 4, user: 'Pedro', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100', text: 'A <strong>Pedro</strong> le gusto tu publicacion', time: 'Ayer', unread: false },
-            { id: 5, user: 'Maria\'s Cut', avatar: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100', text: 'Tu cita ha sido <strong>confirmada</strong>', time: 'Hace 2 dias', unread: false }
-        ];
+        // ===== SISTEMA DE NOTIFICACIONES REAL =====
+        function initNotificationsListener() {
+            if (!AppState.currentUser || AppState.isGuest) return;
+            
+            // Limpiar suscripción anterior si existe
+            if (AppState.notificationsUnsubscribe) {
+                AppState.notificationsUnsubscribe();
+            }
+            
+            const notificationsQuery = query(
+                collection(db, 'users', AppState.currentUser.uid, 'notifications'),
+                orderBy('timestamp', 'desc'),
+                limit(50)
+            );
+            
+            AppState.notificationsUnsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
+                const notifications = [];
+                let unreadCount = 0;
+                
+                snapshot.forEach((docSnap) => {
+                    const notif = { id: docSnap.id, ...docSnap.data() };
+                    notifications.push(notif);
+                    if (!notif.read) unreadCount++;
+                });
+                
+                // Actualizar badge
+                const badge = document.getElementById('notif-badge');
+                const badgeDot = document.getElementById('notif-badge-dot');
+                
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                    badge.classList.remove('hidden');
+                    badgeDot.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                    badgeDot.classList.add('hidden');
+                }
+                
+                // Guardar para renderizar
+                AppState.notifications = notifications;
+            });
+        }
 
         document.getElementById('btn-notifications').addEventListener('click', () => {
             renderNotifications();
             openModal('modal-notifications');
-            document.getElementById('notif-badge').style.display = 'none';
+            // Marcar como leídas al abrir
+            markNotificationsAsRead();
         });
 
         function renderNotifications() {
             const container = document.getElementById('notifications-list');
+            if (!AppState.notifications || AppState.notifications.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No tienes notificaciones</p></div>';
+                return;
+            }
+            
             let html = '';
-            mockNotifications.forEach(notif => {
-                html += '<div class="notification-item ' + (notif.unread ? 'unread' : '') + '">' +
-                    '<img src="' + notif.avatar + '" class="notification-avatar">' +
+            AppState.notifications.forEach(notif => {
+                const timeText = notif.timestamp ? formatTimeAgo(notif.timestamp.toMillis ? notif.timestamp.toMillis() : notif.timestamp) : '';
+                html += '<div class="notification-item ' + (notif.read ? '' : 'unread') + '" data-notif-id="' + notif.id + '">' +
+                    '<img src="' + (notif.fromUserPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="notification-avatar">' +
                     '<div class="notification-content">' +
-                    '<p class="notification-text">' + notif.text + '</p>' +
-                    '<p class="notification-time">' + notif.time + '</p>' +
+                    '<p class="notification-text">' + getNotificationText(notif) + '</p>' +
+                    '<p class="notification-time">' + timeText + '</p>' +
                     '</div>' +
-                    (notif.unread ? '<div class="notification-dot"></div>' : '') +
+                    (notif.read ? '' : '<div class="notification-dot"></div>') +
                     '</div>';
             });
             container.innerHTML = html;
+        }
+
+        function getNotificationText(notif) {
+            switch(notif.type) {
+                case 'like':
+                    return 'A <strong>' + (notif.fromUserName || 'Alguien') + '</strong> le gustó tu foto';
+                case 'comment':
+                    return '<strong>' + (notif.fromUserName || 'Alguien') + '</strong> comentó tu publicación';
+                case 'follow':
+                    return '<strong>' + (notif.fromUserName || 'Alguien') + '</strong> comenzó a seguirte';
+                default:
+                    return notif.message || 'Nueva notificación';
+            }
+        }
+
+        async function markNotificationsAsRead() {
+            if (!AppState.notifications) return;
+            
+            const unreadNotifications = AppState.notifications.filter(n => !n.read);
+            for (const notif of unreadNotifications) {
+                try {
+                    await updateDoc(doc(db, 'users', AppState.currentUser.uid, 'notifications', notif.id), {
+                        read: true
+                    });
+                } catch (error) {
+                    console.error('Error marcando notificación como leída:', error);
+                }
+            }
+            
+            document.getElementById('notif-badge').classList.add('hidden');
+            document.getElementById('notif-badge-dot').classList.add('hidden');
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+            
+            if (seconds < 60) return 'Hace un momento';
+            if (minutes < 60) return 'Hace ' + minutes + ' min';
+            if (hours < 24) return 'Hace ' + hours + ' h';
+            if (days === 1) return 'Ayer';
+            return 'Hace ' + days + ' días';
         }
 
         // ===== MASCOTA =====
@@ -1574,7 +1717,7 @@
             }
         });
 
-        // ===== FIX 1: AUTH STATE CON AWAIT PARA LOADUSERDATA =====
+        // ===== AUTH STATE =====
         onAuthStateChanged(auth, async (user) => {
             const nav = document.getElementById('bottom-nav');
             if (AppState.isInitializing) {
@@ -1589,11 +1732,12 @@
                 } else {
                     AppState.currentUser = user;
                     if (user && !AppState.isGuest) {
-                        // FIX CRITICO: Esperar a que loadUserData termine antes de mostrar la app
                         const dataLoaded = await loadUserData(user.uid);
                         if (!dataLoaded) {
                             console.warn('No se pudieron cargar los datos del usuario');
                         }
+                        // Iniciar listener de notificaciones
+                        initNotificationsListener();
                     } else {
                         AppState.userData = { name: 'Invitado', petName: '' };
                     }
@@ -1613,14 +1757,12 @@
             }
         });
 
-        // FIX 1: Funcion loadUserData que retorna Promise para poder hacer await
         async function loadUserData(uid) {
             if (!uid) return false;
             try {
                 const userDoc = await getDoc(doc(db, 'users', uid));
                 if (userDoc.exists()) {
                     AppState.userData = userDoc.data();
-                    // Actualizar DOM del perfil inmediatamente
                     document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario';
                     document.getElementById('profile-pet').textContent = AppState.userData.petName ? '🐕 ' + AppState.userData.petName : '';
                     if (AppState.currentUser?.photoURL) {
@@ -1628,7 +1770,6 @@
                     }
                     return true;
                 } else {
-                    // Si no existe el documento, crear uno basico
                     AppState.userData = { name: 'Usuario', petName: '' };
                     document.getElementById('profile-name').textContent = 'Usuario';
                     document.getElementById('profile-pet').textContent = '';
@@ -1636,13 +1777,11 @@
                 }
             } catch (error) {
                 console.error('Error cargando datos de usuario:', error);
-                // En caso de error, mostrar valores por defecto para evitar "Cargando..."
                 document.getElementById('profile-name').textContent = 'Usuario';
                 document.getElementById('profile-pet').textContent = '';
                 return false;
             }
         }
-
 
         // ===== LOGIN =====
         const loginActions = document.getElementById('login-actions');
@@ -2141,7 +2280,7 @@
                     mediaType: AppState.capturedMedia.type,
                     caption: caption || '🐾',
                     likes: [],
-                    comments: [],
+                    commentCount: 0,
                     createdAt: serverTimestamp()
                 });
                 showToast('Publicacion creada!', 'success');
@@ -2152,22 +2291,30 @@
         });
 
 
-        // ===== FIX 2: FEED PUBLICO CON LIKES, COMMENTS, SHARE =====
+        // ===== FEED GLOBAL - TODOS LOS POSTS =====
         function loadFeed() {
             const feedContainer = document.getElementById('feed-container');
-            // Feed publico - sin where clause, todos los posts
-            const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
             
-            onSnapshot(postsQuery, (snapshot) => {
+            // FEED GLOBAL: Sin filtro de usuario, muestra TODOS los posts
+            const postsQuery = query(
+                collection(db, 'posts'), 
+                orderBy('createdAt', 'desc'),
+                limit(50)
+            );
+            
+            if (AppState.feedUnsubscribe) {
+                AppState.feedUnsubscribe();
+            }
+            
+            AppState.feedUnsubscribe = onSnapshot(postsQuery, (snapshot) => {
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const post = docSnap.data();
                     const postId = docSnap.id;
                     const likes = post.likes || [];
-                    const comments = post.comments || [];
+                    const commentCount = post.commentCount || 0;
                     const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
                     const likeCount = likes.length;
-                    const commentCount = comments.length;
                     
                     html += '<div class="social-card">';
                     html += '<div class="flex items-center p-3">';
@@ -2183,16 +2330,26 @@
                     
                     // Barra de acciones con likes, comments, share
                     html += '<div class="post-actions">';
+                    
+                    // Botón de Like con corazón rojo si ya dio like
                     html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
-                    html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                    if (isLiked) {
+                        // Corazón lleno rojo
+                        html += '<svg fill="#EF4444" stroke="#EF4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                    } else {
+                        // Corazón vacío
+                        html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                    }
                     html += '<span class="post-action-count like-count">' + likeCount + '</span>';
                     html += '</button>';
                     
-                    html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
+                    // Botón de Comentarios
+                    html += '<button class="post-action-btn" onclick="window.openCommentsModal(\'' + postId + '\')">';
                     html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
-                    html += '<span class="post-action-count">' + commentCount + '</span>';
+                    html += '<span class="post-action-count comment-count-' + postId + '">' + commentCount + '</span>';
                     html += '</button>';
                     
+                    // Botón de Compartir
                     html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
                     html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
                     html += '</button>';
@@ -2207,7 +2364,7 @@
             });
         }
 
-        // Toggle Like - funcion global
+        // ===== TOGGLE LIKE CON NOTIFICACIÓN =====
         window.toggleLike = async function(postId, btn) {
             if (AppState.isGuest || !AppState.currentUser) {
                 showToast('Registrate para dar like', 'info');
@@ -2218,14 +2375,31 @@
             const isLiked = btn.classList.contains('liked');
             
             try {
+                const postSnap = await getDoc(postRef);
+                const postData = postSnap.data();
+                const postOwnerId = postData.userId;
+                
                 if (isLiked) {
+                    // Quitar like
                     await updateDoc(postRef, { likes: arrayRemove(AppState.currentUser.uid) });
                     btn.classList.remove('liked');
                     btn.querySelector('svg').setAttribute('fill', 'none');
+                    btn.querySelector('svg').setAttribute('stroke', 'currentColor');
+                    const countEl = btn.querySelector('.like-count');
+                    countEl.textContent = parseInt(countEl.textContent) - 1;
                 } else {
+                    // Dar like
                     await updateDoc(postRef, { likes: arrayUnion(AppState.currentUser.uid) });
                     btn.classList.add('liked');
                     btn.querySelector('svg').setAttribute('fill', '#EF4444');
+                    btn.querySelector('svg').setAttribute('stroke', '#EF4444');
+                    const countEl = btn.querySelector('.like-count');
+                    countEl.textContent = parseInt(countEl.textContent) + 1;
+                    
+                    // CREAR NOTIFICACIÓN para el dueño del post (si no es el mismo usuario)
+                    if (postOwnerId !== AppState.currentUser.uid) {
+                        await createLikeNotification(postOwnerId, postId, postData.mediaUrl);
+                    }
                 }
             } catch (error) {
                 console.error('Error al dar like:', error);
@@ -2233,17 +2407,128 @@
             }
         };
 
-        // Show Comments - funcion global
-        window.showComments = function(postId) {
+        // Crear notificación de like
+        async function createLikeNotification(toUserId, postId, postImageUrl) {
+            try {
+                await addDoc(collection(db, 'users', toUserId, 'notifications'), {
+                    type: 'like',
+                    fromUserId: AppState.currentUser.uid,
+                    fromUserName: AppState.userData?.name || 'Usuario',
+                    fromUserPhoto: AppState.currentUser?.photoURL || '',
+                    postId: postId,
+                    postImage: postImageUrl || '',
+                    timestamp: serverTimestamp(),
+                    read: false
+                });
+            } catch (error) {
+                console.error('Error creando notificación:', error);
+            }
+        }
+
+        // ===== SISTEMA DE COMENTARIOS =====
+        window.openCommentsModal = function(postId) {
             if (AppState.isGuest) {
                 showToast('Registrate para comentar', 'info');
                 return;
             }
-            // Por ahora solo mostramos un toast, en una version futura se abriria un modal
-            showToast('Comentarios proximamente', 'info');
+            AppState.currentPostIdForComments = postId;
+            loadComments(postId);
+            document.getElementById('modal-comments').classList.add('active');
         };
 
-        // Share Post - funcion global
+        window.closeCommentsModal = function() {
+            document.getElementById('modal-comments').classList.remove('active');
+            AppState.currentPostIdForComments = null;
+        };
+
+        function loadComments(postId) {
+            const commentsList = document.getElementById('comments-list');
+            commentsList.innerHTML = '<div class="comments-empty"><p>Cargando comentarios...</p></div>';
+            
+            const commentsQuery = query(
+                collection(db, 'posts', postId, 'comments'),
+                orderBy('timestamp', 'asc')
+            );
+            
+            onSnapshot(commentsQuery, (snapshot) => {
+                if (snapshot.empty) {
+                    commentsList.innerHTML = '<div class="comments-empty"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg><p>Aun no hay comentarios</p><p class="text-sm mt-2">¡Se el primero en comentar!</p></div>';
+                    return;
+                }
+                
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const comment = docSnap.data();
+                    const timeText = comment.timestamp ? formatTimeAgo(comment.timestamp.toMillis ? comment.timestamp.toMillis() : comment.timestamp) : '';
+                    
+                    html += '<div class="comment-item">' +
+                        '<img src="' + (comment.authorPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="comment-avatar">' +
+                        '<div class="comment-content">' +
+                        '<p class="comment-author">' + (comment.authorName || 'Usuario') + '</p>' +
+                        '<p class="comment-text">' + (comment.text || '') + '</p>' +
+                        '<p class="comment-time">' + timeText + '</p>' +
+                        '</div>' +
+                        '</div>';
+                });
+                commentsList.innerHTML = html;
+                commentsList.scrollTop = commentsList.scrollHeight;
+            });
+        }
+
+        // Enviar comentario
+        document.getElementById('btn-submit-comment').addEventListener('click', submitComment);
+        document.getElementById('comment-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') submitComment();
+        });
+
+        async function submitComment() {
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            
+            if (!text || !AppState.currentPostIdForComments) return;
+            
+            const postId = AppState.currentPostIdForComments;
+            
+            try {
+                // Guardar comentario en subcolección
+                await addDoc(collection(db, 'posts', postId, 'comments'), {
+                    text: text,
+                    authorUid: AppState.currentUser.uid,
+                    authorName: AppState.userData?.name || 'Usuario',
+                    authorPhoto: AppState.currentUser?.photoURL || '',
+                    timestamp: serverTimestamp()
+                });
+                
+                // Actualizar contador de comentarios en el post
+                const postRef = doc(db, 'posts', postId);
+                const postSnap = await getDoc(postRef);
+                const currentCount = postSnap.data()?.commentCount || 0;
+                await updateDoc(postRef, { commentCount: currentCount + 1 });
+                
+                // Crear notificación para el dueño del post
+                const postOwnerId = postSnap.data()?.userId;
+                if (postOwnerId && postOwnerId !== AppState.currentUser.uid) {
+                    await addDoc(collection(db, 'users', postOwnerId, 'notifications'), {
+                        type: 'comment',
+                        fromUserId: AppState.currentUser.uid,
+                        fromUserName: AppState.userData?.name || 'Usuario',
+                        fromUserPhoto: AppState.currentUser?.photoURL || '',
+                        postId: postId,
+                        postImage: postSnap.data()?.mediaUrl || '',
+                        timestamp: serverTimestamp(),
+                        read: false
+                    });
+                }
+                
+                input.value = '';
+                showToast('Comentario publicado', 'success');
+            } catch (error) {
+                console.error('Error al comentar:', error);
+                showToast('Error al publicar comentario', 'error');
+            }
+        }
+
+        // ===== SHARE POST =====
         window.sharePost = async function(postId, caption) {
             const decodedCaption = decodeURIComponent(caption);
             const shareData = {
@@ -2257,7 +2542,6 @@
                     await navigator.share(shareData);
                     showToast('Compartido!', 'success');
                 } else {
-                    // Fallback: copiar al portapapeles
                     await navigator.clipboard.writeText(shareData.url);
                     showToast('Link copiado al portapapeles', 'success');
                 }
@@ -2267,33 +2551,64 @@
             }
         };
 
-        // ===== FIX 3: HISTORIAS EFIMERAS - FILTRO 24H EN CLIENTE =====
+        // ===== HISTORIAS AGRUPADAS POR USUARIO =====
         function loadStories() {
             const storiesContainer = document.getElementById('stories-container');
-            const storiesQuery = query(collection(db, 'stories'), orderBy('createdAt', 'desc'));
             
-            onSnapshot(storiesQuery, (snapshot) => {
-                AppState.stories = [];
-                const now = Date.now();
-                const twentyFourHours = 24 * 60 * 60 * 1000;
-                
-                let html = '<div class="story-item" id="btn-add-story"><div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;"><div class="w-full h-full bg-white rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div></div><span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span></div>';
+            // Traer historias de los últimos 24 horas
+            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+            const storiesQuery = query(
+                collection(db, 'stories'), 
+                where('createdAt', '>=', twentyFourHoursAgo),
+                orderBy('createdAt', 'desc')
+            );
+            
+            if (AppState.storiesUnsubscribe) {
+                AppState.storiesUnsubscribe();
+            }
+            
+            AppState.storiesUnsubscribe = onSnapshot(storiesQuery, (snapshot) => {
+                // Agrupar historias por usuario
+                const storiesByUser = {};
                 
                 snapshot.forEach((docSnap) => {
                     const story = { id: docSnap.id, ...docSnap.data() };
+                    const userId = story.userId;
                     
-                    // FIX CRITICO: Filtrar historias mayores a 24h en el cliente
-                    const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : new Date(story.createdAt).getTime();
-                    if (now - storyTime > twentyFourHours) {
-                        return; // Skip historias viejas
+                    if (!storiesByUser[userId]) {
+                        storiesByUser[userId] = {
+                            userId: userId,
+                            userName: story.userName,
+                            userPhoto: story.userPhoto,
+                            stories: []
+                        };
                     }
+                    storiesByUser[userId].stories.push(story);
+                });
+                
+                AppState.storiesByUser = storiesByUser;
+                AppState.storyUsers = Object.values(storiesByUser);
+                
+                // Renderizar - un círculo por usuario
+                let html = '<div class="story-item" id="btn-add-story"><div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;"><div class="w-full h-full bg-white rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div></div><span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span></div>';
+                
+                Object.values(storiesByUser).forEach((userStories, index) => {
+                    const hasNewStories = userStories.stories.some(s => {
+                        const storyTime = s.createdAt?.toMillis ? s.createdAt.toMillis() : new Date(s.createdAt).getTime();
+                        return (Date.now() - storyTime) < (12 * 60 * 60 * 1000); // Menos de 12h = nuevo
+                    });
                     
-                    AppState.stories.push(story);
-                    html += '<div class="story-item" data-story-id="' + story.id + '"><div class="story-avatar-ring unseen"><img src="' + story.mediaUrl + '" class="story-avatar"></div><span class="text-xs text-[#4B3621] mt-1 font-medium">' + story.userName + '</span></div>';
+                    html += '<div class="story-item" data-user-index="' + index + '">' +
+                        '<div class="story-avatar-ring ' + (hasNewStories ? 'has-stories' : '') + '">' +
+                        '<img src="' + (userStories.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="story-avatar">' +
+                        '</div>' +
+                        '<span class="text-xs text-[#4B3621] mt-1 font-medium">' + userStories.userName + '</span>' +
+                        '</div>';
                 });
                 
                 storiesContainer.innerHTML = html;
                 
+                // Event listener para agregar historia
                 document.getElementById('btn-add-story').addEventListener('click', () => {
                     if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
                     AppState.cameraMode = 'story';
@@ -2301,31 +2616,45 @@
                     startCamera();
                 });
                 
-                document.querySelectorAll('.story-item[data-story-id]').forEach(item => {
+                // Event listeners para ver historias
+                document.querySelectorAll('.story-item[data-user-index]').forEach(item => {
                     item.addEventListener('click', () => {
-                        const storyId = item.dataset.storyId;
-                        const index = AppState.stories.findIndex(s => s.id === storyId);
-                        if (index !== -1) openStoryViewer(index);
+                        const userIndex = parseInt(item.dataset.userIndex);
+                        openStoryViewerByUser(userIndex);
                     });
                 });
             });
         }
 
-        function openStoryViewer(startIndex = 0) {
-            if (AppState.stories.length === 0) return;
-            AppState.currentStoryIndex = startIndex;
+        // Abrir visor de historias agrupadas por usuario
+        function openStoryViewerByUser(userIndex, storyIndex = 0) {
+            if (AppState.storyUsers.length === 0) return;
+            
+            AppState.currentStoryUserIndex = userIndex;
+            const userStories = AppState.storyUsers[userIndex];
+            AppState.currentUserStories = userStories.stories;
+            AppState.currentStoryIndex = storyIndex;
+            
             const viewer = document.getElementById('story-viewer');
             viewer.classList.add('active');
+            
+            // Crear barras de progreso para todas las historias de este usuario
             const progressContainer = document.getElementById('story-progress-container');
-            progressContainer.innerHTML = AppState.stories.map((_, i) => '<div class="story-progress-bar"><div class="story-progress-fill ' + (i === startIndex ? 'active' : '') + '" id="progress-' + i + '"></div></div>').join('');
-            showCurrentStory();
+            progressContainer.innerHTML = userStories.stories.map((_, i) => 
+                '<div class="story-progress-bar"><div class="story-progress-fill ' + (i === storyIndex ? 'active' : '') + '" id="progress-' + i + '"></div></div>'
+            ).join('');
+            
+            showCurrentStoryForUser();
         }
 
-        function showCurrentStory() {
-            const story = AppState.stories[AppState.currentStoryIndex];
+        function showCurrentStoryForUser() {
+            const userStories = AppState.storyUsers[AppState.currentStoryUserIndex];
+            const story = AppState.currentUserStories[AppState.currentStoryIndex];
+            
             if (!story) { closeStoryViewer(); return; }
             
-            AppState.stories.forEach((_, i) => {
+            // Actualizar barras de progreso
+            AppState.currentUserStories.forEach((_, i) => {
                 const fill = document.getElementById('progress-' + i);
                 if (fill) {
                     fill.classList.remove('active');
@@ -2336,15 +2665,17 @@
             const currentFill = document.getElementById('progress-' + AppState.currentStoryIndex);
             if (currentFill) currentFill.classList.add('active');
             
-            document.getElementById('story-viewer-name').textContent = story.userName;
-            document.getElementById('story-viewer-avatar').src = story.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
+            // Mostrar info del usuario
+            document.getElementById('story-viewer-name').textContent = userStories.userName;
+            document.getElementById('story-viewer-avatar').src = userStories.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
             
-            // Mostrar tiempo relativo
+            // Mostrar tiempo
             const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : new Date(story.createdAt).getTime();
             const hoursAgo = Math.floor((Date.now() - storyTime) / (1000 * 60 * 60));
             const timeText = hoursAgo < 1 ? 'Hace menos de 1 hora' : 'Hace ' + hoursAgo + ' hora' + (hoursAgo > 1 ? 's' : '');
             document.getElementById('story-viewer-time').textContent = timeText;
             
+            // Mostrar media
             const mediaImg = document.getElementById('story-viewer-media');
             const mediaVideo = document.getElementById('story-viewer-video');
             if (story.mediaType === 'video') {
@@ -2357,23 +2688,35 @@
                 mediaImg.classList.remove('hidden');
                 mediaImg.src = story.mediaUrl;
             }
+            
             clearTimeout(AppState.storyTimer);
-            AppState.storyTimer = setTimeout(() => nextStory(), 10000);
+            AppState.storyTimer = setTimeout(() => nextStoryInUser(), 10000);
         }
 
-        function nextStory() {
-            if (AppState.currentStoryIndex < AppState.stories.length - 1) {
+        function nextStoryInUser() {
+            if (AppState.currentStoryIndex < AppState.currentUserStories.length - 1) {
+                // Siguiente historia del mismo usuario
                 AppState.currentStoryIndex++;
-                showCurrentStory();
+                showCurrentStoryForUser();
+            } else if (AppState.currentStoryUserIndex < AppState.storyUsers.length - 1) {
+                // Pasar al siguiente usuario
+                AppState.currentStoryUserIndex++;
+                openStoryViewerByUser(AppState.currentStoryUserIndex, 0);
             } else {
                 closeStoryViewer();
             }
         }
 
-        function prevStory() {
+        function prevStoryInUser() {
             if (AppState.currentStoryIndex > 0) {
+                // Historia anterior del mismo usuario
                 AppState.currentStoryIndex--;
-                showCurrentStory();
+                showCurrentStoryForUser();
+            } else if (AppState.currentStoryUserIndex > 0) {
+                // Volver al usuario anterior (última historia)
+                AppState.currentStoryUserIndex--;
+                const prevUserStories = AppState.storyUsers[AppState.currentStoryUserIndex];
+                openStoryViewerByUser(AppState.currentStoryUserIndex, prevUserStories.stories.length - 1);
             }
         }
 
@@ -2384,8 +2727,8 @@
         }
 
         document.getElementById('story-close').addEventListener('click', closeStoryViewer);
-        document.getElementById('story-nav-next').addEventListener('click', nextStory);
-        document.getElementById('story-nav-prev').addEventListener('click', prevStory);
+        document.getElementById('story-nav-next').addEventListener('click', nextStoryInUser);
+        document.getElementById('story-nav-prev').addEventListener('click', prevStoryInUser);
 
         // ===== CHAT =====
         document.getElementById('btn-send-chat').addEventListener('click', sendChatMessage);
@@ -2414,12 +2757,13 @@
             }, 800);
         }
 
-        console.log('Maria\'s Cut App - FIXED EDITION v2.0');
+        console.log('Maria\'s Cut App - FIXED EDITION v3.0');
         console.log('FIXES APLICADOS:');
-        console.log('1. Perfil "Cargando" - loadUserData con await');
-        console.log('2. Feed publico con likes/comments/share');
-        console.log('3. Historias filtradas 24h en cliente');
-        console.log('4. Foto de perfil con try/catch/finally');
+        console.log('1. Feed Global - Muestra posts de TODOS los usuarios');
+        console.log('2. Historias agrupadas por usuario - Un círculo por usuario');
+        console.log('3. Sistema de Comentarios - Modal con subcolección posts/{postId}/comments');
+        console.log('4. Sistema de Notificaciones - Notificaciones reales en tiempo real');
+        console.log('5. Like con corazón rojo y notificación al dueño del post');
     </script>
 </body>
 </html>
