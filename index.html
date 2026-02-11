@@ -1668,114 +1668,127 @@
         };
 
         // ============================================
-        // AUTENTICACION
+        // AUTENTICACION - EVENT LISTENERS (DEFINIDOS DIRECTAMENTE)
         // ============================================
-        function setupAuthListeners() {
-            document.getElementById('btn-show-register')?.addEventListener('click', () => {
-                document.getElementById('login-actions').classList.add('hidden');
-                document.getElementById('register-actions').classList.remove('hidden');
-                document.getElementById('register-fields').classList.remove('hidden');
-                document.getElementById('login-error').classList.add('hidden');
-            });
-            
-            document.getElementById('btn-show-login')?.addEventListener('click', () => {
-                document.getElementById('register-actions').classList.add('hidden');
-                document.getElementById('login-actions').classList.remove('hidden');
-                document.getElementById('register-fields').classList.add('hidden');
-                document.getElementById('login-error').classList.add('hidden');
-            });
-            
-            document.getElementById('btn-login')?.addEventListener('click', async () => {
-                const email = document.getElementById('login-email').value.trim();
-                const password = document.getElementById('login-password').value;
-                
-                if (!email || !password) {
-                    showAuthError('Ingresa email y contrasena');
-                    return;
-                }
-                
-                showLoading('Iniciando sesion...');
-                document.getElementById('login-error').classList.add('hidden');
-                
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                } catch (error) {
-                    log('AUTH', 'Login error:', error);
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                        showAuthError('Usuario o contrasena incorrectos');
-                    } else if (error.code === 'auth/invalid-email') {
-                        showAuthError('Email invalido');
-                    } else {
-                        showAuthError('Error: ' + error.message);
-                    }
-                    hideLoading();
-                }
-            });
-            
-            document.getElementById('btn-register')?.addEventListener('click', async () => {
-                const email = document.getElementById('login-email').value.trim();
-                const password = document.getElementById('login-password').value;
-                const name = document.getElementById('login-name').value.trim();
-                const pet = document.getElementById('login-pet').value.trim();
-                const phone = document.getElementById('login-phone').value.trim();
-                
-                if (!email || !password || !name) {
-                    showAuthError('Email, contrasena y nombre son obligatorios');
-                    return;
-                }
-                if (password.length < 6) {
-                    showAuthError('La contrasena debe tener al menos 6 caracteres');
-                    return;
-                }
-                
-                showLoading('Creando cuenta...');
-                document.getElementById('login-error').classList.add('hidden');
-                
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    log('AUTH', 'Registro OK, UID:', userCredential.user.uid);
-                    
-                    const userData = {
-                        name: name, email: email,
-                        petName: pet || 'Mi Mascota', phone: phone || '',
-                        createdAt: serverTimestamp()
-                    };
-                    
-                    await setDoc(doc(db, 'users', userCredential.user.uid), userData);
-                    await updateProfile(userCredential.user, { displayName: name });
-                    
-                    AppState.userData = userData;
-                    showToast('¡Cuenta creada!', 'success');
-                } catch (error) {
-                    log('AUTH', 'Registro error:', error);
-                    if (error.code === 'auth/email-already-in-use') {
-                        showAuthError('Este correo ya esta registrado');
-                    } else {
-                        showAuthError('Error: ' + error.message);
-                    }
-                    hideLoading();
-                }
-            });
-            
-            document.getElementById('btn-skip')?.addEventListener('click', async () => {
-                showLoading('Entrando como invitado...');
-                try {
-                    AppState.isGuest = true;
-                    await signInAnonymously(auth);
-                } catch (error) {
-                    log('AUTH', 'Guest error:', error);
-                    showToast('Error al entrar como invitado', 'error');
-                    AppState.isGuest = false;
-                    hideLoading();
-                }
-            });
-        }
+        const loginActions = document.getElementById('login-actions');
+        const registerActions = document.getElementById('register-actions');
+        const registerFields = document.getElementById('register-fields');
+        const errorEl = document.getElementById('login-error');
 
         function showAuthError(msg) {
-            const errorEl = document.getElementById('login-error');
             errorEl.textContent = msg;
             errorEl.classList.remove('hidden');
         }
+        function hideAuthError() { errorEl.classList.add('hidden'); }
+
+        // Toggle entre login y registro
+        document.getElementById('btn-show-register')?.addEventListener('click', () => {
+            console.log('[AUTH] Click: mostrar registro');
+            loginActions.classList.add('hidden');
+            registerActions.classList.remove('hidden');
+            registerFields.classList.remove('hidden');
+            hideAuthError();
+        });
+
+        document.getElementById('btn-show-login')?.addEventListener('click', () => {
+            console.log('[AUTH] Click: mostrar login');
+            registerActions.classList.add('hidden');
+            loginActions.classList.remove('hidden');
+            registerFields.classList.add('hidden');
+            hideAuthError();
+        });
+
+        // Login
+        document.getElementById('btn-login')?.addEventListener('click', async () => {
+            console.log('[AUTH] Click: iniciar sesion');
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                showAuthError('Ingresa email y contrasena');
+                return;
+            }
+            
+            showLoading('Iniciando sesion...');
+            hideAuthError();
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                // El onAuthStateChanged se encarga del resto
+            } catch (error) {
+                console.error('[AUTH] Login error:', error);
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                    showAuthError('Usuario o contrasena incorrectos');
+                } else if (error.code === 'auth/invalid-email') {
+                    showAuthError('Email invalido');
+                } else {
+                    showAuthError('Error: ' + error.message);
+                }
+                hideLoading();
+            }
+        });
+
+        // Registro
+        document.getElementById('btn-register')?.addEventListener('click', async () => {
+            console.log('[AUTH] Click: registrarse');
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const name = document.getElementById('login-name').value.trim();
+            const pet = document.getElementById('login-pet').value.trim();
+            const phone = document.getElementById('login-phone').value.trim();
+            
+            if (!email || !password || !name) {
+                showAuthError('Email, contrasena y nombre son obligatorios');
+                return;
+            }
+            if (password.length < 6) {
+                showAuthError('La contrasena debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            showLoading('Creando cuenta...');
+            hideAuthError();
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log('[AUTH] Registro OK, UID:', userCredential.user.uid);
+                
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name, email: email,
+                    petName: pet || 'Mi Mascota', phone: phone || '',
+                    createdAt: serverTimestamp()
+                });
+                
+                await updateProfile(userCredential.user, { displayName: name });
+                showToast('¡Cuenta creada!', 'success');
+            } catch (error) {
+                console.error('[AUTH] Registro error:', error);
+                if (error.code === 'auth/email-already-in-use') {
+                    showAuthError('Este correo ya esta registrado');
+                } else {
+                    showAuthError('Error: ' + error.message);
+                }
+                hideLoading();
+            }
+        });
+
+        // Invitado
+        document.getElementById('btn-skip')?.addEventListener('click', async () => {
+            console.log('[AUTH] Click: invitado');
+            showLoading('Entrando como invitado...');
+            try {
+                AppState.isGuest = true;
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.error('[AUTH] Guest error:', error);
+                showToast('Error al entrar como invitado', 'error');
+                AppState.isGuest = false;
+                hideLoading();
+            }
+        });
+
+        // Placeholder para compatibilidad
+        function setupAuthListeners() { console.log('[AUTH] Listeners ya configurados'); }
 
         // ============================================
         // PERFIL Y NOTIFICACIONES
