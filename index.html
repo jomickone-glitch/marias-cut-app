@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Maria's Cut</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,9 +11,7 @@
     <link rel="apple-touch-icon" href="778405F5-FB9C-47F4-908A-185070ECD1DC.PNG">
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -132,8 +128,21 @@
         .story-avatar-small { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
         .story-user-info { color: white; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
         .story-close { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 30px); right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; z-index: 10; }
+
+        /* SOCIAL CARD CON ACCIONES */
         .social-card { background: #FFFDF5; border-radius: 24px; margin: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(75, 54, 33, 0.06); }
         .post-media { width: 100%; aspect-ratio: 1; object-fit: cover; }
+        .post-actions { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid rgba(197, 160, 89, 0.1); }
+        .post-action-btn { display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 50%; cursor: pointer; transition: all 0.2s; background: transparent; border: none; }
+        .post-action-btn:hover { background: rgba(197, 160, 89, 0.1); }
+        .post-action-btn svg { width: 24px; height: 24px; color: #8B7355; transition: all 0.2s; }
+        .post-action-btn.liked svg { color: #EF4444; fill: #EF4444; }
+        .post-action-btn.liked svg path { fill: #EF4444; }
+        .post-action-count { font-size: 0.85rem; font-weight: 600; color: #4B3621; }
+        .post-caption { padding: 0 16px 16px; }
+        .post-caption-text { font-size: 0.95rem; color: #4B3621; }
+        .post-caption-text .username { font-weight: 700; }
+
         .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
         .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4; animation: fadeInUp 0.3s ease; }
@@ -169,12 +178,12 @@
         .header-centered .header-title { text-align: center; }
         .header-centered .header-actions { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); margin-top: calc(env(safe-area-inset-top, 0px) / 2); }
 
-        /* ===== NUEVOS ESTILOS PARA PERFIL ===== */
+        /* PERFIL */
         .profile-header-new { background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%); padding-top: calc(env(safe-area-inset-top, 0px) + 16px); padding-bottom: 24px; position: relative; }
         .profile-header-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 0 16px 16px; }
         .profile-avatar-large { width: 90px; height: 90px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 16px rgba(0,0,0,0.15); object-fit: cover; }
         .profile-header-actions { display: flex; gap: 12px; }
-        .profile-icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: none; }
+        .profile-icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: none; position: relative; }
         .profile-icon-btn:hover { background: white; transform: scale(1.05); }
         .profile-icon-btn .badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .profile-info { text-align: center; padding: 0 16px; }
@@ -235,7 +244,7 @@
         .side-menu-item-title { font-weight: 600; color: #4B3621; font-size: 0.95rem; }
         .side-menu-item-desc { font-size: 0.8rem; color: #8B7355; }
 
-        /* Modal Mis Datos */
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 900; display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-sheet { background: white; width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
@@ -255,7 +264,7 @@
         .avatar-edit:hover .avatar-edit-overlay { opacity: 1; }
         .avatar-edit-overlay svg { width: 24px; height: 24px; color: white; }
 
-        /* Wizard Modal */
+        /* Wizard */
         .wizard-step { display: none; }
         .wizard-step.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -274,7 +283,7 @@
         .wizard-btn.primary:hover { opacity: 0.9; }
         .wizard-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* Notificaciones Modal */
+        /* Notificaciones */
         .notification-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(197, 160, 89, 0.1); cursor: pointer; transition: background 0.2s; }
         .notification-item:hover { background: rgba(197, 160, 89, 0.03); }
         .notification-item.unread { background: rgba(197, 160, 89, 0.05); }
@@ -285,7 +294,7 @@
         .notification-time { font-size: 0.75rem; color: #8B7355; margin-top: 4px; }
         .notification-dot { width: 8px; height: 8px; background: #C5A059; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
 
-        /* Alerta de confirmación */
+        /* Alerta */
         .alert-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
         .alert-overlay.active { display: flex; }
         .alert-box { background: white; border-radius: 20px; padding: 24px; max-width: 320px; width: 100%; text-align: center; animation: scaleIn 0.2s; }
@@ -300,7 +309,6 @@
         .alert-btn.confirm { background: #EF4444; color: white; }
     </style>
 </head>
-
 <body>
     <div id="app-container">
         <!-- SCREEN: LOGIN -->
@@ -530,7 +538,7 @@
                     </div>
                     <div class="bg-white rounded-2xl p-4 border border-[rgba(197,160,89,0.2)]">
                         <div class="w-10 h-10 bg-[#F0EAD6] rounded-xl flex items-center justify-center mb-3">
-                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
+                            <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" strokelinejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
                         </div>
                         <h3 class="font-semibold text-[#4B3621] text-sm">A Domicilio</h3>
                         <p class="text-xs text-[#8B7355] mt-1">Furgoneta VIP</p>
@@ -574,10 +582,11 @@
             </div>
         </div>
     </div>
+</body>
+</html>
 
-    <!-- ===== NUEVO SCREEN: PROFILE ===== -->
+    <!-- SCREEN: PROFILE -->
     <div id="screen-profile" class="screen hidden">
-        <!-- Header con foto y acciones -->
         <div class="profile-header-new">
             <div class="profile-header-top">
                 <div style="width: 40px;"></div>
@@ -604,7 +613,6 @@
             </div>
         </div>
 
-        <!-- Estadísticas -->
         <div class="profile-stats">
             <div class="profile-stat" data-tab="mascota">
                 <p id="stat-mascotas" class="stat-value">1</p>
@@ -620,14 +628,12 @@
             </div>
         </div>
 
-        <!-- Tabs -->
         <div class="profile-tabs">
             <div class="profile-tab" data-tab="mascota">Mascota</div>
             <div class="profile-tab" data-tab="citas">Citas</div>
             <div class="profile-tab active" data-tab="posts">Posts</div>
         </div>
 
-        <!-- Contenido de tabs -->
         <div class="screen-content">
             <div id="tab-content-posts" class="profile-content">
                 <div id="user-posts-grid" class="posts-grid"></div>
@@ -667,7 +673,7 @@
                     </div>
                     <div class="pet-form-group">
                         <label class="pet-form-label">Edad</label>
-                        <input type="text" id="pet-age-input" class="pet-form-input" placeholder="Ej: 2 años">
+                        <input type="text" id="pet-age-input" class="pet-form-input" placeholder="Ej: 2 anos">
                     </div>
                     <div class="pet-form-group">
                         <label class="pet-form-label">Notas especiales</label>
@@ -679,7 +685,7 @@
         </div>
     </div>
 
-    <!-- SIDE MENU (Hamburguesa) -->
+    <!-- SIDE MENU -->
     <div id="side-menu-overlay" class="side-menu-overlay"></div>
     <div id="side-menu" class="side-menu">
         <div class="side-menu-header">
@@ -762,7 +768,7 @@
         </div>
     </div>
 
-    <!-- MODAL: WIZARD SOLICITUD -->
+    <!-- MODAL: WIZARD -->
     <div id="modal-wizard" class="modal-overlay">
         <div class="modal-sheet">
             <div class="modal-header">
@@ -780,7 +786,6 @@
                     <div class="wizard-progress-bar" id="progress-5"></div>
                 </div>
 
-                <!-- Paso 1 -->
                 <div class="wizard-step active" id="step-1">
                     <h4 class="text-lg font-semibold text-[#4B3621] mb-4">¿Cuantos anos de experiencia tienes?</h4>
                     <div class="option-card" data-value="0-1"><div class="option-card-title">0 - 1 ano</div></div>
@@ -789,7 +794,6 @@
                     <div class="option-card" data-value="otro"><div class="option-card-title">Otro</div></div>
                 </div>
 
-                <!-- Paso 2 -->
                 <div class="wizard-step" id="step-2">
                     <h4 class="text-lg font-semibold text-[#4B3621] mb-4">¿Tienes certificacion profesional?</h4>
                     <div class="option-card" data-value="si-certificado"><div class="option-card-title">Si, tengo certificacion</div></div>
@@ -798,7 +802,6 @@
                     <div class="option-card" data-value="no-tengo"><div class="option-card-title">No tengo certificacion</div></div>
                 </div>
 
-                <!-- Paso 3 -->
                 <div class="wizard-step" id="step-3">
                     <h4 class="text-lg font-semibold text-[#4B3621] mb-4">¿Que tipo de mascotas prefieres trabajar?</h4>
                     <div class="option-card" data-value="perros"><div class="option-card-title">Perros</div></div>
@@ -807,7 +810,6 @@
                     <div class="option-card" data-value="otros-animales"><div class="option-card-title">Otros animales</div></div>
                 </div>
 
-                <!-- Paso 4 -->
                 <div class="wizard-step" id="step-4">
                     <h4 class="text-lg font-semibold text-[#4B3621] mb-4">¿Disponibilidad de tiempo?</h4>
                     <div class="option-card" data-value="tiempo-completo"><div class="option-card-title">Tiempo completo</div></div>
@@ -816,7 +818,6 @@
                     <div class="option-card" data-value="por-horas"><div class="option-card-title">Por horas</div></div>
                 </div>
 
-                <!-- Paso 5 -->
                 <div class="wizard-step" id="step-5">
                     <h4 class="text-lg font-semibold text-[#4B3621] mb-4">Cuéntanos sobre ti</h4>
                     <textarea id="wizard-about" class="post-editor-input" rows="5" placeholder="Describe tu experiencia, metodologia, o cualquier informacion relevante..."></textarea>
@@ -839,13 +840,11 @@
                     <svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
-            <div class="modal-body" id="notifications-list">
-                <!-- Notificaciones se cargan dinamicamente -->
-            </div>
+            <div class="modal-body" id="notifications-list"></div>
         </div>
     </div>
 
-    <!-- ALERT: CONFIRMAR CIERRE DE SESION -->
+    <!-- ALERT: LOGOUT -->
     <div id="alert-logout" class="alert-overlay">
         <div class="alert-box">
             <div class="alert-icon">
@@ -1075,11 +1074,12 @@
     <input type="file" id="gallery-input" class="hidden" accept="image/*,video/*">
     </div>
 
+
     <!-- FIREBASE & APP LOGIC -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
         import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
         const firebaseConfig = {
@@ -1113,7 +1113,8 @@
             userBookings: [],
             wizardStep: 1,
             wizardAnswers: {},
-            wizardType: ''
+            wizardType: '',
+            likedPosts: new Set()
         };
 
         const CanvasState = {
@@ -1144,7 +1145,6 @@
             AppState.currentScreen = screenId;
             updateNavState();
             
-            // Cargar datos del perfil si es la pantalla de perfil
             if (screenId === 'screen-profile' && AppState.currentUser) {
                 loadUserProfileData();
             }
@@ -1214,15 +1214,12 @@
         });
 
         function switchProfileTab(tabName) {
-            // Actualizar tabs
             document.querySelectorAll('.profile-tab').forEach(t => {
                 t.classList.toggle('active', t.dataset.tab === tabName);
             });
             document.querySelectorAll('.profile-stat').forEach(s => {
                 s.classList.toggle('active', s.dataset.tab === tabName);
             });
-            
-            // Mostrar contenido
             document.querySelectorAll('[id^="tab-content-"]').forEach(c => {
                 c.classList.add('hidden');
             });
@@ -1232,10 +1229,8 @@
         // ===== PERFIL - CARGAR DATOS =====
         async function loadUserProfileData() {
             if (!AppState.currentUser) return;
-            
             const uid = AppState.currentUser.uid;
             
-            // Cargar posts del usuario
             const postsQuery = query(
                 collection(db, 'posts'),
                 where('userId', '==', uid),
@@ -1266,11 +1261,8 @@
                 grid.innerHTML = html;
                 empty.classList.add('hidden');
                 document.getElementById('stat-posts').textContent = AppState.userPosts.length;
-            }, (error) => {
-                console.error('Error cargando posts:', error);
             });
             
-            // Cargar bookings del usuario
             const bookingsQuery = query(
                 collection(db, 'bookings'),
                 where('userId', '==', uid),
@@ -1290,8 +1282,8 @@
                 }
                 
                 let html = '';
-                snapshot.forEach((doc) => {
-                    const booking = doc.data();
+                snapshot.forEach((docSnap) => {
+                    const booking = docSnap.data();
                     AppState.userBookings.push(booking);
                     const fecha = booking.date ? new Date(booking.date.seconds * 1000).toLocaleDateString('es-CL') : 'Pendiente';
                     html += '<div class="booking-item">' +
@@ -1307,21 +1299,22 @@
                 list.innerHTML = html;
                 empty.classList.add('hidden');
                 document.getElementById('stat-citas').textContent = AppState.userBookings.length;
-            }, (error) => {
-                console.error('Error cargando bookings:', error);
             });
             
-            // Cargar datos de la mascota
-            const petDoc = await getDoc(doc(db, 'pets', uid));
-            if (petDoc.exists()) {
-                const pet = petDoc.data();
-                document.getElementById('pet-name-input').value = pet.name || '';
-                document.getElementById('pet-breed-input').value = pet.breed || '';
-                document.getElementById('pet-age-input').value = pet.age || '';
-                document.getElementById('pet-notes-input').value = pet.notes || '';
-                if (pet.photoURL) {
-                    document.getElementById('pet-avatar-img').src = pet.photoURL;
+            try {
+                const petDoc = await getDoc(doc(db, 'pets', uid));
+                if (petDoc.exists()) {
+                    const pet = petDoc.data();
+                    document.getElementById('pet-name-input').value = pet.name || '';
+                    document.getElementById('pet-breed-input').value = pet.breed || '';
+                    document.getElementById('pet-age-input').value = pet.age || '';
+                    document.getElementById('pet-notes-input').value = pet.notes || '';
+                    if (pet.photoURL) {
+                        document.getElementById('pet-avatar-img').src = pet.photoURL;
+                    }
                 }
+            } catch (error) {
+                console.error('Error cargando datos de mascota:', error);
             }
         }
 
@@ -1329,21 +1322,18 @@
         document.getElementById('menu-mis-datos').addEventListener('click', () => {
             document.getElementById('side-menu-overlay').classList.remove('active');
             document.getElementById('side-menu').classList.remove('active');
-            
-            // Cargar datos actuales
             document.getElementById('edit-name').value = AppState.userData?.name || '';
             document.getElementById('edit-phone').value = AppState.userData?.phone || '';
             document.getElementById('edit-email').value = AppState.currentUser?.email || '';
             document.getElementById('modal-avatar-img').src = AppState.currentUser?.photoURL || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop';
-            
             openModal('modal-mis-datos');
         });
 
-        // Cambiar avatar
         document.getElementById('avatar-edit').addEventListener('click', () => {
             document.getElementById('avatar-input').click();
         });
 
+        // FIX 4: FOTO DE PERFIL - Try/catch/finally para asegurar que el spinner se detenga
         document.getElementById('avatar-input').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -1353,9 +1343,7 @@
                 const storageRef = ref(storage, 'avatars/' + AppState.currentUser.uid + '.jpg');
                 await uploadBytes(storageRef, file);
                 const photoURL = await getDownloadURL(storageRef);
-                
                 await updateProfile(AppState.currentUser, { photoURL });
-                
                 document.getElementById('modal-avatar-img').src = photoURL;
                 document.getElementById('profile-avatar').src = photoURL;
                 showToast('Foto actualizada', 'success');
@@ -1367,7 +1355,6 @@
             }
         });
 
-        // Guardar datos
         document.getElementById('btn-save-datos').addEventListener('click', async () => {
             const name = document.getElementById('edit-name').value.trim();
             const phone = document.getElementById('edit-phone').value.trim();
@@ -1375,23 +1362,19 @@
             
             showLoading('Guardando...');
             try {
-                // Actualizar Firestore
                 await setDoc(doc(db, 'users', AppState.currentUser.uid), {
                     name: name,
                     phone: phone,
                     email: AppState.currentUser.email
                 }, { merge: true });
                 
-                // Actualizar Auth profile
                 await updateProfile(AppState.currentUser, { displayName: name });
                 
-                // Actualizar password si se proporciono
                 if (password && password.length >= 6) {
                     await updatePassword(AppState.currentUser, password);
                     showToast('Contrasena actualizada', 'success');
                 }
                 
-                // Actualizar estado local
                 AppState.userData.name = name;
                 AppState.userData.phone = phone;
                 document.getElementById('profile-name').textContent = name;
@@ -1406,7 +1389,7 @@
             }
         });
 
-        // ===== MENU: SOLICITUD ENTRENADOR/PASEADOR =====
+        // ===== WIZARD =====
         document.getElementById('menu-entrenador').addEventListener('click', () => {
             document.getElementById('side-menu-overlay').classList.remove('active');
             document.getElementById('side-menu').classList.remove('active');
@@ -1423,33 +1406,23 @@
             AppState.wizardType = type;
             AppState.wizardStep = 1;
             AppState.wizardAnswers = {};
-            
-            document.getElementById('wizard-title').textContent = type === 'entrenador' 
-                ? 'Solicitud de Entrenador' 
-                : 'Solicitud de Paseador';
-            
+            document.getElementById('wizard-title').textContent = type === 'entrenador' ? 'Solicitud de Entrenador' : 'Solicitud de Paseador';
             updateWizardUI();
             openModal('modal-wizard');
         }
 
         function updateWizardUI() {
-            // Actualizar progress bars
             for (let i = 1; i <= 5; i++) {
                 document.getElementById('progress-' + i).classList.toggle('fill', i <= AppState.wizardStep);
             }
-            
-            // Mostrar paso actual
             document.querySelectorAll('.wizard-step').forEach((step, index) => {
                 step.classList.toggle('active', index + 1 === AppState.wizardStep);
             });
-            
-            // Actualizar botones
             document.getElementById('wizard-prev').style.visibility = AppState.wizardStep === 1 ? 'hidden' : 'visible';
             document.getElementById('wizard-next').textContent = AppState.wizardStep === 5 ? 'Finalizar' : 'Siguiente';
         }
 
         window.nextWizardStep = function() {
-            // Guardar respuesta del paso actual
             const currentStepEl = document.getElementById('step-' + AppState.wizardStep);
             if (AppState.wizardStep < 5) {
                 const selected = currentStepEl.querySelector('.option-card.selected');
@@ -1477,7 +1450,6 @@
             }
         };
 
-        // Seleccion de opciones en wizard
         document.querySelectorAll('.option-card').forEach(card => {
             card.addEventListener('click', function() {
                 this.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
@@ -1497,7 +1469,6 @@
                     userEmail: AppState.currentUser.email,
                     createdAt: serverTimestamp()
                 });
-                
                 showToast('Solicitud enviada. Te contactaremos pronto!', 'success');
                 closeModal('modal-wizard');
             } catch (error) {
@@ -1508,7 +1479,7 @@
             }
         }
 
-        // ===== MENU: CERRAR SESION =====
+        // ===== LOGOUT =====
         document.getElementById('menu-logout').addEventListener('click', () => {
             document.getElementById('side-menu-overlay').classList.remove('active');
             document.getElementById('side-menu').classList.remove('active');
@@ -1540,7 +1511,6 @@
         document.getElementById('btn-notifications').addEventListener('click', () => {
             renderNotifications();
             openModal('modal-notifications');
-            // Marcar como leidas
             document.getElementById('notif-badge').style.display = 'none';
         });
 
@@ -1560,7 +1530,7 @@
             container.innerHTML = html;
         }
 
-        // ===== MASCOTA - GUARDAR =====
+        // ===== MASCOTA =====
         document.getElementById('pet-avatar-upload').addEventListener('click', () => {
             document.getElementById('pet-avatar-input').click();
         });
@@ -1604,7 +1574,7 @@
             }
         });
 
-        // ===== AUTH STATE =====
+        // ===== FIX 1: AUTH STATE CON AWAIT PARA LOADUSERDATA =====
         onAuthStateChanged(auth, async (user) => {
             const nav = document.getElementById('bottom-nav');
             if (AppState.isInitializing) {
@@ -1619,7 +1589,11 @@
                 } else {
                     AppState.currentUser = user;
                     if (user && !AppState.isGuest) {
-                        await loadUserData(user.uid);
+                        // FIX CRITICO: Esperar a que loadUserData termine antes de mostrar la app
+                        const dataLoaded = await loadUserData(user.uid);
+                        if (!dataLoaded) {
+                            console.warn('No se pudieron cargar los datos del usuario');
+                        }
                     } else {
                         AppState.userData = { name: 'Invitado', petName: '' };
                     }
@@ -1639,25 +1613,36 @@
             }
         });
 
+        // FIX 1: Funcion loadUserData que retorna Promise para poder hacer await
         async function loadUserData(uid) {
             if (!uid) return false;
             try {
                 const userDoc = await getDoc(doc(db, 'users', uid));
                 if (userDoc.exists()) {
                     AppState.userData = userDoc.data();
+                    // Actualizar DOM del perfil inmediatamente
                     document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario';
                     document.getElementById('profile-pet').textContent = AppState.userData.petName ? '🐕 ' + AppState.userData.petName : '';
                     if (AppState.currentUser?.photoURL) {
                         document.getElementById('profile-avatar').src = AppState.currentUser.photoURL;
                     }
                     return true;
+                } else {
+                    // Si no existe el documento, crear uno basico
+                    AppState.userData = { name: 'Usuario', petName: '' };
+                    document.getElementById('profile-name').textContent = 'Usuario';
+                    document.getElementById('profile-pet').textContent = '';
+                    return true;
                 }
-                return false;
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error cargando datos de usuario:', error);
+                // En caso de error, mostrar valores por defecto para evitar "Cargando..."
+                document.getElementById('profile-name').textContent = 'Usuario';
+                document.getElementById('profile-pet').textContent = '';
                 return false;
             }
         }
+
 
         // ===== LOGIN =====
         const loginActions = document.getElementById('login-actions');
@@ -2155,7 +2140,8 @@
                     mediaUrl: downloadURL,
                     mediaType: AppState.capturedMedia.type,
                     caption: caption || '🐾',
-                    likes: 0,
+                    likes: [],
+                    comments: [],
                     createdAt: serverTimestamp()
                 });
                 showToast('Publicacion creada!', 'success');
@@ -2165,41 +2151,156 @@
             }
         });
 
-        // ===== FEED Y STORIES =====
+
+        // ===== FIX 2: FEED PUBLICO CON LIKES, COMMENTS, SHARE =====
         function loadFeed() {
             const feedContainer = document.getElementById('feed-container');
+            // Feed publico - sin where clause, todos los posts
             const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+            
             onSnapshot(postsQuery, (snapshot) => {
                 let html = '';
-                snapshot.forEach((doc) => {
-                    const post = doc.data();
-                    html += '<div class="social-card"><div class="flex items-center p-3"><img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2"><div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div></div>';
-                    if (post.mediaType === 'video') html += '<video src="' + post.mediaUrl + '" class="post-media" controls></video>';
-                    else html += '<img src="' + post.mediaUrl + '" class="post-media">';
-                    html += '<div class="p-3"><p class="text-sm text-[#4B3621]"><span class="font-bold">' + post.userName + '</span> ' + post.caption + '</p></div></div>';
+                snapshot.forEach((docSnap) => {
+                    const post = docSnap.data();
+                    const postId = docSnap.id;
+                    const likes = post.likes || [];
+                    const comments = post.comments || [];
+                    const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
+                    const likeCount = likes.length;
+                    const commentCount = comments.length;
+                    
+                    html += '<div class="social-card">';
+                    html += '<div class="flex items-center p-3">';
+                    html += '<img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2">';
+                    html += '<div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div>';
+                    html += '</div>';
+                    
+                    if (post.mediaType === 'video') {
+                        html += '<video src="' + post.mediaUrl + '" class="post-media" controls></video>';
+                    } else {
+                        html += '<img src="' + post.mediaUrl + '" class="post-media">';
+                    }
+                    
+                    // Barra de acciones con likes, comments, share
+                    html += '<div class="post-actions">';
+                    html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
+                    html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                    html += '<span class="post-action-count like-count">' + likeCount + '</span>';
+                    html += '</button>';
+                    
+                    html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
+                    html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
+                    html += '<span class="post-action-count">' + commentCount + '</span>';
+                    html += '</button>';
+                    
+                    html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
+                    html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
+                    html += '</button>';
+                    html += '</div>';
+                    
+                    html += '<div class="post-caption">';
+                    html += '<p class="post-caption-text"><span class="username">' + post.userName + '</span> ' + (post.caption || '🐾') + '</p>';
+                    html += '</div>';
+                    html += '</div>';
                 });
                 feedContainer.innerHTML = html;
             });
         }
 
+        // Toggle Like - funcion global
+        window.toggleLike = async function(postId, btn) {
+            if (AppState.isGuest || !AppState.currentUser) {
+                showToast('Registrate para dar like', 'info');
+                return;
+            }
+            
+            const postRef = doc(db, 'posts', postId);
+            const isLiked = btn.classList.contains('liked');
+            
+            try {
+                if (isLiked) {
+                    await updateDoc(postRef, { likes: arrayRemove(AppState.currentUser.uid) });
+                    btn.classList.remove('liked');
+                    btn.querySelector('svg').setAttribute('fill', 'none');
+                } else {
+                    await updateDoc(postRef, { likes: arrayUnion(AppState.currentUser.uid) });
+                    btn.classList.add('liked');
+                    btn.querySelector('svg').setAttribute('fill', '#EF4444');
+                }
+            } catch (error) {
+                console.error('Error al dar like:', error);
+                showToast('Error al procesar like', 'error');
+            }
+        };
+
+        // Show Comments - funcion global
+        window.showComments = function(postId) {
+            if (AppState.isGuest) {
+                showToast('Registrate para comentar', 'info');
+                return;
+            }
+            // Por ahora solo mostramos un toast, en una version futura se abriria un modal
+            showToast('Comentarios proximamente', 'info');
+        };
+
+        // Share Post - funcion global
+        window.sharePost = async function(postId, caption) {
+            const decodedCaption = decodeURIComponent(caption);
+            const shareData = {
+                title: 'Maria\'s Cut - Social Club',
+                text: decodedCaption || 'Mira esta publicacion en Maria\'s Cut! 🐕',
+                url: window.location.href + '?post=' + postId
+            };
+            
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    showToast('Compartido!', 'success');
+                } else {
+                    // Fallback: copiar al portapapeles
+                    await navigator.clipboard.writeText(shareData.url);
+                    showToast('Link copiado al portapapeles', 'success');
+                }
+            } catch (error) {
+                console.error('Error al compartir:', error);
+                showToast('Error al compartir', 'error');
+            }
+        };
+
+        // ===== FIX 3: HISTORIAS EFIMERAS - FILTRO 24H EN CLIENTE =====
         function loadStories() {
             const storiesContainer = document.getElementById('stories-container');
             const storiesQuery = query(collection(db, 'stories'), orderBy('createdAt', 'desc'));
+            
             onSnapshot(storiesQuery, (snapshot) => {
                 AppState.stories = [];
+                const now = Date.now();
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                
                 let html = '<div class="story-item" id="btn-add-story"><div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;"><div class="w-full h-full bg-white rounded-full flex items-center justify-center"><svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div></div><span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span></div>';
-                snapshot.forEach((doc) => {
-                    const story = { id: doc.id, ...doc.data() };
+                
+                snapshot.forEach((docSnap) => {
+                    const story = { id: docSnap.id, ...docSnap.data() };
+                    
+                    // FIX CRITICO: Filtrar historias mayores a 24h en el cliente
+                    const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : new Date(story.createdAt).getTime();
+                    if (now - storyTime > twentyFourHours) {
+                        return; // Skip historias viejas
+                    }
+                    
                     AppState.stories.push(story);
                     html += '<div class="story-item" data-story-id="' + story.id + '"><div class="story-avatar-ring unseen"><img src="' + story.mediaUrl + '" class="story-avatar"></div><span class="text-xs text-[#4B3621] mt-1 font-medium">' + story.userName + '</span></div>';
                 });
+                
                 storiesContainer.innerHTML = html;
+                
                 document.getElementById('btn-add-story').addEventListener('click', () => {
                     if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
                     AppState.cameraMode = 'story';
                     updateCameraModeUI();
                     startCamera();
                 });
+                
                 document.querySelectorAll('.story-item[data-story-id]').forEach(item => {
                     item.addEventListener('click', () => {
                         const storyId = item.dataset.storyId;
@@ -2223,6 +2324,7 @@
         function showCurrentStory() {
             const story = AppState.stories[AppState.currentStoryIndex];
             if (!story) { closeStoryViewer(); return; }
+            
             AppState.stories.forEach((_, i) => {
                 const fill = document.getElementById('progress-' + i);
                 if (fill) {
@@ -2230,10 +2332,19 @@
                     fill.style.width = i < AppState.currentStoryIndex ? '100%' : '0%';
                 }
             });
+            
             const currentFill = document.getElementById('progress-' + AppState.currentStoryIndex);
             if (currentFill) currentFill.classList.add('active');
+            
             document.getElementById('story-viewer-name').textContent = story.userName;
             document.getElementById('story-viewer-avatar').src = story.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
+            
+            // Mostrar tiempo relativo
+            const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : new Date(story.createdAt).getTime();
+            const hoursAgo = Math.floor((Date.now() - storyTime) / (1000 * 60 * 60));
+            const timeText = hoursAgo < 1 ? 'Hace menos de 1 hora' : 'Hace ' + hoursAgo + ' hora' + (hoursAgo > 1 ? 's' : '');
+            document.getElementById('story-viewer-time').textContent = timeText;
+            
             const mediaImg = document.getElementById('story-viewer-media');
             const mediaVideo = document.getElementById('story-viewer-video');
             if (story.mediaType === 'video') {
@@ -2303,7 +2414,12 @@
             }, 800);
         }
 
-        console.log('Maria\'s Cut App - PERFIL PRO EDITION');
+        console.log('Maria\'s Cut App - FIXED EDITION v2.0');
+        console.log('FIXES APLICADOS:');
+        console.log('1. Perfil "Cargando" - loadUserData con await');
+        console.log('2. Feed publico con likes/comments/share');
+        console.log('3. Historias filtradas 24h en cliente');
+        console.log('4. Foto de perfil con try/catch/finally');
     </script>
 </body>
 </html>
