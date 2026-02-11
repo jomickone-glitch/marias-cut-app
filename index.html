@@ -128,6 +128,8 @@
         .story-avatar-small { width: 40px; height: 40px; border-radius: 50%; border: 2px solid white; object-fit: cover; }
         .story-user-info { color: white; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); }
         .story-close { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 30px); right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; z-index: 10; }
+
+        /* SOCIAL CARD */
         .social-card { background: #FFFDF5; border-radius: 24px; margin: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(75, 54, 33, 0.06); }
         .post-media { width: 100%; aspect-ratio: 1; object-fit: cover; }
         .post-actions { display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-top: 1px solid rgba(197, 160, 89, 0.1); }
@@ -135,10 +137,12 @@
         .post-action-btn:hover { background: rgba(197, 160, 89, 0.1); }
         .post-action-btn svg { width: 24px; height: 24px; color: #8B7355; transition: all 0.2s; }
         .post-action-btn.liked svg { color: #EF4444; fill: #EF4444; }
+        .post-action-btn.liked svg path { fill: #EF4444; }
         .post-action-count { font-size: 0.85rem; font-weight: 600; color: #4B3621; }
         .post-caption { padding: 0 16px 16px; }
         .post-caption-text { font-size: 0.95rem; color: #4B3621; }
         .post-caption-text .username { font-weight: 700; }
+
         .chat-container { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
         .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
         .chat-bubble { max-width: 80%; padding: 12px 16px; border-radius: 20px; font-size: 0.95rem; line-height: 1.4; animation: fadeInUp 0.3s ease; }
@@ -170,6 +174,11 @@
         .toast.success { background: #22c55e; }
         .toast.error { background: #ef4444; }
         .toast.info { background: #3b82f6; }
+        .header-centered { display: flex; justify-content: center; align-items: center; position: relative; padding: 12px 16px; padding-top: calc(env(safe-area-inset-top, 0px) + 12px); }
+        .header-centered .header-title { text-align: center; }
+        .header-centered .header-actions { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); margin-top: calc(env(safe-area-inset-top, 0px) / 2); }
+
+        /* PERFIL */
         .profile-header-new { background: linear-gradient(135deg, #F0EAD6 0%, #D4B896 100%); padding-top: calc(env(safe-area-inset-top, 0px) + 16px); padding-bottom: 24px; position: relative; }
         .profile-header-top { display: flex; justify-content: space-between; align-items: flex-start; padding: 0 16px 16px; }
         .profile-avatar-large { width: 90px; height: 90px; border-radius: 50%; border: 4px solid white; box-shadow: 0 4px 16px rgba(0,0,0,0.15); object-fit: cover; }
@@ -177,7 +186,6 @@
         .profile-icon-btn { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; border: none; position: relative; }
         .profile-icon-btn:hover { background: white; transform: scale(1.05); }
         .profile-icon-btn .badge { position: absolute; top: -2px; right: -2px; width: 18px; height: 18px; background: #ef4444; color: white; font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .profile-icon-btn .badge-dot { position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; border: 2px solid white; }
         .profile-info { text-align: center; padding: 0 16px; }
         .profile-name { font-size: 1.25rem; font-weight: 700; color: #4B3621; margin-bottom: 4px; }
         .profile-pet-name { font-size: 0.9rem; color: #6D5D4E; }
@@ -196,6 +204,7 @@
         .posts-grid-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
         .posts-grid-item:hover img { transform: scale(1.05); }
         .empty-state { text-align: center; padding: 48px 24px; color: #8B7355; }
+        .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.5; }
         .booking-item { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(197, 160, 89, 0.15); }
         .booking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .booking-service { font-weight: 600; color: #4B3621; }
@@ -209,8 +218,14 @@
         .pet-form-label { display: block; font-size: 0.85rem; font-weight: 500; color: #4B3621; margin-bottom: 6px; }
         .pet-form-input { width: 100%; padding: 12px 16px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 12px; font-size: 0.95rem; outline: none; transition: all 0.2s; }
         .pet-form-input:focus { border-color: #C5A059; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1); }
+        .pet-form-input:read-only { background: #F9F7F2; color: #8B7355; }
         .pet-avatar-upload { width: 100px; height: 100px; border-radius: 50%; border: 3px dashed rgba(197, 160, 89, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; margin: 0 auto 20px; transition: all 0.2s; position: relative; overflow: hidden; }
         .pet-avatar-upload:hover { border-color: #C5A059; background: rgba(197, 160, 89, 0.05); }
+        .pet-avatar-upload img { width: 100%; height: 100%; object-fit: cover; }
+        .pet-avatar-upload .upload-icon { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); padding: 4px; text-align: center; }
+        .pet-avatar-upload .upload-icon svg { width: 16px; height: 16px; color: white; }
+
+        /* Side Menu Modal */
         .side-menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 800; display: none; opacity: 0; transition: opacity 0.3s; }
         .side-menu-overlay.active { display: block; opacity: 1; }
         .side-menu { position: fixed; top: 0; right: 0; bottom: 0; width: 80%; max-width: 320px; background: white; z-index: 801; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding-top: calc(env(safe-area-inset-top, 0px) + 16px); }
@@ -228,6 +243,8 @@
         .side-menu-item-text { flex: 1; }
         .side-menu-item-title { font-weight: 600; color: #4B3621; font-size: 0.95rem; }
         .side-menu-item-desc { font-size: 0.8rem; color: #8B7355; }
+
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 900; display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .modal-sheet { background: white; width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
@@ -240,10 +257,28 @@
         .form-label { display: block; font-size: 0.85rem; font-weight: 500; color: #4B3621; margin-bottom: 8px; }
         .form-input { width: 100%; padding: 14px 16px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 12px; font-size: 0.95rem; outline: none; transition: all 0.2s; }
         .form-input:focus { border-color: #C5A059; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1); }
+        .form-input:read-only { background: #F9F7F2; color: #8B7355; }
         .avatar-edit { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; position: relative; cursor: pointer; }
         .avatar-edit img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .avatar-edit-overlay { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
         .avatar-edit:hover .avatar-edit-overlay { opacity: 1; }
+        .avatar-edit-overlay svg { width: 24px; height: 24px; color: white; }
+
+        /* Comments Modal */
+        .comments-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 900; display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .comments-modal.active { display: flex; opacity: 1; }
+        .comments-sheet { background: white; width: 100%; max-height: 80vh; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; display: flex; flex-direction: column; }
+        .comments-modal.active .comments-sheet { transform: translateY(0); }
+        .comments-header { padding: 20px; border-bottom: 1px solid rgba(197, 160, 89, 0.15); display: flex; justify-content: space-between; align-items: center; }
+        .comments-title { font-size: 1.1rem; font-weight: 700; color: #4B3621; }
+        .comments-list { flex: 1; overflow-y: auto; padding: 16px; }
+        .comments-empty { text-align: center; padding: 48px 24px; color: #8B7355; }
+        .comments-input-area { padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px); background: #FFFDF5; border-top: 1px solid rgba(197, 160, 89, 0.15); }
+        .comments-input-wrapper { display: flex; align-items: center; gap: 10px; background: #F9F7F2; border-radius: 50px; padding: 4px 4px 4px 16px; border: 1px solid rgba(197, 160, 89, 0.2); }
+        .comments-input { flex: 1; border: none; background: transparent; font-size: 0.95rem; color: #4B3621; outline: none; padding: 10px 0; }
+        .comments-submit-btn { padding: 10px 20px; border-radius: 50px; background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%); color: white; font-weight: 600; border: none; cursor: pointer; }
+
+        /* Wizard */
         .wizard-step { display: none; }
         .wizard-step.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -257,48 +292,40 @@
         .wizard-nav { display: flex; gap: 12px; margin-top: 24px; }
         .wizard-btn { flex: 1; padding: 14px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
         .wizard-btn.secondary { background: #F3F4F6; color: #4B3621; }
+        .wizard-btn.secondary:hover { background: #E5E7EB; }
         .wizard-btn.primary { background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%); color: white; }
+        .wizard-btn.primary:hover { opacity: 0.9; }
+        .wizard-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Notificaciones */
         .notification-item { display: flex; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(197, 160, 89, 0.1); cursor: pointer; transition: background 0.2s; }
         .notification-item:hover { background: rgba(197, 160, 89, 0.03); }
         .notification-item.unread { background: rgba(197, 160, 89, 0.05); }
         .notification-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         .notification-content { flex: 1; }
         .notification-text { font-size: 0.9rem; color: #4B3621; line-height: 1.4; }
+        .notification-text strong { font-weight: 600; }
         .notification-time { font-size: 0.75rem; color: #8B7355; margin-top: 4px; }
         .notification-dot { width: 8px; height: 8px; background: #C5A059; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+        /* Alerta */
         .alert-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
         .alert-overlay.active { display: flex; }
         .alert-box { background: white; border-radius: 20px; padding: 24px; max-width: 320px; width: 100%; text-align: center; animation: scaleIn 0.2s; }
         @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .alert-icon { width: 56px; height: 56px; background: #FEF2F2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+        .alert-icon svg { width: 28px; height: 28px; color: #EF4444; }
         .alert-title { font-size: 1.1rem; font-weight: 700; color: #4B3621; margin-bottom: 8px; }
         .alert-message { font-size: 0.9rem; color: #6D5D4E; margin-bottom: 20px; }
         .alert-buttons { display: flex; gap: 12px; }
         .alert-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; }
         .alert-btn.cancel { background: #F3F4F6; color: #4B3621; }
         .alert-btn.confirm { background: #EF4444; color: white; }
-        .comments-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 950; display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s; }
-        .comments-modal.active { display: flex; opacity: 1; }
-        .comments-sheet { background: white; width: 100%; height: 60vh; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; }
-        .comments-modal.active .comments-sheet { transform: translateY(0); }
-        .comments-header { padding: 16px 20px; border-bottom: 1px solid rgba(197, 160, 89, 0.15); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
-        .comments-title { font-size: 1rem; font-weight: 700; color: #4B3621; }
-        .comments-list { flex: 1; overflow-y: auto; padding: 16px; }
-        .comment-item { display: flex; gap: 12px; margin-bottom: 16px; }
-        .comment-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-        .comment-content { flex: 1; }
-        .comment-author { font-size: 0.85rem; font-weight: 600; color: #4B3621; }
-        .comment-text { font-size: 0.9rem; color: #6D5D4E; margin-top: 2px; line-height: 1.4; }
-        .comment-time { font-size: 0.75rem; color: #8B7355; margin-top: 4px; }
-        .comments-input-area { padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px); border-top: 1px solid rgba(197, 160, 89, 0.15); background: #FFFDF5; flex-shrink: 0; }
-        .comments-input-wrapper { display: flex; align-items: center; gap: 10px; }
-        .comments-input { flex: 1; padding: 12px 16px; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 50px; font-size: 0.95rem; outline: none; background: white; }
-        .comments-submit-btn { padding: 10px 20px; border-radius: 50px; background: linear-gradient(135deg, #C5A059 0%, #D4B896 100%); color: white; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; }
-        .comments-empty { text-align: center; padding: 40px 20px; color: #8B7355; }
     </style>
 </head>
 <body>
     <div id="app-container">
+
         <!-- SCREEN: LOGIN -->
         <div id="screen-login" class="screen login-screen active">
             <div class="text-center mb-8">
@@ -387,7 +414,7 @@
                         <div class="p-3">
                             <h3 class="text-sm font-medium text-[#4B3621]">Perrarina Premium</h3>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">\$54.99</span>
+                                <span class="text-[#C5A059] font-bold">$54.99</span>
                                 <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                 </button>
@@ -401,7 +428,7 @@
                         <div class="p-3">
                             <h3 class="text-sm font-medium text-[#4B3621]">Collar GPS</h3>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">\$129.99</span>
+                                <span class="text-[#C5A059] font-bold">$129.99</span>
                                 <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                 </button>
@@ -415,7 +442,7 @@
                         <div class="p-3">
                             <h3 class="text-sm font-medium text-[#4B3621]">Juguete Resistente</h3>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">\$24.50</span>
+                                <span class="text-[#C5A059] font-bold">$24.50</span>
                                 <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                 </button>
@@ -429,7 +456,7 @@
                         <div class="p-3">
                             <h3 class="text-sm font-medium text-[#4B3621]">Champu Organico</h3>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-[#C5A059] font-bold">\$18.90</span>
+                                <span class="text-[#C5A059] font-bold">$18.90</span>
                                 <button class="w-7 h-7 bg-[#F0EAD6] rounded-full flex items-center justify-center text-[#4B3621]">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
                                 </button>
@@ -485,23 +512,31 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                             </svg>
                         </div>
-                        <h2 class="text-lg font-bold text-[#4B3621]">Avisos de Maria</h2>
+                        <h2 class="text-sm font-bold text-[#4B3621] uppercase tracking-wide">Anuncios</h2>
                     </div>
                     <div class="announcement-card">
                         <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-bold text-sm">M</span></div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">- Hace 2 horas</span></div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">📢 <span class="font-semibold">¡Atencion!</span> La proxima semana tenemos <span class="text-[#C5A059] font-semibold">10% de descuento</span> en Banos Medicados. 🐕✨</p>
+                            <div class="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-[#4B3621] mb-1">Nuevos Horarios</h3>
+                                <p class="text-sm text-[#6D5D4E]">Ahora abrimos los domingos de 10:00 a 14:00 hrs. ¡Reserva tu cita!</p>
                             </div>
                         </div>
                     </div>
                     <div class="announcement-card">
                         <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0"><span class="text-white font-bold text-sm">M</span></div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1"><span class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">- Ayer</span></div>
-                                <p class="text-[#4B3621] text-sm leading-relaxed">🚐 Nuestra Furgoneta Luna estara en <span class="font-semibold">Las Condes</span> este viernes. ¡Cupos limitados!</p>
+                            <div class="w-10 h-10 bg-[#C5A059]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-[#4B3621] mb-1">Promocion de Invierno</h3>
+                                <p class="text-sm text-[#6D5D4E]">20% de descuento en todos nuestros servicios de spa. ¡Valido hasta fin de mes!</p>
                             </div>
                         </div>
                     </div>
@@ -511,26 +546,22 @@
 
         <!-- SCREEN: ASSISTANT -->
         <div id="screen-assistant" class="screen hidden">
-            <div class="safe-header px-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-[#4B3621]">Asistente Maria's Cut</h1>
-                        <p class="text-xs text-[#C5A059]">Experto en bienestar animal</p>
-                    </div>
-                </div>
+            <div class="safe-header px-4 flex justify-between items-center">
+                <h1 class="text-lg font-bold text-[#4B3621]">Asistente Maria's</h1>
             </div>
             <div class="chat-container">
-                <div id="chat-messages" class="chat-messages">
-                    <div class="chat-bubble bot">Hola, soy la IA de Maria's Cut. ¿En que puedo ayudarte hoy con tu mascota? 🐾</div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-bubble bot">
+                        ¡Hola! Soy el asistente virtual de Maria's Cut. ¿En que puedo ayudarte hoy?
+                    </div>
                 </div>
                 <div class="chat-input-area">
                     <div class="chat-input-wrapper">
                         <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje...">
                         <button id="btn-send-chat" class="chat-send-btn">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -541,17 +572,13 @@
         <div id="screen-profile" class="screen hidden">
             <div class="profile-header-new">
                 <div class="profile-header-top">
-                    <div style="width: 40px;"></div>
-                    <div class="relative">
-                        <img id="profile-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop" class="profile-avatar-large">
-                    </div>
+                    <img id="profile-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop" class="profile-avatar-large">
                     <div class="profile-header-actions">
-                        <button id="btn-notifications" class="profile-icon-btn relative">
+                        <button id="btn-notifications" class="profile-icon-btn">
                             <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                            <span id="notif-badge" class="badge hidden">0</span>
-                            <span id="notif-badge-dot" class="badge-dot hidden"></span>
+                            <span class="badge" id="notif-badge">3</span>
                         </button>
                         <button id="btn-menu" class="profile-icon-btn">
                             <svg class="w-5 h-5 text-[#4B3621]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -561,43 +588,57 @@
                     </div>
                 </div>
                 <div class="profile-info">
-                    <h1 id="profile-name" class="profile-name">Cargando...</h1>
-                    <p id="profile-pet" class="profile-pet-name">...</p>
+                    <h2 id="profile-name" class="profile-name">Usuario</h2>
+                    <p id="profile-pet" class="profile-pet-name"></p>
+                    <div class="profile-stats">
+                        <div class="profile-stat" data-tab="posts">
+                            <div class="stat-value" id="stat-posts">0</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                        <div class="profile-stat" data-tab="bookings">
+                            <div class="stat-value" id="stat-bookings">0</div>
+                            <div class="stat-label">Citas</div>
+                        </div>
+                        <div class="profile-stat" data-tab="pet">
+                            <div class="stat-value" id="stat-pet">🐕</div>
+                            <div class="stat-label">Mascota</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="profile-stats">
-                <div class="profile-stat" data-tab="mascota"><p id="stat-mascotas" class="stat-value">1</p><p class="stat-label">Mascota</p></div>
-                <div class="profile-stat" data-tab="citas"><p id="stat-citas" class="stat-value">0</p><p class="stat-label">Citas</p></div>
-                <div class="profile-stat active" data-tab="posts"><p id="stat-posts" class="stat-value">0</p><p class="stat-label">Posts</p></div>
             </div>
             <div class="profile-tabs">
-                <div class="profile-tab" data-tab="mascota">Mascota</div>
-                <div class="profile-tab" data-tab="citas">Citas</div>
-                <div class="profile-tab active" data-tab="posts">Posts</div>
+                <div class="profile-tab active" data-tab="posts">Publicaciones</div>
+                <div class="profile-tab" data-tab="bookings">Citas</div>
+                <div class="profile-tab" data-tab="pet">Mascota</div>
             </div>
-            <div class="screen-content">
-                <div id="tab-content-posts" class="profile-content">
-                    <div id="user-posts-grid" class="posts-grid"></div>
-                    <div id="posts-empty" class="empty-state hidden">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="mx-auto mb-4 w-16 h-16 opacity-50"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                        <p>Aun no has publicado nada</p>
-                        <p class="text-sm mt-2">¡Comparte fotos de tu mascota!</p>
+            <div class="profile-content">
+                <div id="tab-posts" class="tab-content">
+                    <div class="posts-grid" id="profile-posts-grid"></div>
+                    <div class="empty-state" id="posts-empty">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        <p class="text-sm">Aun no hay publicaciones</p>
                     </div>
                 </div>
-                <div id="tab-content-citas" class="profile-content hidden">
-                    <div id="user-bookings-list"></div>
-                    <div id="bookings-empty" class="empty-state">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="mx-auto mb-4 w-16 h-16 opacity-50"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                        <p>No tienes citas programadas</p>
-                        <p class="text-sm mt-2">Agenda tu primera visita</p>
+                <div id="tab-bookings" class="tab-content hidden">
+                    <div id="bookings-list">
+                        <div class="booking-item">
+                            <div class="booking-header">
+                                <span class="booking-service">Spa Deluxe</span>
+                                <span class="booking-status confirmada">Confirmada</span>
+                            </div>
+                            <div class="booking-date">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                Proximamente
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="tab-content-mascota" class="profile-content hidden">
+                <div id="tab-pet" class="tab-content hidden">
                     <div class="pet-form">
                         <div class="pet-avatar-upload" id="pet-avatar-upload">
-                            <img id="pet-avatar-img" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=200&h=200&fit=crop" alt="Mascota">
-                            <div class="upload-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                            <img id="pet-avatar-img" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=200&fit=crop" class="hidden">
+                            <div class="upload-icon" id="pet-upload-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                             </div>
                         </div>
                         <input type="file" id="pet-avatar-input" class="hidden" accept="image/*">
@@ -638,7 +679,7 @@
             <div class="modal-sheet">
                 <div class="modal-header">
                     <h3 class="modal-title">Mis Datos</h3>
-                    <button class="modal-close" onclick="closeModal('modal-mis-datos')"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                    <button id="btn-close-mis-datos" class="modal-close"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
                 <div class="modal-body">
                     <div class="avatar-edit" id="avatar-edit">
@@ -660,7 +701,7 @@
             <div class="modal-sheet">
                 <div class="modal-header">
                     <h3 class="modal-title" id="wizard-title">Solicitud de Entrenador</h3>
-                    <button class="modal-close" onclick="closeModal('modal-wizard')"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                    <button id="btn-close-wizard" class="modal-close"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
                 <div class="modal-body">
                     <div class="wizard-progress">
@@ -703,8 +744,8 @@
                         <textarea id="wizard-about" class="post-editor-input" rows="5" placeholder="Describe tu experiencia, metodologia, o cualquier informacion relevante..."></textarea>
                     </div>
                     <div class="wizard-nav">
-                        <button class="wizard-btn secondary" id="wizard-prev" onclick="prevWizardStep()">Anterior</button>
-                        <button class="wizard-btn primary" id="wizard-next" onclick="nextWizardStep()">Siguiente</button>
+                        <button class="wizard-btn secondary" id="wizard-prev">Anterior</button>
+                        <button class="wizard-btn primary" id="wizard-next">Siguiente</button>
                     </div>
                 </div>
             </div>
@@ -715,7 +756,7 @@
             <div class="modal-sheet">
                 <div class="modal-header">
                     <h3 class="modal-title">Notificaciones</h3>
-                    <button class="modal-close" onclick="closeModal('modal-notifications')"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                    <button id="btn-close-notifications" class="modal-close"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
                 <div class="modal-body" id="notifications-list"></div>
             </div>
@@ -726,7 +767,7 @@
             <div class="comments-sheet">
                 <div class="comments-header">
                     <h3 class="comments-title">Comentarios</h3>
-                    <button class="modal-close" onclick="closeCommentsModal()"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                    <button id="btn-close-comments" class="modal-close"><svg class="w-5 h-5 text-[#8B7355]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
                 </div>
                 <div class="comments-list" id="comments-list">
                     <div class="comments-empty">
@@ -751,7 +792,7 @@
                 <h4 class="alert-title">¿Cerrar sesion?</h4>
                 <p class="alert-message">¿Estas seguro de que deseas salir de tu cuenta?</p>
                 <div class="alert-buttons">
-                    <button class="alert-btn cancel" onclick="closeAlert('alert-logout')">Cancelar</button>
+                    <button id="btn-cancel-logout" class="alert-btn cancel">Cancelar</button>
                     <button class="alert-btn confirm" id="confirm-logout">Cerrar Sesion</button>
                 </div>
             </div>
@@ -773,7 +814,7 @@
                             <div class="flex items-center mt-2 text-gray-400 text-sm"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>90 min</div>
                         </div>
                         <div class="text-right">
-                            <p class="text-xl font-bold text-[#C5A059]">\$55.000</p>
+                            <p class="text-xl font-bold text-[#C5A059]">$55.000</p>
                             <span class="bg-[#C5A059]/10 text-[#C5A059] text-xs px-2 py-1 rounded-full font-bold">Popular</span>
                         </div>
                     </div>
@@ -800,9 +841,9 @@
                         </div>
                     </div>
                     <div class="border-t border-gray-100 pt-4">
-                        <div class="flex justify-between mb-2"><span class="text-gray-600">Subtotal</span><span class="font-medium">\$55.000</span></div>
-                        <div class="flex justify-between mb-2"><span class="text-gray-600">IVA (19%)</span><span class="font-medium">\$10.450</span></div>
-                        <div class="flex justify-between pt-2 border-t border-gray-100"><span class="font-bold text-gray-800">Total</span><span class="font-bold text-[#C5A059] text-xl">\$65.450</span></div>
+                        <div class="flex justify-between mb-2"><span class="text-gray-600">Subtotal</span><span class="font-medium">$55.000</span></div>
+                        <div class="flex justify-between mb-2"><span class="text-gray-600">IVA (19%)</span><span class="font-medium">$10.450</span></div>
+                        <div class="flex justify-between pt-2 border-t border-gray-100"><span class="font-bold text-gray-800">Total</span><span class="font-bold text-[#C5A059] text-xl">$65.450</span></div>
                     </div>
                 </div>
                 <button id="btn-stripe-pay" class="cta-button-gold flex items-center justify-center gap-3">
@@ -966,7 +1007,8 @@
         <input type="file" id="gallery-input" class="hidden" accept="image/*,video/*">
     </div>
 
-    <!-- APP ENGINE v5.0 -->
+
+    <!-- APP ENGINE v5.0 - REPARADO -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
         import { 
@@ -1007,825 +1049,380 @@
             currentUser: null, userData: null, isGuest: false,
             currentScreen: 'login', cameraMode: 'story', capturedMedia: null,
             storiesByUser: {}, storyUsers: [], currentStoryIndex: 0,
-            currentStoryUserIndex: 0, currentUserStories: [], storyTimer: null,
-            mediaStream: null, isInitializing: true, notifications: [],
-            notificationsUnsubscribe: null, storiesUnsubscribe: null,
-            feedUnsubscribe: null, profilePostsUnsubscribe: null,
-            profileBookingsUnsubscribe: null, currentPostIdForComments: null,
-            wizardStep: 1, wizardAnswers: {}, wizardType: ''
+            currentPostId: null, currentPostLikes: [],
+            wizardType: 'entrenador', wizardStep: 1, wizardAnswers: {},
+            notifications: [], notificationsUnsubscribe: null,
+            feedUnsubscribe: null, storiesUnsubscribe: null,
+            isInitializing: true, mediaStream: null
         };
 
         const CanvasState = {
             canvas: null, ctx: null, isDrawing: false,
-            currentTool: 'pen', currentColor: '#FFFFFF', currentSize: 6,
+            lastX: 0, lastY: 0, currentTool: 'pen',
+            currentColor: '#FFFFFF', currentSize: 6,
             drawingHistory: [], historyStep: -1,
-            backgroundImage: null, lastX: 0, lastY: 0
+            backgroundImage: null
         };
 
         // ============================================
         // UTILIDADES
         // ============================================
-        function withTimeout(promise, ms = 10000, errorMsg = 'Timeout') {
-            return Promise.race([
-                promise,
-                new Promise((_, reject) => setTimeout(() => reject(new Error(errorMsg)), ms))
-            ]);
-        }
-
         function log(section, message, data = null) {
-            const prefix = [\`[\${section}]\`, message];
+            const prefix = [`[${section}]`, message];
             data ? console.log(...prefix, data) : console.log(...prefix);
         }
 
         function showFatalError(message) {
-            log('ERROR', message);
-            alert('ERROR CRITICO: ' + message);
-            hideLoading();
-        }
-
-        function showScreen(screenId) {
-            log('NAV', 'Pantalla: ' + screenId);
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-                s.classList.add('hidden');
-            });
-            const screen = document.getElementById(screenId);
-            if (screen) {
-                screen.classList.remove('hidden');
-                screen.classList.add('active');
+            const overlay = document.getElementById('loading-overlay');
+            const text = document.getElementById('loading-text');
+            if (overlay && text) {
+                text.innerHTML = `<span style="color: #ef4444;">Error:</span> ${message}<br><br><button onclick="location.reload()" style="padding: 10px 20px; background: #C5A059; color: white; border: none; border-radius: 8px; cursor: pointer;">Recargar</button>`;
+                overlay.classList.add('active');
             }
-            AppState.currentScreen = screenId;
-            updateNavState();
-            if (screenId === 'screen-profile') loadUserProfileData();
-        }
-
-        function updateNavState() {
-            document.querySelectorAll('.nav-item, .nav-center-btn').forEach(item => {
-                item.classList.toggle('active', item.dataset.screen === AppState.currentScreen);
-            });
         }
 
         function showLoading(text = 'Cargando...') {
-            document.getElementById('loading-text').textContent = text;
-            document.getElementById('loading-overlay').classList.add('active');
+            const overlay = document.getElementById('loading-overlay');
+            const textEl = document.getElementById('loading-text');
+            if (overlay && textEl) {
+                textEl.textContent = text;
+                overlay.classList.add('active');
+            }
         }
 
         function hideLoading() {
-            document.getElementById('loading-overlay').classList.remove('active');
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.classList.remove('active');
         }
 
         function showToast(message, type = 'default') {
             const toast = document.getElementById('toast');
+            if (!toast) return;
             toast.textContent = message;
-            toast.className = 'toast ' + type + ' show';
+            toast.className = 'toast show ' + type;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        function formatTimeAgo(timestamp) {
-            if (!timestamp) return '';
-            let millis = timestamp.toMillis ? timestamp.toMillis() : 
-                        (timestamp.seconds ? timestamp.seconds * 1000 : timestamp);
-            const diff = Date.now() - millis;
-            const seconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-            if (seconds < 60) return 'Hace un momento';
-            if (minutes < 60) return \`Hace \${minutes} min\`;
-            if (hours < 24) return \`Hace \${hours} h\`;
-            if (days === 1) return 'Ayer';
-            return \`Hace \${days} dias\`;
+        // ============================================
+        // NAVEGACION
+        // ============================================
+        function showScreen(screenId) {
+            log('NAV', 'Mostrando pantalla:', screenId);
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.add('hidden');
+                s.classList.remove('active');
+            });
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('active');
+                AppState.currentScreen = screenId;
+            }
         }
 
         // ============================================
-        // MODALES GLOBALES
+        // INICIALIZACION PRINCIPAL - DOMContentLoaded
         // ============================================
-        window.openModal = (modalId) => document.getElementById(modalId)?.classList.add('active');
-        window.closeModal = (modalId) => document.getElementById(modalId)?.classList.remove('active');
-        window.openAlert = (alertId) => document.getElementById(alertId)?.classList.add('active');
-        window.closeAlert = (alertId) => document.getElementById(alertId)?.classList.remove('active');
-        window.closeCommentsModal = () => {
-            document.getElementById('modal-comments')?.classList.remove('active');
-            AppState.currentPostIdForComments = null;
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            log('INIT', '========================================');
+            log('INIT', "Maria's Cut App Engine v5.0 - REPARADO");
+            log('INIT', '========================================');
 
-        // ============================================
-        // INICIALIZACION - MOTOR PRINCIPAL
-        // ============================================
-        async function initApp() {
-            log('INIT', '=== Maria\\'s Cut App Engine v5.0 ===');
-            showLoading('Iniciando aplicacion...');
-            onAuthStateChanged(auth, handleAuthStateChange);
-        }
+            // Referencias DOM
+            const loginActions = document.getElementById('login-actions');
+            const registerActions = document.getElementById('register-actions');
+            const registerFields = document.getElementById('register-fields');
+            const errorEl = document.getElementById('login-error');
 
-        async function handleAuthStateChange(user) {
-            log('AUTH', 'Estado:', user ? \`UID: \${user.uid}\` : 'Sin usuario');
+            // ============================================
+            // FUNCIONES DE AUTH
+            // ============================================
+            function showAuthError(msg) {
+                if (errorEl) {
+                    errorEl.textContent = msg;
+                    errorEl.classList.remove('hidden');
+                }
+            }
+
+            function hideAuthError() {
+                if (errorEl) errorEl.classList.add('hidden');
+            }
+
+            // ============================================
+            // EVENT LISTENERS - AUTH (LOS MAS IMPORTANTES)
+            // ============================================
             
-            try {
+            // Toggle registro
+            const btnShowRegister = document.getElementById('btn-show-register');
+            if (btnShowRegister) {
+                btnShowRegister.addEventListener('click', () => {
+                    log('AUTH', 'Click: mostrar registro');
+                    loginActions?.classList.add('hidden');
+                    registerActions?.classList.remove('hidden');
+                    registerFields?.classList.remove('hidden');
+                    hideAuthError();
+                });
+            }
+
+            // Toggle login
+            const btnShowLogin = document.getElementById('btn-show-login');
+            if (btnShowLogin) {
+                btnShowLogin.addEventListener('click', () => {
+                    log('AUTH', 'Click: mostrar login');
+                    registerActions?.classList.add('hidden');
+                    loginActions?.classList.remove('hidden');
+                    registerFields?.classList.add('hidden');
+                    hideAuthError();
+                });
+            }
+
+            // LOGIN PRINCIPAL
+            const btnLogin = document.getElementById('btn-login');
+            if (btnLogin) {
+                btnLogin.addEventListener('click', async () => {
+                    log('AUTH', 'Click: iniciar sesion');
+                    const email = document.getElementById('login-email')?.value.trim();
+                    const password = document.getElementById('login-password')?.value;
+                    
+                    if (!email || !password) {
+                        showAuthError('Ingresa email y contrasena');
+                        return;
+                    }
+                    
+                    showLoading('Iniciando sesion...');
+                    hideAuthError();
+                    
+                    try {
+                        await signInWithEmailAndPassword(auth, email, password);
+                        log('AUTH', 'Login exitoso');
+                    } catch (error) {
+                        log('AUTH', 'Login error:', error);
+                        hideLoading();
+                        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                            showAuthError('Usuario o contrasena incorrectos');
+                        } else if (error.code === 'auth/invalid-email') {
+                            showAuthError('Email invalido');
+                        } else {
+                            showAuthError('Error: ' + error.message);
+                        }
+                    }
+                });
+            }
+
+            // REGISTRO
+            const btnRegister = document.getElementById('btn-register');
+            if (btnRegister) {
+                btnRegister.addEventListener('click', async () => {
+                    log('AUTH', 'Click: registrarse');
+                    const email = document.getElementById('login-email')?.value.trim();
+                    const password = document.getElementById('login-password')?.value;
+                    const name = document.getElementById('login-name')?.value.trim();
+                    const pet = document.getElementById('login-pet')?.value.trim();
+                    const phone = document.getElementById('login-phone')?.value.trim();
+                    
+                    if (!email || !password || !name) {
+                        showAuthError('Email, contrasena y nombre son obligatorios');
+                        return;
+                    }
+                    if (password.length < 6) {
+                        showAuthError('La contrasena debe tener al menos 6 caracteres');
+                        return;
+                    }
+                    
+                    showLoading('Creando cuenta...');
+                    hideAuthError();
+                    
+                    try {
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        log('AUTH', 'Registro OK, UID:', userCredential.user.uid);
+                        
+                        await setDoc(doc(db, 'users', userCredential.user.uid), {
+                            name: name, email: email,
+                            petName: pet || 'Mi Mascota', phone: phone || '',
+                            createdAt: serverTimestamp()
+                        });
+                        
+                        await updateProfile(userCredential.user, { displayName: name });
+                        showToast('¡Cuenta creada!', 'success');
+                    } catch (error) {
+                        log('AUTH', 'Registro error:', error);
+                        hideLoading();
+                        if (error.code === 'auth/email-already-in-use') {
+                            showAuthError('Este correo ya esta registrado');
+                        } else {
+                            showAuthError('Error: ' + error.message);
+                        }
+                    }
+                });
+            }
+
+            // INVITADO
+            const btnSkip = document.getElementById('btn-skip');
+            if (btnSkip) {
+                btnSkip.addEventListener('click', async () => {
+                    log('AUTH', 'Click: invitado');
+                    showLoading('Entrando como invitado...');
+                    try {
+                        AppState.isGuest = true;
+                        await signInAnonymously(auth);
+                    } catch (error) {
+                        log('AUTH', 'Guest error:', error);
+                        hideLoading();
+                        showToast('Error al entrar como invitado', 'error');
+                        AppState.isGuest = false;
+                    }
+                });
+            }
+
+            // ============================================
+            // MODALES - Funciones globales
+            // ============================================
+            window.openModal = (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('active');
+            };
+
+            window.closeModal = (modalId) => {
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.remove('active');
+            };
+
+            window.openAlert = (alertId) => {
+                const alert = document.getElementById(alertId);
+                if (alert) alert.classList.add('active');
+            };
+
+            window.closeAlert = (alertId) => {
+                const alert = document.getElementById(alertId);
+                if (alert) alert.classList.remove('active');
+            };
+
+            window.closeCommentsModal = () => {
+                const modal = document.getElementById('modal-comments');
+                if (modal) modal.classList.remove('active');
+            };
+
+            // Botones cerrar modales
+            document.getElementById('btn-close-mis-datos')?.addEventListener('click', () => closeModal('modal-mis-datos'));
+            document.getElementById('btn-close-wizard')?.addEventListener('click', () => closeModal('modal-wizard'));
+            document.getElementById('btn-close-notifications')?.addEventListener('click', () => closeModal('modal-notifications'));
+            document.getElementById('btn-close-comments')?.addEventListener('click', closeCommentsModal);
+            document.getElementById('btn-cancel-logout')?.addEventListener('click', () => closeAlert('alert-logout'));
+
+            // ============================================
+            // NAVEGACION
+            // ============================================
+            document.querySelectorAll('.nav-item, .nav-center-btn').forEach(item => {
+                item.addEventListener('click', () => {
+                    const screenId = item.dataset.screen;
+                    if (screenId) showScreen(screenId);
+                });
+            });
+
+            document.getElementById('btn-booking')?.addEventListener('click', () => showScreen('screen-booking'));
+            document.getElementById('btn-continue-payment')?.addEventListener('click', () => showScreen('screen-payment'));
+            document.getElementById('btn-back-grooming')?.addEventListener('click', () => showScreen('screen-grooming'));
+            document.getElementById('btn-back-booking')?.addEventListener('click', () => showScreen('screen-booking'));
+            document.getElementById('btn-stripe-pay')?.addEventListener('click', () => {
+                window.open('https://buy.stripe.com/14A8wH1Yjd6E0The7Adby00', '_blank');
+            });
+
+            // ============================================
+            // AUTH STATE - MANEJO DE SESION
+            // ============================================
+            onAuthStateChanged(auth, async (user) => {
+                log('AUTH', 'Estado cambiado:', user ? `UID: ${user.uid}` : 'Sin usuario');
+                
                 if (!user && !AppState.isGuest) {
-                    // SIN USUARIO
+                    // Sin usuario - mostrar login
                     AppState.currentUser = null;
                     AppState.userData = null;
                     showScreen('screen-login');
-                    document.getElementById('bottom-nav').classList.add('hidden');
+                    document.getElementById('bottom-nav')?.classList.add('hidden');
                     hideLoading();
                     return;
                 }
-                
+
                 AppState.currentUser = user;
-                
+
                 if (user && !AppState.isGuest) {
-                    // USUARIO AUTENTICADO - Cargar datos PRIMERO
-                    log('AUTH', 'Cargando datos de Firestore...');
+                    // Usuario autenticado
                     showLoading('Cargando tu perfil...');
                     
-                    const userData = await fetchUserData(user.uid);
-                    
-                    if (userData) {
-                        log('AUTH', 'Datos OK:', userData.name);
-                        AppState.userData = userData;
-                        updateProfileUI(userData);
-                        initNotificationsListener();
-                        
-                        // MOSTRAR APP SOLO DESPUES DE TENER DATOS
+                    try {
+                        const userDoc = await getDoc(doc(db, 'users', user.uid));
+                        if (userDoc.exists()) {
+                            AppState.userData = userDoc.data();
+                            document.getElementById('profile-name') && (document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario');
+                            document.getElementById('profile-pet') && (document.getElementById('profile-pet').textContent = AppState.userData.petName || '');
+                        } else {
+                            // Crear perfil nuevo
+                            const basicProfile = { 
+                                name: user.displayName || 'Usuario', 
+                                email: user.email || '', petName: '', phone: '',
+                                createdAt: serverTimestamp() 
+                            };
+                            await setDoc(doc(db, 'users', user.uid), basicProfile);
+                            AppState.userData = basicProfile;
+                        }
+
+                        // MOSTRAR APP INMEDIATAMENTE (fix cargando infinito)
                         showScreen('screen-grooming');
-                        document.getElementById('bottom-nav').classList.remove('hidden');
+                        document.getElementById('bottom-nav')?.classList.remove('hidden');
+                        hideLoading();
+                        
+                        // Cargar datos en segundo plano
                         loadFeed();
                         loadStories();
-                    } else {
-                        // Crear perfil nuevo
-                        log('AUTH', 'Creando perfil nuevo...');
-                        const basicProfile = { 
-                            name: user.displayName || 'Usuario', 
-                            email: user.email || '', petName: '', phone: '',
-                            createdAt: serverTimestamp() 
-                        };
-                        await setDoc(doc(db, 'users', user.uid), basicProfile);
-                        AppState.userData = basicProfile;
-                        updateProfileUI(basicProfile);
+                        
+                    } catch (error) {
+                        log('AUTH', 'Error cargando datos:', error);
                         showScreen('screen-grooming');
-                        document.getElementById('bottom-nav').classList.remove('hidden');
+                        document.getElementById('bottom-nav')?.classList.remove('hidden');
+                        hideLoading();
                     }
                 } else {
-                    // INVITADO
+                    // Modo invitado
                     log('AUTH', 'Modo invitado');
                     AppState.userData = { name: 'Invitado', petName: '' };
                     showScreen('screen-grooming');
-                    document.getElementById('bottom-nav').classList.remove('hidden');
-                }
-            } catch (error) {
-                log('AUTH', 'ERROR:', error);
-                showFatalError('Error inicializando: ' + error.message);
-                showScreen('screen-login');
-            } finally {
-                AppState.isInitializing = false;
-                hideLoading();
-            }
-        }
-
-        // ============================================
-        // FETCH USER DATA CON DEBUGGING
-        // ============================================
-        async function fetchUserData(uid) {
-            log('DB', '========================================');
-            log('DB', 'fetchUserData() UID:', uid);
-            
-            try {
-                const userRef = doc(db, 'users', uid);
-                log('DB', 'Leyendo: users/' + uid);
-                
-                const userDoc = await withTimeout(
-                    getDoc(userRef), 10000, 'Timeout leyendo usuario (10s)'
-                );
-                
-                log('DB', 'Existe:', userDoc.exists());
-                
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    log('DB', 'Datos:', data);
-                    return data;
-                }
-                return null;
-            } catch (error) {
-                log('DB', 'ERROR:', error.message);
-                if (error.message.includes('Timeout')) {
-                    throw new Error('Firebase no responde. Verifica tu conexion.');
-                } else if (error.code === 'permission-denied') {
-                    throw new Error('No tienes permisos. Verifica las reglas de Firestore.');
-                }
-                throw error;
-            }
-        }
-
-        function updateProfileUI(userData) {
-            const nameEl = document.getElementById('profile-name');
-            const petEl = document.getElementById('profile-pet');
-            const avatarEl = document.getElementById('profile-avatar');
-            
-            if (nameEl) nameEl.textContent = userData.name || 'Usuario';
-            if (petEl) petEl.textContent = userData.petName ? '🐕 ' + userData.petName : '';
-            if (avatarEl && AppState.currentUser?.photoURL) {
-                avatarEl.src = AppState.currentUser.photoURL;
-            }
-        }
-
-        // ============================================
-        // FEED PUBLICO (SIN FILTROS)
-        // ============================================
-        function loadFeed() {
-            log('FEED', 'Cargando feed publico...');
-            const feedContainer = document.getElementById('feed-container');
-            if (!feedContainer) return;
-            
-            if (AppState.feedUnsubscribe) {
-                AppState.feedUnsubscribe();
-            }
-            
-            // QUERY PUBLICA: Sin where(), muestra TODOS los posts
-            const postsQuery = query(
-                collection(db, 'posts'),
-                orderBy('createdAt', 'desc'),
-                limit(50)
-            );
-            
-            AppState.feedUnsubscribe = onSnapshot(postsQuery, 
-                (snapshot) => {
-                    log('FEED', \`Posts recibidos: \${snapshot.size}\`);
-                    renderFeed(snapshot, feedContainer);
-                },
-                (error) => {
-                    log('FEED', 'ERROR:', error);
-                    feedContainer.innerHTML = \`<div class="p-8 text-center text-red-500">Error cargando feed: \${error.message}</div>\`;
-                }
-            );
-        }
-
-        function renderFeed(snapshot, container) {
-            if (snapshot.empty) {
-                container.innerHTML = \`
-                    <div class="empty-state p-8">
-                        <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <p class="text-[#8B7355]">No hay publicaciones aun</p>
-                        <p class="text-sm mt-2">¡Se el primero en compartir!</p>
-                    </div>\`;
-                return;
-            }
-            
-            let html = '';
-            snapshot.forEach((docSnap) => {
-                const post = docSnap.data();
-                html += renderPostCard(post, docSnap.id);
-            });
-            container.innerHTML = html;
-        }
-
-        function renderPostCard(post, postId) {
-            const likes = post.likes || [];
-            const commentCount = post.commentCount || 0;
-            const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
-            const likeCount = likes.length;
-            const timeAgo = formatTimeAgo(post.createdAt);
-            
-            return \`
-                <div class="social-card">
-                    <div class="flex items-center p-3">
-                        <img src="\${post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="w-8 h-8 rounded-full object-cover mr-2">
-                        <div>
-                            <h4 class="text-sm font-bold text-[#4B3621]">\${post.userName || 'Usuario'}</h4>
-                            <p class="text-xs text-[#8B7355]">\${timeAgo}</p>
-                        </div>
-                    </div>
-                    \${post.mediaType === 'video' 
-                        ? \`<video src="\${post.mediaUrl}" class="post-media" controls playsinline></video>\`
-                        : \`<img src="\${post.mediaUrl}" class="post-media" loading="lazy">\`
-                    }
-                    <div class="post-actions">
-                        <button class="post-action-btn \${isLiked ? 'liked' : ''}" onclick="window.toggleLike('\${postId}', this)" data-post-id="\${postId}">
-                            \${isLiked 
-                                ? '<svg fill="#EF4444" stroke="#EF4444" viewBox="0 0 24 24" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>'
-                                : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>'
-                            }
-                            <span class="post-action-count like-count">\${likeCount}</span>
-                        </button>
-                        <button class="post-action-btn" onclick="window.openCommentsModal('\${postId}')">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                            <span class="post-action-count comment-count-\${postId}">\${commentCount}</span>
-                        </button>
-                        <button class="post-action-btn" onclick="window.sharePost('\${postId}', '\${encodeURIComponent(post.caption || '')}')">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
-                        </button>
-                    </div>
-                    <div class="post-caption">
-                        <p class="post-caption-text"><span class="username">\${post.userName || 'Usuario'}</span> \${post.caption || '🐾'}</p>
-                    </div>
-                </div>\`;
-        }
-
-        // ============================================
-        // HISTORIAS (STORIES)
-        // ============================================
-        function loadStories() {
-            log('STORIES', 'Cargando historias...');
-            const storiesContainer = document.getElementById('stories-container');
-            if (!storiesContainer) return;
-            
-            if (AppState.storiesUnsubscribe) {
-                AppState.storiesUnsubscribe();
-            }
-            
-            const storiesQuery = query(
-                collection(db, 'stories'),
-                orderBy('createdAt', 'desc'),
-                limit(100)
-            );
-            
-            AppState.storiesUnsubscribe = onSnapshot(storiesQuery,
-                (snapshot) => {
-                    log('STORIES', \`Recibidas: \${snapshot.size}\`);
-                    renderStories(snapshot, storiesContainer);
-                },
-                (error) => {
-                    log('STORIES', 'ERROR:', error);
-                }
-            );
-        }
-
-        function renderStories(snapshot, container) {
-            const yesterday = Date.now() - (24 * 60 * 60 * 1000);
-            const storiesByUser = {};
-            
-            snapshot.forEach((docSnap) => {
-                const story = { id: docSnap.id, ...docSnap.data() };
-                const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : 
-                                 (story.createdAt?.seconds ? story.createdAt.seconds * 1000 : 0);
-                
-                if (storyTime > yesterday) {
-                    const userId = story.userId;
-                    if (!storiesByUser[userId]) {
-                        storiesByUser[userId] = {
-                            userId: userId, userName: story.userName || 'Usuario',
-                            userPhoto: story.userPhoto || '', stories: []
-                        };
-                    }
-                    storiesByUser[userId].stories.push(story);
+                    document.getElementById('bottom-nav')?.classList.remove('hidden');
+                    hideLoading();
                 }
             });
-            
-            AppState.storiesByUser = storiesByUser;
-            AppState.storyUsers = Object.values(storiesByUser);
-            
-            let html = \`
-                <div class="story-item" id="btn-add-story">
-                    <div class="story-avatar-ring" style="background: transparent; border: 2px dashed #C5A059;">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-[#C5A059]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        </div>
-                    </div>
-                    <span class="text-xs text-[#6D5D4E] mt-1">Tu Historia</span>
-                </div>\`;
-            
-            AppState.storyUsers.forEach((userStories, index) => {
-                userStories.stories.sort((a, b) => {
-                    const timeA = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt?.seconds || 0) * 1000;
-                    const timeB = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt?.seconds || 0) * 1000;
-                    return timeB - timeA;
-                });
-                
-                const hasNew = userStories.stories.some(s => {
-                    const t = s.createdAt?.toMillis ? s.createdAt.toMillis() : (s.createdAt?.seconds || 0) * 1000;
-                    return (Date.now() - t) < (12 * 60 * 60 * 1000);
-                });
-                
-                html += \`
-                    <div class="story-item" data-user-index="\${index}">
-                        <div class="story-avatar-ring \${hasNew ? 'has-stories' : ''}">
-                            <img src="\${userStories.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="story-avatar">
-                        </div>
-                        <span class="text-xs text-[#4B3621] mt-1 font-medium">\${userStories.userName}</span>
-                    </div>\`;
-            });
-            
-            container.innerHTML = html;
-            
-            document.getElementById('btn-add-story')?.addEventListener('click', () => {
-                if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-                AppState.cameraMode = 'story';
-                updateCameraModeUI();
-                startCamera();
-            });
-            
-            document.querySelectorAll('.story-item[data-user-index]').forEach(item => {
-                item.addEventListener('click', () => {
-                    openStoryViewerByUser(parseInt(item.dataset.userIndex));
-                });
-            });
-        }
 
-        // ============================================
-        // STORY VIEWER
-        // ============================================
-        function openStoryViewerByUser(userIndex, storyIndex = 0) {
-            if (AppState.storyUsers.length === 0) return;
-            AppState.currentStoryUserIndex = userIndex;
-            const userStories = AppState.storyUsers[userIndex];
-            AppState.currentUserStories = userStories.stories;
-            AppState.currentStoryIndex = storyIndex;
-            
-            document.getElementById('story-viewer').classList.add('active');
-            
-            const progressContainer = document.getElementById('story-progress-container');
-            progressContainer.innerHTML = userStories.stories.map((_, i) => 
-                \`<div class="story-progress-bar"><div class="story-progress-fill \${i === storyIndex ? 'active' : ''}" id="progress-\${i}"></div></div>\`
-            ).join('');
-            
-            showCurrentStoryForUser();
-        }
-
-        function showCurrentStoryForUser() {
-            const userStories = AppState.storyUsers[AppState.currentStoryUserIndex];
-            const story = AppState.currentUserStories[AppState.currentStoryIndex];
-            if (!story) { closeStoryViewer(); return; }
-            
-            AppState.currentUserStories.forEach((_, i) => {
-                const fill = document.getElementById(\`progress-\${i}\`);
-                if (fill) {
-                    fill.classList.remove('active');
-                    fill.style.width = i < AppState.currentStoryIndex ? '100%' : '0%';
-                }
-            });
-            document.getElementById(\`progress-\${AppState.currentStoryIndex}\`)?.classList.add('active');
-            
-            document.getElementById('story-viewer-name').textContent = userStories.userName;
-            document.getElementById('story-viewer-avatar').src = userStories.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
-            
-            const storyTime = story.createdAt?.toMillis ? story.createdAt.toMillis() : new Date(story.createdAt).getTime();
-            const hoursAgo = Math.floor((Date.now() - storyTime) / (1000 * 60 * 60));
-            document.getElementById('story-viewer-time').textContent = hoursAgo < 1 ? 'Hace menos de 1 hora' : \`Hace \${hoursAgo} h\`;
-            
-            const mediaImg = document.getElementById('story-viewer-media');
-            const mediaVideo = document.getElementById('story-viewer-video');
-            
-            if (story.mediaType === 'video') {
-                mediaImg.classList.add('hidden');
-                mediaVideo.classList.remove('hidden');
-                mediaVideo.src = story.mediaUrl;
-                mediaVideo.play();
-            } else {
-                mediaVideo.classList.add('hidden');
-                mediaImg.classList.remove('hidden');
-                mediaImg.src = story.mediaUrl;
-            }
-            
-            clearTimeout(AppState.storyTimer);
-            AppState.storyTimer = setTimeout(() => nextStoryInUser(), 10000);
-        }
-
-        function nextStoryInUser() {
-            if (AppState.currentStoryIndex < AppState.currentUserStories.length - 1) {
-                AppState.currentStoryIndex++;
-                showCurrentStoryForUser();
-            } else if (AppState.currentStoryUserIndex < AppState.storyUsers.length - 1) {
-                AppState.currentStoryUserIndex++;
-                openStoryViewerByUser(AppState.currentStoryUserIndex, 0);
-            } else {
-                closeStoryViewer();
-            }
-        }
-
-        function prevStoryInUser() {
-            if (AppState.currentStoryIndex > 0) {
-                AppState.currentStoryIndex--;
-                showCurrentStoryForUser();
-            } else if (AppState.currentStoryUserIndex > 0) {
-                AppState.currentStoryUserIndex--;
-                const prevUserStories = AppState.storyUsers[AppState.currentStoryUserIndex];
-                openStoryViewerByUser(AppState.currentStoryUserIndex, prevUserStories.stories.length - 1);
-            }
-        }
-
-        function closeStoryViewer() {
-            clearTimeout(AppState.storyTimer);
-            document.getElementById('story-viewer').classList.remove('active');
-            document.getElementById('story-viewer-video').pause();
-        }
-
-        // ============================================
-        // LIKES Y COMENTARIOS
-        // ============================================
-        window.toggleLike = async function(postId, btn) {
-            if (AppState.isGuest || !AppState.currentUser) {
-                showToast('Registrate para dar like', 'info');
-                return;
-            }
-            
-            const postRef = doc(db, 'posts', postId);
-            const isLiked = btn.classList.contains('liked');
-            
-            try {
-                const postSnap = await getDoc(postRef);
-                const postData = postSnap.data();
-                const postOwnerId = postData.userId;
-                
-                if (isLiked) {
-                    await updateDoc(postRef, { likes: arrayRemove(AppState.currentUser.uid) });
-                    btn.classList.remove('liked');
-                    btn.querySelector('svg').setAttribute('fill', 'none');
-                    btn.querySelector('svg').setAttribute('stroke', 'currentColor');
-                    const countEl = btn.querySelector('.like-count');
-                    countEl.textContent = parseInt(countEl.textContent) - 1;
-                } else {
-                    await updateDoc(postRef, { likes: arrayUnion(AppState.currentUser.uid) });
-                    btn.classList.add('liked');
-                    btn.querySelector('svg').setAttribute('fill', '#EF4444');
-                    btn.querySelector('svg').setAttribute('stroke', '#EF4444');
-                    const countEl = btn.querySelector('.like-count');
-                    countEl.textContent = parseInt(countEl.textContent) + 1;
-                    
-                    if (postOwnerId !== AppState.currentUser.uid) {
-                        await addDoc(collection(db, 'users', postOwnerId, 'notifications'), {
-                            type: 'like', fromUserId: AppState.currentUser.uid,
-                            fromUserName: AppState.userData?.name || 'Usuario',
-                            fromUserPhoto: AppState.currentUser?.photoURL || '',
-                            postId: postId, postImage: postData.mediaUrl || '',
-                            timestamp: serverTimestamp(), read: false
-                        });
-                    }
-                }
-            } catch (error) {
-                log('LIKE', 'ERROR:', error);
-                showToast('Error al procesar like', 'error');
-            }
-        };
-
-        window.openCommentsModal = function(postId) {
-            if (AppState.isGuest) { showToast('Registrate para comentar', 'info'); return; }
-            AppState.currentPostIdForComments = postId;
-            loadComments(postId);
-            document.getElementById('modal-comments').classList.add('active');
-        };
-
-        function loadComments(postId) {
-            const commentsList = document.getElementById('comments-list');
-            commentsList.innerHTML = '<div class="comments-empty"><p>Cargando comentarios...</p></div>';
-            
-            const commentsQuery = query(
-                collection(db, 'posts', postId, 'comments'),
-                orderBy('timestamp', 'asc')
-            );
-            
-            onSnapshot(commentsQuery, (snapshot) => {
-                if (snapshot.empty) {
-                    commentsList.innerHTML = \`
-                        <div class="comments-empty">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-12 h-12 mx-auto mb-4 opacity-50">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            <p>Aun no hay comentarios</p>
-                            <p class="text-sm mt-2">¡Se el primero en comentar!</p>
-                        </div>\`;
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach((docSnap) => {
-                    const comment = docSnap.data();
-                    const timeText = formatTimeAgo(comment.timestamp);
-                    html += \`
-                        <div class="comment-item">
-                            <img src="\${comment.authorPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="comment-avatar">
-                            <div class="comment-content">
-                                <p class="comment-author">\${comment.authorName || 'Usuario'}</p>
-                                <p class="comment-text">\${comment.text || ''}</p>
-                                <p class="comment-time">\${timeText}</p>
-                            </div>
-                        </div>\`;
-                });
-                commentsList.innerHTML = html;
-                commentsList.scrollTop = commentsList.scrollHeight;
-            });
-        }
-
-        async function submitComment() {
-            const input = document.getElementById('comment-input');
-            const text = input.value.trim();
-            if (!text || !AppState.currentPostIdForComments) return;
-            
-            const postId = AppState.currentPostIdForComments;
-            
-            try {
-                await addDoc(collection(db, 'posts', postId, 'comments'), {
-                    text: text, authorUid: AppState.currentUser.uid,
-                    authorName: AppState.userData?.name || 'Usuario',
-                    authorPhoto: AppState.currentUser?.photoURL || '',
-                    timestamp: serverTimestamp()
-                });
-                
-                const postRef = doc(db, 'posts', postId);
-                const postSnap = await getDoc(postRef);
-                const currentCount = postSnap.data()?.commentCount || 0;
-                await updateDoc(postRef, { commentCount: currentCount + 1 });
-                
-                const postOwnerId = postSnap.data()?.userId;
-                if (postOwnerId && postOwnerId !== AppState.currentUser.uid) {
-                    await addDoc(collection(db, 'users', postOwnerId, 'notifications'), {
-                        type: 'comment', fromUserId: AppState.currentUser.uid,
-                        fromUserName: AppState.userData?.name || 'Usuario',
-                        fromUserPhoto: AppState.currentUser?.photoURL || '',
-                        postId: postId, postImage: postSnap.data()?.mediaUrl || '',
-                        timestamp: serverTimestamp(), read: false
-                    });
-                }
-                
-                input.value = '';
-                showToast('Comentario publicado', 'success');
-            } catch (error) {
-                log('COMMENT', 'ERROR:', error);
-                showToast('Error al publicar comentario', 'error');
-            }
-        }
-
-        window.sharePost = async function(postId, caption) {
-            const decodedCaption = decodeURIComponent(caption);
-            const shareData = {
-                title: "Maria's Cut - Social Club",
-                text: decodedCaption || '¡Mira esta publicacion en Maria\'s Cut! 🐕',
-                url: window.location.href + '?post=' + postId
-            };
-            
-            try {
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                    showToast('¡Compartido!', 'success');
-                } else {
-                    await navigator.clipboard.writeText(shareData.url);
-                    showToast('Link copiado', 'success');
-                }
-            } catch (error) {
-                log('SHARE', 'ERROR:', error);
-            }
-        };
-
-        // ============================================
-        // AUTENTICACION - EVENT LISTENERS (DEFINIDOS DIRECTAMENTE)
-        // ============================================
-        const loginActions = document.getElementById('login-actions');
-        const registerActions = document.getElementById('register-actions');
-        const registerFields = document.getElementById('register-fields');
-        const errorEl = document.getElementById('login-error');
-
-        function showAuthError(msg) {
-            errorEl.textContent = msg;
-            errorEl.classList.remove('hidden');
-        }
-        function hideAuthError() { errorEl.classList.add('hidden'); }
-
-        // Toggle entre login y registro
-        document.getElementById('btn-show-register')?.addEventListener('click', () => {
-            console.log('[AUTH] Click: mostrar registro');
-            loginActions.classList.add('hidden');
-            registerActions.classList.remove('hidden');
-            registerFields.classList.remove('hidden');
-            hideAuthError();
-        });
-
-        document.getElementById('btn-show-login')?.addEventListener('click', () => {
-            console.log('[AUTH] Click: mostrar login');
-            registerActions.classList.add('hidden');
-            loginActions.classList.remove('hidden');
-            registerFields.classList.add('hidden');
-            hideAuthError();
-        });
-
-        // Login
-        document.getElementById('btn-login')?.addEventListener('click', async () => {
-            console.log('[AUTH] Click: iniciar sesion');
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            
-            if (!email || !password) {
-                showAuthError('Ingresa email y contrasena');
-                return;
-            }
-            
-            showLoading('Iniciando sesion...');
-            hideAuthError();
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                // El onAuthStateChanged se encarga del resto
-            } catch (error) {
-                console.error('[AUTH] Login error:', error);
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
-                    showAuthError('Usuario o contrasena incorrectos');
-                } else if (error.code === 'auth/invalid-email') {
-                    showAuthError('Email invalido');
-                } else {
-                    showAuthError('Error: ' + error.message);
-                }
-                hideLoading();
-            }
-        });
-
-        // Registro
-        document.getElementById('btn-register')?.addEventListener('click', async () => {
-            console.log('[AUTH] Click: registrarse');
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            const name = document.getElementById('login-name').value.trim();
-            const pet = document.getElementById('login-pet').value.trim();
-            const phone = document.getElementById('login-phone').value.trim();
-            
-            if (!email || !password || !name) {
-                showAuthError('Email, contrasena y nombre son obligatorios');
-                return;
-            }
-            if (password.length < 6) {
-                showAuthError('La contrasena debe tener al menos 6 caracteres');
-                return;
-            }
-            
-            showLoading('Creando cuenta...');
-            hideAuthError();
-            
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                console.log('[AUTH] Registro OK, UID:', userCredential.user.uid);
-                
-                await setDoc(doc(db, 'users', userCredential.user.uid), {
-                    name: name, email: email,
-                    petName: pet || 'Mi Mascota', phone: phone || '',
-                    createdAt: serverTimestamp()
-                });
-                
-                await updateProfile(userCredential.user, { displayName: name });
-                showToast('¡Cuenta creada!', 'success');
-            } catch (error) {
-                console.error('[AUTH] Registro error:', error);
-                if (error.code === 'auth/email-already-in-use') {
-                    showAuthError('Este correo ya esta registrado');
-                } else {
-                    showAuthError('Error: ' + error.message);
-                }
-                hideLoading();
-            }
-        });
-
-        // Invitado
-        document.getElementById('btn-skip')?.addEventListener('click', async () => {
-            console.log('[AUTH] Click: invitado');
-            showLoading('Entrando como invitado...');
-            try {
-                AppState.isGuest = true;
-                await signInAnonymously(auth);
-            } catch (error) {
-                console.error('[AUTH] Guest error:', error);
-                showToast('Error al entrar como invitado', 'error');
-                AppState.isGuest = false;
-                hideLoading();
-            }
-        });
-
-        // Placeholder para compatibilidad
-        function setupAuthListeners() { console.log('[AUTH] Listeners ya configurados'); }
-
-        // ============================================
-        // PERFIL Y NOTIFICACIONES
-        // ============================================
-        function setupProfileListeners() {
-            // Tabs
-            document.querySelectorAll('.profile-tab, .profile-stat').forEach(tab => {
-                tab.addEventListener('click', () => switchProfileTab(tab.dataset.tab));
-            });
-            
-            // Menu
+            // ============================================
+            // PERFIL Y MENU
+            // ============================================
             document.getElementById('btn-menu')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.add('active');
-                document.getElementById('side-menu').classList.add('active');
+                document.getElementById('side-menu-overlay')?.classList.add('active');
+                document.getElementById('side-menu')?.classList.add('active');
             });
-            
+
             document.getElementById('side-menu-overlay')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.remove('active');
-                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay')?.classList.remove('active');
+                document.getElementById('side-menu')?.classList.remove('active');
             });
-            
-            // Mis datos
+
             document.getElementById('menu-mis-datos')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.remove('active');
-                document.getElementById('side-menu').classList.remove('active');
-                document.getElementById('edit-name').value = AppState.userData?.name || '';
-                document.getElementById('edit-phone').value = AppState.userData?.phone || '';
-                document.getElementById('edit-email').value = AppState.currentUser?.email || '';
+                document.getElementById('side-menu-overlay')?.classList.remove('active');
+                document.getElementById('side-menu')?.classList.remove('active');
+                document.getElementById('edit-name') && (document.getElementById('edit-name').value = AppState.userData?.name || '');
+                document.getElementById('edit-phone') && (document.getElementById('edit-phone').value = AppState.userData?.phone || '');
+                document.getElementById('edit-email') && (document.getElementById('edit-email').value = AppState.currentUser?.email || '');
                 openModal('modal-mis-datos');
             });
-            
-            // Guardar datos
+
             document.getElementById('btn-save-datos')?.addEventListener('click', async () => {
-                const name = document.getElementById('edit-name').value.trim();
-                const phone = document.getElementById('edit-phone').value.trim();
-                const password = document.getElementById('edit-password').value;
+                const name = document.getElementById('edit-name')?.value.trim();
+                const phone = document.getElementById('edit-phone')?.value.trim();
+                const password = document.getElementById('edit-password')?.value;
                 
+                if (!name) {
+                    showToast('El nombre es obligatorio', 'error');
+                    return;
+                }
+
                 showLoading('Guardando...');
                 try {
                     await setDoc(doc(db, 'users', AppState.currentUser.uid), {
@@ -1841,7 +1438,7 @@
                     
                     AppState.userData.name = name;
                     AppState.userData.phone = phone;
-                    document.getElementById('profile-name').textContent = name;
+                    document.getElementById('profile-name') && (document.getElementById('profile-name').textContent = name);
                     
                     showToast('Datos guardados', 'success');
                     closeModal('modal-mis-datos');
@@ -1851,39 +1448,14 @@
                     hideLoading();
                 }
             });
-            
-            // Avatar
-            document.getElementById('avatar-edit')?.addEventListener('click', () => {
-                document.getElementById('avatar-input').click();
-            });
-            
-            document.getElementById('avatar-input')?.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                showLoading('Subiendo foto...');
-                try {
-                    const storageRef = ref(storage, \`avatars/\${AppState.currentUser.uid}.jpg\`);
-                    await uploadBytesResumable(storageRef, file);
-                    const photoURL = await getDownloadURL(storageRef);
-                    await updateProfile(AppState.currentUser, { photoURL });
-                    document.getElementById('modal-avatar-img').src = photoURL;
-                    document.getElementById('profile-avatar').src = photoURL;
-                    showToast('Foto actualizada', 'success');
-                } catch (error) {
-                    showToast('Error al subir foto', 'error');
-                } finally {
-                    hideLoading();
-                }
-            });
-            
+
             // Logout
             document.getElementById('menu-logout')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.remove('active');
-                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay')?.classList.remove('active');
+                document.getElementById('side-menu')?.classList.remove('active');
                 openAlert('alert-logout');
             });
-            
+
             document.getElementById('confirm-logout')?.addEventListener('click', async () => {
                 closeAlert('alert-logout');
                 try {
@@ -1894,175 +1466,377 @@
                     await signOut(auth);
                     AppState.isGuest = false;
                     AppState.currentUser = null;
-                    AppState.userData = null;
                     showToast('Sesion cerrada', 'success');
                 } catch (error) {
                     showToast('Error al cerrar sesion', 'error');
                 }
             });
-        }
 
-        function switchProfileTab(tabName) {
-            document.querySelectorAll('.profile-tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.tab === tabName);
+            // Tabs perfil
+            document.querySelectorAll('.profile-tab, .profile-stat').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.dataset.tab;
+                    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                    document.querySelector(`.profile-tab[data-tab="${tabName}"]`)?.classList.add('active');
+                    document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
+                });
             });
-            document.querySelectorAll('.profile-stat').forEach(s => {
-                s.classList.toggle('active', s.dataset.tab === tabName);
-            });
-            document.querySelectorAll('[id^="tab-content-"]').forEach(c => c.classList.add('hidden'));
-            document.getElementById(\`tab-content-\${tabName}\`)?.classList.remove('hidden');
-        }
 
-        async function loadUserProfileData() {
-            if (!AppState.currentUser) return;
-            const uid = AppState.currentUser.uid;
-            
-            if (AppState.profilePostsUnsubscribe) AppState.profilePostsUnsubscribe();
-            if (AppState.profileBookingsUnsubscribe) AppState.profileBookingsUnsubscribe();
-            
-            // Posts del usuario
-            const postsQuery = query(
-                collection(db, 'posts'),
-                where('userId', '==', uid),
-                orderBy('createdAt', 'desc')
-            );
-            
-            AppState.profilePostsUnsubscribe = onSnapshot(postsQuery, (snapshot) => {
-                const grid = document.getElementById('user-posts-grid');
-                const empty = document.getElementById('posts-empty');
+            // ============================================
+            // WIZARD
+            // ============================================
+            document.getElementById('menu-entrenador')?.addEventListener('click', () => {
+                document.getElementById('side-menu-overlay')?.classList.remove('active');
+                document.getElementById('side-menu')?.classList.remove('active');
+                startWizard('entrenador');
+            });
+
+            document.getElementById('menu-paseador')?.addEventListener('click', () => {
+                document.getElementById('side-menu-overlay')?.classList.remove('active');
+                document.getElementById('side-menu')?.classList.remove('active');
+                startWizard('paseador');
+            });
+
+            function startWizard(type) {
+                AppState.wizardType = type;
+                AppState.wizardStep = 1;
+                AppState.wizardAnswers = {};
+                document.getElementById('wizard-title') && (document.getElementById('wizard-title').textContent = type === 'entrenador' ? 'Solicitud de Entrenador' : 'Solicitud de Paseador');
+                updateWizardUI();
+                openModal('modal-wizard');
+            }
+
+            function updateWizardUI() {
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById(`progress-${i}`)?.classList.toggle('fill', i <= AppState.wizardStep);
+                }
+                document.querySelectorAll('.wizard-step').forEach((step, index) => {
+                    step.classList.toggle('active', index + 1 === AppState.wizardStep);
+                });
+                const prevBtn = document.getElementById('wizard-prev');
+                const nextBtn = document.getElementById('wizard-next');
+                if (prevBtn) prevBtn.style.visibility = AppState.wizardStep === 1 ? 'hidden' : 'visible';
+                if (nextBtn) nextBtn.textContent = AppState.wizardStep === 5 ? 'Finalizar' : 'Siguiente';
+            }
+
+            document.getElementById('wizard-prev')?.addEventListener('click', () => {
+                if (AppState.wizardStep > 1) {
+                    AppState.wizardStep--;
+                    updateWizardUI();
+                }
+            });
+
+            document.getElementById('wizard-next')?.addEventListener('click', async () => {
+                const currentStepEl = document.getElementById(`step-${AppState.wizardStep}`);
                 
-                if (snapshot.empty) {
-                    if (grid) grid.innerHTML = '';
-                    empty?.classList.remove('hidden');
-                    document.getElementById('stat-posts').textContent = '0';
+                if (AppState.wizardStep < 5) {
+                    const selected = currentStepEl?.querySelector('.option-card.selected');
+                    if (!selected) { showToast('Selecciona una opcion', 'info'); return; }
+                    AppState.wizardAnswers[`pregunta${AppState.wizardStep}`] = selected.dataset.value;
+                } else {
+                    AppState.wizardAnswers.about = document.getElementById('wizard-about')?.value;
+                }
+                
+                if (AppState.wizardStep === 5) {
+                    showLoading('Enviando solicitud...');
+                    try {
+                        await addDoc(collection(db, 'solicitudes_staff'), {
+                            uid: AppState.currentUser.uid, tipo: AppState.wizardType,
+                            respuestas: AppState.wizardAnswers, estado: 'pendiente',
+                            userName: AppState.userData?.name || '',
+                            userEmail: AppState.currentUser.email,
+                            createdAt: serverTimestamp()
+                        });
+                        showToast('¡Solicitud enviada!', 'success');
+                        closeModal('modal-wizard');
+                    } catch (error) {
+                        showToast('Error al enviar', 'error');
+                    } finally {
+                        hideLoading();
+                    }
+                } else {
+                    AppState.wizardStep++;
+                    updateWizardUI();
+                }
+            });
+
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.parentElement?.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // ============================================
+            // FEED Y STORIES
+            // ============================================
+            function loadFeed() {
+                const feedContainer = document.getElementById('feed-container');
+                if (!feedContainer) return;
+
+                const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
+                
+                if (AppState.feedUnsubscribe) AppState.feedUnsubscribe();
+                
+                AppState.feedUnsubscribe = onSnapshot(q, (snapshot) => {
+                    let html = '';
+                    snapshot.forEach(doc => {
+                        const post = doc.data();
+                        const postId = doc.id;
+                        const likes = post.likes || [];
+                        const comments = post.comments || [];
+                        const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
+                        
+                        html += `
+                            <div class="social-card" data-post-id="${postId}">
+                                <div class="p-3 flex items-center gap-3">
+                                    <img src="${post.userPhoto || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop'}" class="w-10 h-10 rounded-full object-cover">
+                                    <div class="flex-1">
+                                        <p class="font-semibold text-[#4B3621] text-sm">${post.userName || 'Usuario'}</p>
+                                        <p class="text-xs text-[#8B7355]">Hace un momento</p>
+                                    </div>
+                                </div>
+                                <img src="${post.mediaUrl}" class="post-media" loading="lazy">
+                                <div class="post-actions">
+                                    <button class="post-action-btn ${isLiked ? 'liked' : ''}" data-action="like" data-post-id="${postId}">
+                                        <svg fill="${isLiked ? '#EF4444' : 'none'}" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                                        <span class="post-action-count">${likes.length}</span>
+                                    </button>
+                                    <button class="post-action-btn" data-action="comment" data-post-id="${postId}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                                        <span class="post-action-count">${comments.length}</span>
+                                    </button>
+                                    <button class="post-action-btn" data-action="share" data-post-id="${postId}">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                                    </button>
+                                </div>
+                                <div class="post-caption">
+                                    <p class="post-caption-text"><span class="username">${post.userName || 'Usuario'}</span> ${post.caption || ''}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    feedContainer.innerHTML = html || '<div class="empty-state"><p>Aun no hay publicaciones</p></div>';
+                    
+                    // Event listeners para acciones
+                    feedContainer.querySelectorAll('[data-action="like"]').forEach(btn => {
+                        btn.addEventListener('click', () => handleLike(btn.dataset.postId));
+                    });
+                    feedContainer.querySelectorAll('[data-action="comment"]').forEach(btn => {
+                        btn.addEventListener('click', () => openComments(btn.dataset.postId));
+                    });
+                    feedContainer.querySelectorAll('[data-action="share"]').forEach(btn => {
+                        btn.addEventListener('click', () => handleShare(btn.dataset.postId));
+                    });
+                });
+            }
+
+            async function handleLike(postId) {
+                if (AppState.isGuest) { showToast('Registrate para dar like', 'info'); return; }
+                if (!AppState.currentUser) return;
+                
+                try {
+                    const postRef = doc(db, 'posts', postId);
+                    const postDoc = await getDoc(postRef);
+                    if (!postDoc.exists()) return;
+                    
+                    const likes = postDoc.data().likes || [];
+                    if (likes.includes(AppState.currentUser.uid)) {
+                        await updateDoc(postRef, { likes: arrayRemove(AppState.currentUser.uid) });
+                    } else {
+                        await updateDoc(postRef, { likes: arrayUnion(AppState.currentUser.uid) });
+                    }
+                } catch (error) {
+                    log('LIKE', 'Error:', error);
+                }
+            }
+
+            function openComments(postId) {
+                if (AppState.isGuest) { showToast('Registrate para comentar', 'info'); return; }
+                AppState.currentPostId = postId;
+                openModal('modal-comments');
+                loadComments(postId);
+            }
+
+            async function loadComments(postId) {
+                const container = document.getElementById('comments-list');
+                if (!container) return;
+                
+                const postDoc = await getDoc(doc(db, 'posts', postId));
+                const comments = postDoc.data()?.comments || [];
+                
+                if (comments.length === 0) {
+                    container.innerHTML = `
+                        <div class="comments-empty">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-12 h-12 mx-auto mb-4 opacity-50"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                            <p>Aun no hay comentarios</p>
+                        </div>`;
                     return;
                 }
                 
-                let html = '';
-                let count = 0;
-                snapshot.forEach((docSnap) => {
-                    const post = docSnap.data();
-                    if (post.mediaType === 'image') {
-                        html += \`<div class="posts-grid-item"><img src="\${post.mediaUrl}" loading="lazy"></div>\`;
-                        count++;
-                    }
-                });
-                
-                if (grid) grid.innerHTML = html;
-                empty?.classList.add('hidden');
-                document.getElementById('stat-posts').textContent = count;
-            });
-        }
+                container.innerHTML = comments.map(c => `
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm text-[#4B3621]">${c.userName || 'Usuario'}</p>
+                            <p class="text-[#6D5D4E] text-sm">${c.text}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
 
-        function initNotificationsListener() {
-            if (!AppState.currentUser || AppState.isGuest) return;
-            
-            if (AppState.notificationsUnsubscribe) AppState.notificationsUnsubscribe();
-            
-            const notificationsQuery = query(
-                collection(db, 'users', AppState.currentUser.uid, 'notifications'),
-                orderBy('timestamp', 'desc'), limit(50)
-            );
-            
-            AppState.notificationsUnsubscribe = onSnapshot(notificationsQuery, (snapshot) => {
-                const notifications = [];
-                let unreadCount = 0;
+            document.getElementById('btn-submit-comment')?.addEventListener('click', async () => {
+                const input = document.getElementById('comment-input');
+                const text = input?.value.trim();
+                if (!text || !AppState.currentPostId) return;
                 
-                snapshot.forEach((docSnap) => {
-                    const notif = { id: docSnap.id, ...docSnap.data() };
-                    notifications.push(notif);
-                    if (!notif.read) unreadCount++;
-                });
-                
-                AppState.notifications = notifications;
-                
-                const badge = document.getElementById('notif-badge');
-                const badgeDot = document.getElementById('notif-badge-dot');
-                
-                if (unreadCount > 0) {
-                    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
-                    badge.classList.remove('hidden');
-                    badgeDot.classList.remove('hidden');
-                } else {
-                    badge.classList.add('hidden');
-                    badgeDot.classList.add('hidden');
+                try {
+                    const postRef = doc(db, 'posts', AppState.currentPostId);
+                    await updateDoc(postRef, {
+                        comments: arrayUnion({
+                            userId: AppState.currentUser.uid,
+                            userName: AppState.userData?.name || 'Usuario',
+                            text: text,
+                            createdAt: new Date().toISOString()
+                        })
+                    });
+                    input.value = '';
+                    loadComments(AppState.currentPostId);
+                } catch (error) {
+                    showToast('Error al comentar', 'error');
                 }
             });
-        }
 
-        document.getElementById('btn-notifications')?.addEventListener('click', () => {
-            renderNotifications();
-            openModal('modal-notifications');
-            markNotificationsAsRead();
-        });
-
-        function renderNotifications() {
-            const container = document.getElementById('notifications-list');
-            if (!AppState.notifications || AppState.notifications.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>No tienes notificaciones</p></div>';
-                return;
-            }
-            
-            let html = '';
-            AppState.notifications.forEach(notif => {
-                const timeText = formatTimeAgo(notif.timestamp);
-                const text = notif.type === 'like' 
-                    ? \`A <strong>\${notif.fromUserName || 'Alguien'}</strong> le gusto tu foto\`
-                    : (notif.type === 'comment'
-                        ? \`<strong>\${notif.fromUserName || 'Alguien'}</strong> comento tu publicacion\`
-                        : 'Nueva notificacion');
-                
-                html += \`
-                    <div class="notification-item \${notif.read ? '' : 'unread'}" data-notif-id="\${notif.id}">
-                        <img src="\${notif.fromUserPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg'}" class="notification-avatar">
-                        <div class="notification-content">
-                            <p class="notification-text">\${text}</p>
-                            <p class="notification-time">\${timeText}</p>
-                        </div>
-                        \${notif.read ? '' : '<div class="notification-dot"></div>'}
-                    </div>\`;
-            });
-            container.innerHTML = html;
-        }
-
-        async function markNotificationsAsRead() {
-            if (!AppState.notifications) return;
-            const unread = AppState.notifications.filter(n => !n.read);
-            for (const notif of unread) {
+            async function handleShare(postId) {
                 try {
-                    await updateDoc(doc(db, 'users', AppState.currentUser.uid, 'notifications', notif.id), { read: true });
-                } catch (e) { log('NOTIF', 'Error marcando leida:', e); }
+                    await navigator.clipboard.writeText(`https://mariascut.app/post/${postId}`);
+                    showToast('Link copiado', 'success');
+                } catch (e) {
+                    showToast('¡Compartido!', 'success');
+                }
             }
-            document.getElementById('notif-badge')?.classList.add('hidden');
-            document.getElementById('notif-badge-dot')?.classList.add('hidden');
-        }
 
-        // ============================================
-        // CAMARA Y CONTENIDO
-        // ============================================
-        function setupCameraListeners() {
+            // ============================================
+            // STORIES
+            // ============================================
+            function loadStories() {
+                const container = document.getElementById('stories-container');
+                if (!container) return;
+
+                const q = query(collection(db, 'stories'), orderBy('createdAt', 'desc'), limit(100));
+                
+                if (AppState.storiesUnsubscribe) AppState.storiesUnsubscribe();
+                
+                AppState.storiesUnsubscribe = onSnapshot(q, (snapshot) => {
+                    const stories = [];
+                    snapshot.forEach(doc => stories.push({ id: doc.id, ...doc.data() }));
+                    
+                    // Filtrar stories de ultimas 24h
+                    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+                    const validStories = stories.filter(s => (s.createdAt?.toMillis?.() || 0) > cutoff);
+                    
+                    // Agrupar por usuario
+                    const byUser = {};
+                    validStories.forEach(s => {
+                        if (!byUser[s.userId]) byUser[s.userId] = [];
+                        byUser[s.userId].push(s);
+                    });
+                    
+                    AppState.storiesByUser = byUser;
+                    AppState.storyUsers = Object.keys(byUser);
+                    
+                    let html = `
+                        <div class="story-item" id="btn-add-story">
+                            <div class="story-avatar-ring">
+                                <img src="${AppState.userData?.photoURL || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop'}" class="story-avatar">
+                            </div>
+                            <span class="text-xs text-[#4B3621] mt-1">Tu historia</span>
+                        </div>
+                    `;
+                    
+                    Object.entries(byUser).forEach(([userId, userStories]) => {
+                        const story = userStories[0];
+                        html += `
+                            <div class="story-item" data-story-user="${userId}">
+                                <div class="story-avatar-ring has-stories">
+                                    <img src="${story.userPhoto || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop'}" class="story-avatar">
+                                </div>
+                                <span class="text-xs text-[#4B3621] mt-1">${story.userName?.split(' ')[0] || 'Usuario'}</span>
+                            </div>
+                        `;
+                    });
+                    
+                    container.innerHTML = html;
+                    
+                    document.getElementById('btn-add-story')?.addEventListener('click', () => {
+                        if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+                        AppState.cameraMode = 'story';
+                        startCamera();
+                    });
+                    
+                    container.querySelectorAll('[data-story-user]').forEach(item => {
+                        item.addEventListener('click', () => {
+                            const userId = item.dataset.storyUser;
+                            const index = AppState.storyUsers.indexOf(userId);
+                            if (index !== -1) openStoryViewer(index);
+                        });
+                    });
+                });
+            }
+
+            // ============================================
+            // CAMERA Y EDITOR
+            // ============================================
+            const cameraOverlay = document.getElementById('camera-overlay');
+            const cameraVideo = document.getElementById('camera-video');
+
+            async function startCamera() {
+                if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+                try {
+                    AppState.mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+                    cameraVideo.srcObject = AppState.mediaStream;
+                    cameraOverlay?.classList.add('active');
+                } catch (error) {
+                    showToast('No se pudo acceder a la camara', 'error');
+                    document.getElementById('gallery-input')?.click();
+                }
+            }
+
+            function stopCamera() {
+                if (AppState.mediaStream) {
+                    AppState.mediaStream.getTracks().forEach(track => track.stop());
+                    AppState.mediaStream = null;
+                }
+                cameraOverlay?.classList.remove('active');
+            }
+
             document.getElementById('btn-add-content')?.addEventListener('click', () => {
                 if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
                 AppState.cameraMode = 'post';
-                updateCameraModeUI();
                 startCamera();
             });
-            
+
             document.getElementById('camera-close')?.addEventListener('click', stopCamera);
-            
-            document.querySelectorAll('.camera-mode-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.camera-mode-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    AppState.cameraMode = btn.dataset.mode;
-                });
+
+            document.getElementById('camera-capture')?.addEventListener('click', () => {
+                const canvas = document.getElementById('camera-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = cameraVideo.videoWidth;
+                canvas.height = cameraVideo.videoHeight;
+                ctx.drawImage(cameraVideo, 0, 0);
+                canvas.toBlob((blob) => {
+                    AppState.capturedMedia = { blob, type: 'image' };
+                    stopCamera();
+                    if (AppState.cameraMode === 'story') openStoryCanvasEditor();
+                    else openPostEditor();
+                }, 'image/jpeg', 0.9);
             });
-            
-            document.getElementById('camera-capture')?.addEventListener('click', capturePhoto);
+
             document.getElementById('camera-gallery-btn')?.addEventListener('click', () => {
-                document.getElementById('gallery-input').click();
+                document.getElementById('gallery-input')?.click();
             });
-            
+
             document.getElementById('gallery-input')?.addEventListener('change', (e) => {
                 const file = e.target.files[0];
                 if (file) {
@@ -2072,623 +1846,191 @@
                     else openPostEditor();
                 }
             });
-        }
 
-        async function startCamera() {
-            if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            try {
-                AppState.mediaStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' }, audio: false 
-                });
-                document.getElementById('camera-video').srcObject = AppState.mediaStream;
-                document.getElementById('camera-overlay').classList.add('active');
-            } catch (error) {
-                log('CAMERA', 'Error:', error);
-                showToast('No se pudo acceder a la camara', 'error');
-                document.getElementById('gallery-input').click();
-            }
-        }
-
-        function stopCamera() {
-            if (AppState.mediaStream) {
-                AppState.mediaStream.getTracks().forEach(track => track.stop());
-                AppState.mediaStream = null;
-            }
-            document.getElementById('camera-overlay').classList.remove('active');
-        }
-
-        function updateCameraModeUI() {
-            document.querySelectorAll('.camera-mode-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.mode === AppState.cameraMode);
-            });
-        }
-
-        function capturePhoto() {
-            const video = document.getElementById('camera-video');
-            const canvas = document.getElementById('camera-canvas');
-            const context = canvas.getContext('2d');
-            
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0);
-            
-            canvas.toBlob((blob) => {
-                AppState.capturedMedia = { blob, type: 'image' };
-                stopCamera();
-                if (AppState.cameraMode === 'story') openStoryCanvasEditor();
-                else openPostEditor();
-            }, 'image/jpeg', 0.9);
-        }
-
-        function openPostEditor() {
-            if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            const modal = document.getElementById('post-editor-modal');
-            const previewImg = document.getElementById('editor-preview-img');
-            const previewVideo = document.getElementById('editor-preview-video');
-            
-            document.getElementById('editor-caption').value = '';
-            
-            if (AppState.capturedMedia.type === 'image') {
-                previewImg.classList.remove('hidden');
-                previewVideo.classList.add('hidden');
-                previewImg.src = URL.createObjectURL(AppState.capturedMedia.blob);
-            } else {
-                previewImg.classList.add('hidden');
-                previewVideo.classList.remove('hidden');
-                previewVideo.src = URL.createObjectURL(AppState.capturedMedia.blob);
-            }
-            modal.classList.add('active');
-        }
-
-        async function submitPost() {
-            if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            
-            const caption = document.getElementById('editor-caption').value.trim();
-            document.getElementById('post-editor-modal').classList.remove('active');
-            showToast('Subiendo...', 'info');
-            
-            try {
-                const fileName = \`posts/\${Date.now()}_\${AppState.currentUser.uid}.jpg\`;
-                const storageRef = ref(storage, fileName);
-                const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
+            function openPostEditor() {
+                const modal = document.getElementById('post-editor-modal');
+                const img = document.getElementById('editor-preview-img');
+                const video = document.getElementById('editor-preview-video');
                 
-                await new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed', null, reject, resolve);
-                });
-                
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                
-                await addDoc(collection(db, 'posts'), {
-                    userId: AppState.currentUser.uid,
-                    userName: AppState.userData?.name || 'Usuario',
-                    userPhoto: AppState.currentUser?.photoURL || '',
-                    mediaUrl: downloadURL,
-                    mediaType: AppState.capturedMedia.type,
-                    caption: caption || '🐾',
-                    likes: [], commentCount: 0,
-                    createdAt: serverTimestamp()
-                });
-                
-                showToast('¡Publicacion creada!', 'success');
-                AppState.capturedMedia = null;
-            } catch (error) {
-                log('UPLOAD', 'ERROR:', error);
-                showToast('Error al subir: ' + error.message, 'error');
-            }
-        }
-
-        document.getElementById('editor-cancel')?.addEventListener('click', () => {
-            document.getElementById('post-editor-modal').classList.remove('active');
-            AppState.capturedMedia = null;
-        });
-        document.getElementById('editor-submit')?.addEventListener('click', submitPost);
-
-        // ============================================
-        // STORY CANVAS EDITOR
-        // ============================================
-        function openStoryCanvasEditor() {
-            if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            
-            const modal = document.getElementById('story-canvas-editor');
-            const canvas = document.getElementById('story-canvas');
-            
-            CanvasState.canvas = canvas;
-            CanvasState.ctx = canvas.getContext('2d');
-            CanvasState.drawingHistory = [];
-            CanvasState.historyStep = -1;
-            
-            const img = new Image();
-            img.onload = () => {
-                CanvasState.backgroundImage = img;
-                const maxWidth = window.innerWidth;
-                const maxHeight = window.innerHeight * 0.65;
-                const scale = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
-                
-                canvas.width = img.width;
-                canvas.height = img.height;
-                canvas.style.width = (img.width * scale) + 'px';
-                canvas.style.height = (img.height * scale) + 'px';
-                
-                redrawCanvas();
-            };
-            img.src = URL.createObjectURL(AppState.capturedMedia.blob);
-            
-            modal.classList.add('active');
-            setupCanvasEvents();
-        }
-
-        function setupCanvasEvents() {
-            const canvas = CanvasState.canvas;
-            if (!canvas) return;
-            
-            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-            canvas.addEventListener('touchend', handleTouchEnd);
-            canvas.addEventListener('mousedown', handleMouseDown);
-            canvas.addEventListener('mousemove', handleMouseMove);
-            canvas.addEventListener('mouseup', handleMouseUp);
-            canvas.addEventListener('mouseleave', handleMouseUp);
-        }
-
-        function getCanvasCoordinates(e) {
-            const canvas = CanvasState.canvas;
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            let clientX, clientY;
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            }
-            
-            return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-        }
-
-        function handleTouchStart(e) {
-            if (CanvasState.currentTool === 'text') return;
-            e.preventDefault();
-            CanvasState.isDrawing = true;
-            const coords = getCanvasCoordinates(e);
-            CanvasState.lastX = coords.x;
-            CanvasState.lastY = coords.y;
-        }
-
-        function handleTouchMove(e) {
-            if (!CanvasState.isDrawing || CanvasState.currentTool === 'text') return;
-            e.preventDefault();
-            const coords = getCanvasCoordinates(e);
-            draw(coords.x, coords.y);
-        }
-
-        function handleTouchEnd(e) {
-            if (CanvasState.isDrawing) {
-                CanvasState.isDrawing = false;
-                saveDrawingState();
-            }
-        }
-
-        function handleMouseDown(e) {
-            if (CanvasState.currentTool === 'text') return;
-            CanvasState.isDrawing = true;
-            const coords = getCanvasCoordinates(e);
-            CanvasState.lastX = coords.x;
-            CanvasState.lastY = coords.y;
-        }
-
-        function handleMouseMove(e) {
-            if (!CanvasState.isDrawing || CanvasState.currentTool === 'text') return;
-            const coords = getCanvasCoordinates(e);
-            draw(coords.x, coords.y);
-        }
-
-        function handleMouseUp(e) {
-            if (CanvasState.isDrawing) {
-                CanvasState.isDrawing = false;
-                saveDrawingState();
-            }
-        }
-
-        function draw(x, y) {
-            const ctx = CanvasState.ctx;
-            ctx.lineWidth = CanvasState.currentSize;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            if (CanvasState.currentTool === 'eraser') {
-                ctx.globalCompositeOperation = 'destination-out';
-            } else {
-                ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = CanvasState.currentColor;
-            }
-            
-            ctx.beginPath();
-            ctx.moveTo(CanvasState.lastX, CanvasState.lastY);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            
-            CanvasState.lastX = x;
-            CanvasState.lastY = y;
-        }
-
-        function saveDrawingState() {
-            CanvasState.historyStep++;
-            if (CanvasState.historyStep < CanvasState.drawingHistory.length) {
-                CanvasState.drawingHistory.length = CanvasState.historyStep;
-            }
-            CanvasState.drawingHistory.push(CanvasState.canvas.toDataURL());
-        }
-
-        function undo() {
-            if (CanvasState.historyStep > 0) {
-                CanvasState.historyStep--;
-                const img = new Image();
-                img.onload = () => {
-                    CanvasState.ctx.clearRect(0, 0, CanvasState.canvas.width, CanvasState.canvas.height);
-                    CanvasState.ctx.drawImage(img, 0, 0);
-                };
-                img.src = CanvasState.drawingHistory[CanvasState.historyStep];
-            } else if (CanvasState.historyStep === 0) {
-                CanvasState.historyStep = -1;
-                redrawCanvas(true);
-            }
-        }
-
-        function redrawCanvas(clearOnly = false) {
-            const canvas = CanvasState.canvas;
-            const ctx = CanvasState.ctx;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (!clearOnly && CanvasState.backgroundImage) {
-                ctx.drawImage(CanvasState.backgroundImage, 0, 0);
-            }
-        }
-
-        function setupCanvasTools() {
-            document.querySelectorAll('.story-tool-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const tool = btn.dataset.tool;
-                    if (tool === 'undo') { undo(); return; }
-                    
-                    CanvasState.currentTool = tool;
-                    document.querySelectorAll('.story-tool-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    if (tool === 'text') {
-                        document.getElementById('story-text-input-container').classList.add('active');
-                        document.getElementById('story-text-input').focus();
-                    } else {
-                        document.getElementById('story-text-input-container').classList.remove('active');
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.story-color-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    CanvasState.currentColor = btn.dataset.color;
-                    document.querySelectorAll('.story-color-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
-            
-            document.querySelectorAll('.story-brush-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    CanvasState.currentSize = parseInt(btn.dataset.size);
-                    document.querySelectorAll('.story-brush-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                });
-            });
-            
-            document.getElementById('story-text-input')?.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    const text = e.target.value.trim();
-                    if (text) addTextToCanvas(text);
-                    document.getElementById('story-text-input-container').classList.remove('active');
-                    CanvasState.currentTool = 'pen';
-                    document.querySelectorAll('.story-tool-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelector('[data-tool="pen"]')?.classList.add('active');
+                if (AppState.capturedMedia.type === 'video') {
+                    video.src = URL.createObjectURL(AppState.capturedMedia.blob);
+                    video.classList.remove('hidden');
+                    img.classList.add('hidden');
+                } else {
+                    img.src = URL.createObjectURL(AppState.capturedMedia.blob);
+                    img.classList.remove('hidden');
+                    video.classList.add('hidden');
                 }
-            });
-            
-            document.getElementById('story-editor-cancel')?.addEventListener('click', () => {
-                document.getElementById('story-canvas-editor').classList.remove('active');
+                modal?.classList.add('active');
+            }
+
+            document.getElementById('editor-cancel')?.addEventListener('click', () => {
+                document.getElementById('post-editor-modal')?.classList.remove('active');
                 AppState.capturedMedia = null;
             });
-            
-            document.getElementById('story-editor-done')?.addEventListener('click', () => {
-                document.getElementById('story-text-input-container').classList.remove('active');
-            });
-            
-            document.getElementById('story-submit')?.addEventListener('click', submitStory);
-        }
 
-        function addTextToCanvas(text) {
-            const ctx = CanvasState.ctx;
-            const canvas = CanvasState.canvas;
-            ctx.save();
-            ctx.font = 'bold 48px sans-serif';
-            ctx.fillStyle = CanvasState.currentColor;
-            ctx.textAlign = 'center';
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-            ctx.shadowBlur = 4;
-            ctx.shadowOffsetX = 2;
-            ctx.shadowOffsetY = 2;
-            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-            ctx.restore();
-            saveDrawingState();
-        }
-
-        async function mergeCanvasToImage() {
-            const canvas = CanvasState.canvas;
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            const tempCtx = tempCanvas.getContext('2d');
-            if (CanvasState.backgroundImage) tempCtx.drawImage(CanvasState.backgroundImage, 0, 0);
-            tempCtx.drawImage(canvas, 0, 0);
-            return new Promise((resolve) => {
-                tempCanvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.95);
-            });
-        }
-
-        async function submitStory() {
-            if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            
-            document.getElementById('story-canvas-editor').classList.remove('active');
-            showToast('Subiendo historia...', 'info');
-            
-            try {
-                const mergedBlob = await mergeCanvasToImage();
-                const fileName = \`stories/\${Date.now()}_\${AppState.currentUser.uid}.jpg\`;
-                log('UPLOAD', 'Subiendo a:', fileName);
+            document.getElementById('editor-submit')?.addEventListener('click', async () => {
+                if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+                if (!AppState.capturedMedia) return;
                 
-                const storageRef = ref(storage, fileName);
-                const uploadTask = uploadBytesResumable(storageRef, mergedBlob);
+                const caption = document.getElementById('editor-caption')?.value.trim();
+                document.getElementById('post-editor-modal')?.classList.remove('active');
+                showLoading('Subiendo...');
                 
-                await new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed', 
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            log('UPLOAD', \`Progreso: \${progress.toFixed(0)}%\`);
-                        },
-                        (error) => reject(error),
-                        () => resolve()
-                    );
-                });
-                
-                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                log('UPLOAD', 'URL:', downloadURL);
-                
-                await addDoc(collection(db, 'stories'), {
-                    userId: AppState.currentUser.uid,
-                    userName: AppState.userData?.name || 'Usuario',
-                    userPhoto: AppState.currentUser?.photoURL || '',
-                    mediaUrl: downloadURL, mediaType: 'image',
-                    createdAt: serverTimestamp(),
-                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-                });
-                
-                showToast('¡Historia publicada!', 'success');
-                AppState.capturedMedia = null;
-            } catch (error) {
-                log('UPLOAD', 'ERROR:', error);
-                showToast('Error al subir: ' + error.message, 'error');
-            }
-        }
-
-        // ============================================
-        // WIZARD
-        // ============================================
-        function setupWizardListeners() {
-            document.getElementById('menu-entrenador')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.remove('active');
-                document.getElementById('side-menu').classList.remove('active');
-                startWizard('entrenador');
-            });
-            
-            document.getElementById('menu-paseador')?.addEventListener('click', () => {
-                document.getElementById('side-menu-overlay').classList.remove('active');
-                document.getElementById('side-menu').classList.remove('active');
-                startWizard('paseador');
-            });
-            
-            document.querySelectorAll('.option-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    this.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-                });
-            });
-        }
-
-        function startWizard(type) {
-            AppState.wizardType = type;
-            AppState.wizardStep = 1;
-            AppState.wizardAnswers = {};
-            document.getElementById('wizard-title').textContent = type === 'entrenador' ? 'Solicitud de Entrenador' : 'Solicitud de Paseador';
-            updateWizardUI();
-            openModal('modal-wizard');
-        }
-
-        function updateWizardUI() {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(\`progress-\${i}\`).classList.toggle('fill', i <= AppState.wizardStep);
-            }
-            document.querySelectorAll('.wizard-step').forEach((step, index) => {
-                step.classList.toggle('active', index + 1 === AppState.wizardStep);
-            });
-            document.getElementById('wizard-prev').style.visibility = AppState.wizardStep === 1 ? 'hidden' : 'visible';
-            document.getElementById('wizard-next').textContent = AppState.wizardStep === 5 ? 'Finalizar' : 'Siguiente';
-        }
-
-        window.nextWizardStep = function() {
-            const currentStepEl = document.getElementById(\`step-\${AppState.wizardStep}\`);
-            
-            if (AppState.wizardStep < 5) {
-                const selected = currentStepEl.querySelector('.option-card.selected');
-                if (!selected) { showToast('Selecciona una opcion', 'info'); return; }
-                AppState.wizardAnswers[\`pregunta\${AppState.wizardStep}\`] = selected.dataset.value;
-            } else {
-                AppState.wizardAnswers.about = document.getElementById('wizard-about').value;
-            }
-            
-            if (AppState.wizardStep === 5) {
-                submitWizard();
-            } else {
-                AppState.wizardStep++;
-                updateWizardUI();
-            }
-        };
-
-        window.prevWizardStep = function() {
-            if (AppState.wizardStep > 1) {
-                AppState.wizardStep--;
-                updateWizardUI();
-            }
-        };
-
-        async function submitWizard() {
-            showLoading('Enviando solicitud...');
-            try {
-                await addDoc(collection(db, 'solicitudes_staff'), {
-                    uid: AppState.currentUser.uid, tipo: AppState.wizardType,
-                    respuestas: AppState.wizardAnswers, estado: 'pendiente',
-                    userName: AppState.userData?.name || '',
-                    userEmail: AppState.currentUser.email,
-                    createdAt: serverTimestamp()
-                });
-                showToast('¡Solicitud enviada!', 'success');
-                closeModal('modal-wizard');
-            } catch (error) {
-                showToast('Error al enviar', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // ============================================
-        // MASCOTA Y NAVEGACION
-        // ============================================
-        function setupPetListeners() {
-            document.getElementById('pet-avatar-upload')?.addEventListener('click', () => {
-                document.getElementById('pet-avatar-input').click();
-            });
-            
-            document.getElementById('pet-avatar-input')?.addEventListener('change', async (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                showLoading('Subiendo foto...');
                 try {
-                    const storageRef = ref(storage, \`pets/\${AppState.currentUser.uid}.jpg\`);
-                    await uploadBytesResumable(storageRef, file);
-                    const photoURL = await getDownloadURL(storageRef);
-                    document.getElementById('pet-avatar-img').src = photoURL;
-                    showToast('Foto actualizada', 'success');
+                    const fileName = `posts/${Date.now()}_${AppState.currentUser.uid}.jpg`;
+                    const storageRef = ref(storage, fileName);
+                    await uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
+                    const downloadURL = await getDownloadURL(storageRef);
+                    
+                    await addDoc(collection(db, 'posts'), {
+                        userId: AppState.currentUser.uid,
+                        userName: AppState.userData?.name || 'Usuario',
+                        userPhoto: AppState.currentUser.photoURL || '',
+                        mediaUrl: downloadURL,
+                        mediaType: AppState.capturedMedia.type,
+                        caption: caption,
+                        likes: [],
+                        comments: [],
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    showToast('¡Publicado!', 'success');
+                    AppState.capturedMedia = null;
                 } catch (error) {
                     showToast('Error al subir', 'error');
                 } finally {
                     hideLoading();
                 }
             });
-            
-            document.getElementById('btn-save-pet')?.addEventListener('click', async () => {
-                const petData = {
-                    name: document.getElementById('pet-name-input').value,
-                    breed: document.getElementById('pet-breed-input').value,
-                    age: document.getElementById('pet-age-input').value,
-                    notes: document.getElementById('pet-notes-input').value,
-                    ownerId: AppState.currentUser.uid,
-                    updatedAt: serverTimestamp()
+
+            function openStoryCanvasEditor() {
+                const modal = document.getElementById('story-canvas-editor');
+                const canvas = document.getElementById('story-canvas');
+                CanvasState.canvas = canvas;
+                CanvasState.ctx = canvas.getContext('2d');
+                CanvasState.drawingHistory = [];
+                CanvasState.historyStep = -1;
+                
+                const img = new Image();
+                img.onload = () => {
+                    CanvasState.backgroundImage = img;
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    CanvasState.ctx.drawImage(img, 0, 0);
                 };
-                showLoading('Guardando...');
+                img.src = URL.createObjectURL(AppState.capturedMedia.blob);
+                
+                modal?.classList.add('active');
+            }
+
+            document.getElementById('story-editor-cancel')?.addEventListener('click', () => {
+                document.getElementById('story-canvas-editor')?.classList.remove('active');
+                AppState.capturedMedia = null;
+            });
+
+            document.getElementById('story-submit')?.addEventListener('click', async () => {
+                if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+                
+                document.getElementById('story-canvas-editor')?.classList.remove('active');
+                showLoading('Subiendo historia...');
+                
                 try {
-                    await setDoc(doc(db, 'pets', AppState.currentUser.uid), petData, { merge: true });
-                    showToast('Datos guardados', 'success');
+                    const canvas = CanvasState.canvas;
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+                    const fileName = `stories/${Date.now()}_${AppState.currentUser.uid}.jpg`;
+                    
+                    const storageRef = ref(storage, fileName);
+                    await uploadBytesResumable(storageRef, blob);
+                    const downloadURL = await getDownloadURL(storageRef);
+                    
+                    await addDoc(collection(db, 'stories'), {
+                        userId: AppState.currentUser.uid,
+                        userName: AppState.userData?.name || 'Usuario',
+                        userPhoto: AppState.currentUser?.photoURL || '',
+                        mediaUrl: downloadURL,
+                        createdAt: serverTimestamp()
+                    });
+                    
+                    showToast('¡Historia publicada!', 'success');
                 } catch (error) {
-                    showToast('Error al guardar', 'error');
+                    showToast('Error al subir', 'error');
                 } finally {
                     hideLoading();
                 }
             });
-        }
 
-        function setupNavigationListeners() {
-            document.querySelectorAll('.nav-item, .nav-center-btn').forEach(item => {
-                item.addEventListener('click', () => {
-                    const screenId = item.dataset.screen;
-                    if (screenId) showScreen(screenId);
-                });
-            });
-            
-            document.getElementById('btn-booking')?.addEventListener('click', () => showScreen('screen-booking'));
-            document.getElementById('btn-continue-payment')?.addEventListener('click', () => showScreen('screen-payment'));
-            document.getElementById('btn-back-grooming')?.addEventListener('click', () => showScreen('screen-grooming'));
-            document.getElementById('btn-back-booking')?.addEventListener('click', () => showScreen('screen-booking'));
-            document.getElementById('btn-stripe-pay')?.addEventListener('click', () => {
-                window.open('https://buy.stripe.com/14A8wH1Yjd6E0The7Adby00', '_blank');
-            });
-            
-            document.getElementById('story-close')?.addEventListener('click', closeStoryViewer);
-            document.getElementById('story-nav-next')?.addEventListener('click', nextStoryInUser);
-            document.getElementById('story-nav-prev')?.addEventListener('click', prevStoryInUser);
-            
-            document.getElementById('btn-submit-comment')?.addEventListener('click', submitComment);
-            document.getElementById('comment-input')?.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') submitComment();
-            });
-            
+            // ============================================
+            // CHAT
+            // ============================================
             document.getElementById('btn-send-chat')?.addEventListener('click', sendChatMessage);
             document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendChatMessage();
             });
-        }
 
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-            
-            const container = document.getElementById('chat-messages');
-            container.innerHTML += \`<div class="chat-bubble user">\${msg.replace(/</g, '&lt;')}</div>\`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-            
-            setTimeout(() => {
-                const responses = [
-                    "Entiendo. Para mas informacion, contactanos al +56 9 1234 5678 📞",
-                    "¡Buena pregunta! Te sugiero visitar nuestra sede en Av. Providencia 1234 📍",
-                    "Perfecto, anotado. ¿Algo mas en lo que pueda ayudarte?",
-                    "Claro, te recomiendo agendar una cita para que tu mascota reciba la mejor atencion ✨"
-                ];
-                const resp = responses[Math.floor(Math.random() * responses.length)];
-                container.innerHTML += \`<div class="chat-bubble bot">\${resp}</div>\`;
+            function sendChatMessage() {
+                const input = document.getElementById('chat-input');
+                const msg = input?.value.trim();
+                if (!msg) return;
+                
+                const container = document.getElementById('chat-messages');
+                container.innerHTML += `<div class="chat-bubble user">${msg.replace(/</g, '&lt;')}</div>`;
+                input.value = '';
                 container.scrollTop = container.scrollHeight;
-            }, 800);
-        }
+                
+                setTimeout(() => {
+                    const responses = [
+                        "Entiendo. Para mas informacion, contactanos al +56 9 1234 5678 📞",
+                        "¡Buena pregunta! Te sugiero visitar nuestra sede en Av. Providencia 1234 📍",
+                        "Perfecto, anotado. ¿Algo mas en lo que pueda ayudarte?",
+                        "Claro, te recomiendo agendar una cita para que tu mascota reciba la mejor atencion ✨"
+                    ];
+                    const resp = responses[Math.floor(Math.random() * responses.length)];
+                    container.innerHTML += `<div class="chat-bubble bot">${resp}</div>`;
+                    container.scrollTop = container.scrollHeight;
+                }, 800);
+            }
 
-        // ============================================
-        // INICIALIZACION
-        // ============================================
-        log('INIT', '========================================');
-        log('INIT', "Maria's Cut App Engine v5.0");
-        log('INIT', 'FIXES:');
-        log('INIT', '1. initApp() con control de flujo robusto');
-        log('INIT', '2. fetchUserData() con debugging y timeout');
-        log('INIT', '3. Feed publico sin filtros de usuario');
-        log('INIT', '4. Manejo de errores visible');
-        log('INIT', '5. Stories con verificacion de upload');
-        log('INIT', '========================================');
+            // ============================================
+            // STORY VIEWER
+            // ============================================
+            function openStoryViewer(index) {
+                AppState.currentStoryIndex = index;
+                const userId = AppState.storyUsers[index];
+                const stories = AppState.storiesByUser[userId];
+                if (!stories || stories.length === 0) return;
+                
+                const story = stories[0];
+                document.getElementById('story-viewer')?.classList.add('active');
+                document.getElementById('story-viewer-avatar') && (document.getElementById('story-viewer-avatar').src = story.userPhoto || 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop');
+                document.getElementById('story-viewer-name') && (document.getElementById('story-viewer-name').textContent = story.userName || 'Usuario');
+                document.getElementById('story-viewer-media') && (document.getElementById('story-viewer-media').src = story.mediaUrl);
+            }
 
-        setupAuthListeners();
-        setupProfileListeners();
-        setupCameraListeners();
-        setupCanvasTools();
-        setupNavigationListeners();
-        setupWizardListeners();
-        setupPetListeners();
+            document.getElementById('story-close')?.addEventListener('click', () => {
+                document.getElementById('story-viewer')?.classList.remove('active');
+            });
 
-        initApp();
+            document.getElementById('story-nav-next')?.addEventListener('click', () => {
+                if (AppState.currentStoryIndex < AppState.storyUsers.length - 1) {
+                    openStoryViewer(AppState.currentStoryIndex + 1);
+                } else {
+                    document.getElementById('story-viewer')?.classList.remove('active');
+                }
+            });
+
+            document.getElementById('story-nav-prev')?.addEventListener('click', () => {
+                if (AppState.currentStoryIndex > 0) {
+                    openStoryViewer(AppState.currentStoryIndex - 1);
+                }
+            });
+
+            // ============================================
+            // INICIALIZAR
+            // ============================================
+            showLoading('Iniciando aplicacion...');
+            log('INIT', 'App lista - Esperando autenticacion...');
+        });
     </script>
 </body>
 </html>
