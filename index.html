@@ -2198,7 +2198,8 @@
                     <div class="flex items-start gap-3">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">M</span></div>
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1"><span
                                     class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">-
@@ -2214,7 +2215,8 @@
                     <div class="flex items-start gap-3">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">M</span></div>
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1"><span
                                     class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">-
@@ -3986,6 +3988,8 @@
             showToast('Historia publicada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
+            console.error('❌ Error en pipeline de historia:', error);
+            alert('❌ ERROR AL PUBLICAR HISTORIA\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message);
             showToast('Error al subir', 'error');
         }
     });
@@ -4003,7 +4007,8 @@
                 uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await addDoc(collection(db, 'posts'), {
+            console.log('📸 Storage OK. URL:', downloadURL, '→ Escribiendo en Firestore...');
+            const docRef = await addDoc(collection(db, 'posts'), {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
                 userPhoto: AppState.currentUser?.photoURL || '',
@@ -4014,9 +4019,12 @@
                 comments: [],
                 createdAt: serverTimestamp()
             });
+            console.log('✅ Post guardado en Firestore. ID:', docRef.id);
             showToast('Publicacion creada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
+            console.error('❌ Error en pipeline de publicacion:', error);
+            alert('❌ ERROR AL PUBLICAR\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message + '\n\nRevisa la consola para mas detalles.');
             showToast('Error al subir', 'error');
         }
     });
