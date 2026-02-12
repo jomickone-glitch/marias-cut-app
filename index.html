@@ -3987,52 +3987,79 @@
                 uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await addDoc(collection(db, 'stories'), {
-                userId: AppState.currentUser.uid,
-                userName: AppState.userData?.name || 'Usuario',
-                userPhoto: AppState.currentUser?.photoURL || '',
-                mediaUrl: downloadURL,
-                mediaType: 'image',
-                createdAt: serverTimestamp(),
-                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-            });
-            showToast('Historia publicada!', 'success');
+            console.log('[STORY] Imagen subida a Storage OK. URL:', downloadURL);
+            try {
+                const docRef = await addDoc(collection(db, 'stories'), {
+                    userId: AppState.currentUser.uid,
+                    userName: AppState.userData?.name || 'Usuario',
+                    userPhoto: AppState.currentUser?.photoURL || '',
+                    mediaUrl: downloadURL,
+                    mediaType: 'image',
+                    createdAt: serverTimestamp(),
+                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+                });
+                console.log('✅ Historia guardada en Firestore. ID:', docRef.id);
+                showToast('Historia publicada!', 'success');
+            } catch (firestoreError) {
+                console.error('❌ ERROR al escribir historia en Firestore:', firestoreError.code, firestoreError.message, firestoreError);
+                showToast('Error al guardar en base de datos: ' + firestoreError.message, 'error');
+            }
             AppState.capturedMedia = null;
         } catch (error) {
-            showToast('Error al subir', 'error');
+            console.error('❌ ERROR en flujo de historia:', error.code, error.message, error);
+            showToast('Error al subir: ' + error.message, 'error');
         }
     });
 
     document.getElementById('editor-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+        if (!AppState.capturedMedia || !AppState.capturedMedia.blob) {
+            console.error('[POST] ERROR: capturedMedia es null o no tiene blob');
+            showToast('No hay imagen para publicar', 'error');
+            return;
+        }
         const caption = document.getElementById('editor-caption').value.trim();
         document.getElementById('post-editor-modal').classList.remove('active');
         showToast('Subiendo...', 'info');
         try {
             const fileName = 'posts/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
             const storageRef = ref(storage, fileName);
+            console.log('[POST] Subiendo imagen a Storage:', fileName);
             const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
             await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
+                uploadTask.on('state_changed',
+                    (snap) => { console.log('[POST] Upload progress:', Math.round((snap.bytesTransferred / snap.totalBytes) * 100) + '%'); },
+                    (error) => reject(error),
+                    () => resolve()
+                );
             });
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log('[POST] Imagen subida a Storage OK. URL:', downloadURL);
+
+            // === ESCRITURA EN FIRESTORE ===
             console.log('[POST] Intentando escribir en: projects/' + firebaseConfig.projectId + '/databases/(default)/documents/posts');
-            console.log('[POST] Datos:', { userId: AppState.currentUser.uid, userName: AppState.userData?.name, mediaType: AppState.capturedMedia.type });
-            await addDoc(collection(db, 'posts'), {
-                userId: AppState.currentUser.uid,
-                userName: AppState.userData?.name || 'Usuario',
-                userPhoto: AppState.currentUser?.photoURL || '',
-                mediaUrl: downloadURL,
-                mediaType: AppState.capturedMedia.type,
-                caption: caption || '🐾',
-                likes: [],
-                comments: [],
-                createdAt: serverTimestamp()
-            });
-            showToast('Publicacion creada!', 'success');
+            try {
+                const docRef = await addDoc(collection(db, 'posts'), {
+                    userId: AppState.currentUser.uid,
+                    userName: AppState.userData?.name || 'Usuario',
+                    userPhoto: AppState.currentUser?.photoURL || '',
+                    mediaUrl: downloadURL,
+                    mediaType: AppState.capturedMedia.type || 'image',
+                    caption: caption || '🐾',
+                    likes: [],
+                    comments: [],
+                    createdAt: serverTimestamp()
+                });
+                console.log('✅ Post guardado en Firestore. ID:', docRef.id);
+                showToast('Publicacion creada!', 'success');
+            } catch (firestoreError) {
+                console.error('❌ ERROR al escribir post en Firestore:', firestoreError.code, firestoreError.message, firestoreError);
+                showToast('Error al guardar en base de datos: ' + firestoreError.message, 'error');
+            }
             AppState.capturedMedia = null;
         } catch (error) {
-            showToast('Error al subir', 'error');
+            console.error('❌ ERROR en flujo de post:', error.code, error.message, error);
+            showToast('Error al subir: ' + error.message, 'error');
         }
     });
 
