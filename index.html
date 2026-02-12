@@ -2823,6 +2823,9 @@
         <video id="editor-preview-video" class="hidden" controls></video>
     </div>
     <div class="post-editor-footer">
+        <p id="editor-user-label"
+            style="font-size: 12px; color: #8B7355; text-align: center; margin: 0 0 8px 0; font-style: italic;">Logueado
+            como: ---</p>
         <textarea id="editor-caption" class="post-editor-input" rows="2"
             placeholder="Escribe un pie de foto..."></textarea>
         <button id="editor-submit" class="post-editor-submit">
@@ -2976,6 +2979,11 @@
     }).catch((err) => {
         console.error('enableNetwork fallo:', err);
     });
+
+    // DEBUG: Forzar login manual — mata sesiones zombie con displayName undefined
+    signOut(auth).then(() => {
+        console.log('🔄 Sesión anterior cerrada. El usuario debe loguearse de nuevo.');
+    }).catch(() => { });
 
     const AppState = {
         currentUser: null,
@@ -3950,6 +3958,10 @@
             previewVideo.classList.remove('hidden');
             previewVideo.src = URL.createObjectURL(AppState.capturedMedia.blob);
         }
+        // Mostrar quien esta logueado
+        const userLabel = document.getElementById('editor-user-label');
+        const userName = auth.currentUser?.displayName || AppState.userData?.name || 'Usuario Anonimo';
+        userLabel.textContent = 'Logueado como: ' + userName;
         modal.classList.add('active');
     }
 
@@ -4002,11 +4014,19 @@
 
     document.getElementById('editor-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+
+        // Guardia de sesión: evitar publicaciones anónimas
+        const user = auth.currentUser;
+        if (!user || !user.uid) {
+            alert('⛔ ERROR DE SESIÓN: No estás identificado correctamente. Por favor, cierra sesión y vuelve a entrar.');
+            return;
+        }
+
         const submitBtn = document.getElementById('editor-submit');
         submitBtn.disabled = true;
         const caption = document.getElementById('editor-caption').value.trim();
-        const currentUserName = auth.currentUser.displayName || AppState.userData?.name || 'Usuario Anonimo';
-        const currentUserPhoto = auth.currentUser.photoURL || '';
+        const currentUserName = user.displayName || AppState.userData?.name || 'Usuario Anonimo';
+        const currentUserPhoto = user.photoURL || '';
         document.getElementById('post-editor-modal').classList.remove('active');
         showToast('Subiendo...', 'info');
         try {
