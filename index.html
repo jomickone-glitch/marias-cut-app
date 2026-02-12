@@ -2951,7 +2951,7 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    import { initializeFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove, enableNetwork } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
     const firebaseConfig = {
@@ -2966,8 +2966,16 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    // ONLINE-ONLY: Long polling evita bloqueos de WebSocket/IndexedDB en móviles
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
     const storage = getStorage(app);
+
+    // Forzar conexión online al iniciar
+    enableNetwork(db).then(() => {
+        console.log('🚀 Conexión autorizada desde Vercel establecida — Firestore ONLINE');
+    }).catch((err) => {
+        console.error('⚠️ enableNetwork falló:', err);
+    });
 
     const AppState = {
         currentUser: null,
@@ -4003,10 +4011,8 @@
             const storageRef = ref(storage, fileName);
             const snapshot = await uploadBytes(storageRef, AppState.capturedMedia.blob);
             const downloadURL = await getDownloadURL(snapshot.ref);
-            alert('📸 Storage OK. URL: ' + downloadURL + '\n\nAhora intentando escribir en Firestore...');
-
-            // === ESCRITURA AISLADA CON TIMEOUT ===
-            const postData = {
+            console.log('📸 Storage OK. URL:', downloadURL);
+            const docRef = await addDoc(collection(db, 'posts'), {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
                 userPhoto: AppState.currentUser?.photoURL || '',
@@ -4016,27 +4022,13 @@
                 likes: [],
                 comments: [],
                 createdAt: serverTimestamp()
-            };
-            console.log('📝 Intentando addDoc con datos:', JSON.stringify(postData, null, 2));
-
-            try {
-                const timeoutPromise = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('TIMEOUT: addDoc no respondio en 15 segundos. Firestore puede estar bloqueado o sin conexion.')), 15000)
-                );
-                const docRef = await Promise.race([
-                    addDoc(collection(db, 'posts'), postData),
-                    timeoutPromise
-                ]);
-                alert('✅ Post guardado en Firestore! ID: ' + docRef.id);
-                showToast('Publicacion creada!', 'success');
-                AppState.capturedMedia = null;
-            } catch (firestoreError) {
-                console.error('❌ Error SOLO en Firestore addDoc:', firestoreError);
-                alert('❌ FIRESTORE FALLO AL ESCRIBIR\n\nCodigo: ' + (firestoreError.code || 'N/A') + '\nMensaje: ' + firestoreError.message + '\n\nLa foto SI se subio a Storage.\nEl problema es SOLO la escritura en la base de datos.');
-            }
+            });
+            console.log('✅ Post guardado. ID:', docRef.id);
+            showToast('Publicacion creada!', 'success');
+            AppState.capturedMedia = null;
         } catch (error) {
-            console.error('❌ Error en Storage/Upload:', error);
-            alert('❌ ERROR EN STORAGE\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message);
+            console.error('❌ Error al publicar:', error);
+            alert('❌ Error al publicar\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message);
             showToast('Error al subir', 'error');
         }
     });
