@@ -2980,11 +2980,6 @@
         console.error('enableNetwork fallo:', err);
     });
 
-    // DEBUG: Forzar login manual — mata sesiones zombie con displayName undefined
-    signOut(auth).then(() => {
-        console.log('🔄 Sesión anterior cerrada. El usuario debe loguearse de nuevo.');
-    }).catch(() => { });
-
     const AppState = {
         currentUser: null,
         userData: null,
@@ -3470,14 +3465,38 @@
         }
         try {
             if (!user && !AppState.isGuest) {
+                // Sin usuario: ir al login
+                console.log('🚫 No hay usuario autenticado. Mostrando login.');
                 AppState.currentUser = null;
                 AppState.userData = null;
                 showScreen('screen-login');
                 nav.classList.add('hidden');
             } else {
                 AppState.currentUser = user;
+
                 if (user && !AppState.isGuest) {
-                    // FIX CRITICO: Esperar a que loadUserData termine antes de mostrar la app
+                    console.log('✅ Auth OK. Email:', user.email, '| UID:', user.uid, '| displayName:', user.displayName);
+
+                    // Si displayName esta vacio, intentar recuperarlo
+                    if (!user.displayName) {
+                        console.log('⚠️ displayName vacio. Intentando reload()...');
+                        await user.reload();
+                        const refreshedUser = auth.currentUser;
+                        if (refreshedUser && refreshedUser.displayName) {
+                            console.log('✅ displayName recuperado via reload():', refreshedUser.displayName);
+                        } else {
+                            // Intentar recuperar de Firestore
+                            console.log('⚠️ reload() no trajo displayName. Buscando en Firestore users/...');
+                            const userDoc = await getDoc(doc(db, 'users', user.uid));
+                            if (userDoc.exists() && userDoc.data().name) {
+                                await updateProfile(user, { displayName: userDoc.data().name });
+                                console.log('✅ displayName restaurado desde Firestore:', userDoc.data().name);
+                            } else {
+                                console.warn('⚠️ No se encontro nombre en Firestore. El usuario publicara como "Usuario Anonimo".');
+                            }
+                        }
+                    }
+
                     const dataLoaded = await loadUserData(user.uid);
                     if (!dataLoaded) {
                         console.warn('No se pudieron cargar los datos del usuario');
@@ -3491,7 +3510,7 @@
                 loadStories();
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error en onAuthStateChanged:', error);
             showToast('Error al cargar');
             showScreen('screen-login');
             nav.classList.add('hidden');
@@ -3562,12 +3581,23 @@
         showLoading('Iniciando sesion...');
         hideError();
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            console.log('✅ Login OK. Email:', user.email, '| displayName:', user.displayName, '| UID:', user.uid);
         } catch (error) {
+            console.error('Login fallido:', error.code, error.message);
             if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                 showError('Usuario o contrasena incorrectos');
+                alert('⛔ Usuario o contraseña incorrectos. Verifica tus datos.');
+            } else if (error.code === 'auth/wrong-password') {
+                showError('Contrasena incorrecta');
+                alert('⛔ Contraseña incorrecta.');
+            } else if (error.code === 'auth/too-many-requests') {
+                showError('Demasiados intentos. Espera unos minutos.');
+                alert('⛔ Demasiados intentos fallidos. Espera unos minutos.');
             } else {
                 showError('Error al entrar: ' + error.message);
+                alert('⛔ Error: ' + error.message);
             }
         } finally {
             hideLoading();
@@ -3594,10 +3624,22 @@
         hideError();
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, 'users', userCredential.user.uid), {
+            const user = userCredential.user;
+
+            // Guardar perfil en Auth (displayName)
+            await updateProfile(user, { displayName: name });
+            console.log('✅ updateProfile completado. displayName:', name);
+
+            // Forzar reload para que la sesión tenga el displayName actualizado
+            await user.reload();
+            console.log('✅ reload() completado. displayName confirmado:', auth.currentUser.displayName);
+
+            // Guardar datos extendidos en Firestore
+            await setDoc(doc(db, 'users', user.uid), {
                 name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '', createdAt: serverTimestamp()
             });
-            await updateProfile(userCredential.user, { displayName: name });
+            console.log('✅ Datos de usuario guardados en Firestore. UID:', user.uid);
+
             AppState.userData = { name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '' };
             showToast('Cuenta creada!', 'success');
         } catch (error) {
