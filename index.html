@@ -2951,7 +2951,7 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
     const firebaseConfig = {
@@ -2969,6 +2969,30 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    // === DIAGNOSTICO AGRESIVO: Persistencia + Test de conexion ===
+    enableIndexedDbPersistence(db).then(() => {
+        console.log('Persistencia IndexedDB activada OK');
+    }).catch((err) => {
+        console.error('Fallo persistencia:', err.code);
+        if (err.code === 'failed-precondition') {
+            console.warn('Multiples tabs abiertas, persistencia solo en una');
+        } else if (err.code === 'unimplemented') {
+            console.warn('Navegador no soporta persistencia');
+        }
+    });
+
+    // Test inmediato de lectura
+    getDocs(collection(db, 'posts')).then((snap) => {
+        console.log('TEST DIRECTO: Documentos en posts:', snap.size);
+        if (snap.size > 0) {
+            snap.forEach((d) => console.log('  Doc:', d.id, JSON.stringify(d.data())));
+        } else {
+            alert('DIAGNOSTICO: La coleccion "posts" esta VACIA en Firestore. 0 documentos encontrados.');
+        }
+    }).catch((err) => {
+        alert('DIAGNOSTICO: Error al leer Firestore: ' + err.code + ' - ' + err.message);
+        console.error('Error lectura directa:', err);
+    });
 
     const AppState = {
         currentUser: null,
@@ -3998,7 +4022,7 @@
     document.getElementById('editor-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
         if (!AppState.capturedMedia || !AppState.capturedMedia.blob) {
-            showToast('No hay imagen para publicar', 'error');
+            alert('ERROR: No hay imagen capturada (capturedMedia es null)');
             return;
         }
         const caption = document.getElementById('editor-caption').value.trim();
@@ -4012,81 +4036,107 @@
             await new Promise((resolve, reject) => {
                 uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
-            // Paso 2: Obtener URL de descarga
+            // Paso 2: Obtener URL
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            alert('Imagen subida a Storage OK. URL: ' + downloadURL.substring(0, 60) + '... Iniciando escritura en Firestore...');
             // Paso 3: Crear documento en Firestore
-            await addDoc(collection(db, 'posts'), {
-                imageUrl: downloadURL,
-                caption: caption || '\ud83d\udc3e',
-                createdAt: serverTimestamp(),
-                userId: AppState.currentUser.uid,
-                userName: AppState.currentUser.displayName || AppState.userData?.name || 'Usuario',
-                userPhoto: AppState.currentUser?.photoURL || '',
-                mediaType: AppState.capturedMedia.type || 'image',
-                likes: [],
-                comments: []
-            });
-            console.log('\u2705 Post registrado en Firestore');
-            showToast('Publicacion creada!', 'success');
+            try {
+                const docRef = await addDoc(collection(db, 'posts'), {
+                    imageUrl: downloadURL,
+                    caption: caption || '\ud83d\udc3e',
+                    createdAt: serverTimestamp(),
+                    userId: AppState.currentUser.uid,
+                    userName: AppState.currentUser.displayName || AppState.userData?.name || 'Usuario',
+                    userPhoto: AppState.currentUser?.photoURL || '',
+                    mediaType: AppState.capturedMedia.type || 'image',
+                    likes: [],
+                    comments: []
+                });
+                alert('\u2705 POST GUARDADO EN FIRESTORE! ID: ' + docRef.id);
+                showToast('Publicacion creada!', 'success');
+            } catch (firestoreErr) {
+                alert('\u274c FIRESTORE RECHAZO LA ESCRITURA: ' + firestoreErr.code + ' - ' + firestoreErr.message);
+                console.error('Firestore write error:', firestoreErr);
+            }
             AppState.capturedMedia = null;
         } catch (error) {
-            console.error('Error al publicar post:', error);
-            showToast('Error: ' + error.message, 'error');
+            alert('\u274c ERROR EN STORAGE: ' + error.code + ' - ' + error.message);
+            console.error('Storage error:', error);
         }
     });
 
 
-    // ===== FEED PUBLICO - TIEMPO REAL =====
+    // ===== FEED PUBLICO - TIEMPO REAL (CON DIAGNOSTICO) =====
     function loadFeed() {
-        const feedContainer = document.getElementById('feed-container');
-        const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
+        try {
+            const feedContainer = document.getElementById('feed-container');
+            if (!feedContainer) { alert('ERROR: No se encuentra el elemento feed-container en el DOM'); return; }
+            const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
 
-        onSnapshot(postsQuery, (snapshot) => {
-            let html = '';
-            snapshot.forEach((docSnap) => {
-                const post = docSnap.data();
-                const postId = docSnap.id;
-                const likes = post.likes || [];
-                const comments = post.comments || [];
-                const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
-                const likeCount = likes.length;
-                const commentCount = comments.length;
-
-                html += '<div class="social-card">';
-                html += '<div class="flex items-center p-3">';
-                html += '<img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2">';
-                html += '<div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div>';
-                html += '</div>';
-
-                if (post.mediaType === 'video') {
-                    html += '<video src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media" controls></video>';
-                } else {
-                    html += '<img src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media">';
+            onSnapshot(postsQuery, (snapshot) => {
+                console.log('FEED onSnapshot: documentos recibidos:', snapshot.size);
+                if (snapshot.empty) {
+                    feedContainer.innerHTML = '<div style="text-align:center;padding:40px;color:#6D5D4E;"><p style="font-size:18px;font-weight:bold;">Feed vacio</p><p>No hay posts con campo createdAt</p></div>';
+                    // Intento sin orderBy para ver si hay datos
+                    getDocs(collection(db, 'posts')).then((rawSnap) => {
+                        if (rawSnap.size > 0) {
+                            alert('HAY ' + rawSnap.size + ' docs en posts, pero NO tienen createdAt. Campos del primer doc: ' + Object.keys(rawSnap.docs[0].data()).join(', '));
+                        }
+                    });
+                    return;
                 }
+                let html = '';
+                snapshot.forEach((docSnap) => {
+                    const post = docSnap.data();
+                    const postId = docSnap.id;
+                    const likes = post.likes || [];
+                    const comments = post.comments || [];
+                    const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
+                    const likeCount = likes.length;
+                    const commentCount = comments.length;
 
-                html += '<div class="post-actions">';
-                html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
-                html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
-                html += '<span class="post-action-count like-count">' + likeCount + '</span>';
-                html += '</button>';
+                    html += '<div class="social-card">';
+                    html += '<div class="flex items-center p-3">';
+                    html += '<img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2">';
+                    html += '<div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div>';
+                    html += '</div>';
 
-                html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
-                html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
-                html += '<span class="post-action-count">' + commentCount + '</span>';
-                html += '</button>';
+                    if (post.mediaType === 'video') {
+                        html += '<video src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media" controls></video>';
+                    } else {
+                        html += '<img src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media">';
+                    }
 
-                html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
-                html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
-                html += '</button>';
-                html += '</div>';
+                    html += '<div class="post-actions">';
+                    html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
+                    html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                    html += '<span class="post-action-count like-count">' + likeCount + '</span>';
+                    html += '</button>';
 
-                html += '<div class="post-caption">';
-                html += '<p class="post-caption-text"><span class="username">' + post.userName + '</span> ' + (post.caption || '🐾') + '</p>';
-                html += '</div>';
-                html += '</div>';
+                    html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
+                    html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
+                    html += '<span class="post-action-count">' + commentCount + '</span>';
+                    html += '</button>';
+
+                    html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
+                    html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
+                    html += '</button>';
+                    html += '</div>';
+
+                    html += '<div class="post-caption">';
+                    html += '<p class="post-caption-text"><span class="username">' + post.userName + '</span> ' + (post.caption || '\ud83d\udc3e') + '</p>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+                feedContainer.innerHTML = html;
+            }, (error) => {
+                alert('ERROR EN FEED onSnapshot: ' + error.code + ' - ' + error.message);
+                console.error('Feed onSnapshot error:', error);
             });
-            feedContainer.innerHTML = html;
-        });
+        } catch (e) {
+            alert('ERROR CRITICO en loadFeed: ' + e.message);
+            console.error('loadFeed crash:', e);
+        }
     }
 
     // Toggle Like - funcion global
