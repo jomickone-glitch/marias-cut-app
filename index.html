@@ -2969,6 +2969,17 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    // === VERIFICACION DE CONEXION FIRESTORE ===
+    console.log('[FIREBASE] Config cargada. projectId:', firebaseConfig.projectId);
+    getDocs(query(collection(db, 'posts'), limit(1))).then((snap) => {
+        console.log('[FIREBASE] Conexion OK. Posts en Firestore:', snap.size > 0 ? 'SI hay documentos' : 'Coleccion VACIA');
+        if (snap.size > 0) {
+            console.log('[FIREBASE] Primer post campos:', Object.keys(snap.docs[0].data()));
+        }
+    }).catch((err) => {
+        console.error('[FIREBASE] ERROR de conexion a Firestore:', err.code, err.message);
+    });
+
     const AppState = {
         currentUser: null,
         userData: null,
@@ -4005,6 +4016,8 @@
                 uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log('[POST] Intentando escribir en: projects/' + firebaseConfig.projectId + '/databases/(default)/documents/posts');
+            console.log('[POST] Datos:', { userId: AppState.currentUser.uid, userName: AppState.userData?.name, mediaType: AppState.capturedMedia.type });
             await addDoc(collection(db, 'posts'), {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
