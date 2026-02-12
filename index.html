@@ -2969,16 +2969,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // === VERIFICACION DE CONEXION FIRESTORE ===
-    console.log('[FIREBASE] Config cargada. projectId:', firebaseConfig.projectId);
-    getDocs(query(collection(db, 'posts'), limit(1))).then((snap) => {
-        console.log('[FIREBASE] Conexion OK. Posts en Firestore:', snap.size > 0 ? 'SI hay documentos' : 'Coleccion VACIA');
-        if (snap.size > 0) {
-            console.log('[FIREBASE] Primer post campos:', Object.keys(snap.docs[0].data()));
-        }
-    }).catch((err) => {
-        console.error('[FIREBASE] ERROR de conexion a Firestore:', err.code, err.message);
-    });
 
     const AppState = {
         currentUser: null,
@@ -3977,7 +3967,7 @@
     document.getElementById('story-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
         document.getElementById('story-canvas-editor').classList.remove('active');
-        showToast('Subiendo...', 'info');
+        showToast('Subiendo historia...', 'info');
         try {
             const mergedBlob = await mergeCanvasToImage();
             const fileName = 'stories/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
@@ -3987,34 +3977,27 @@
                 uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('[STORY] Imagen subida a Storage OK. URL:', downloadURL);
-            try {
-                const docRef = await addDoc(collection(db, 'stories'), {
-                    userId: AppState.currentUser.uid,
-                    userName: AppState.userData?.name || 'Usuario',
-                    userPhoto: AppState.currentUser?.photoURL || '',
-                    mediaUrl: downloadURL,
-                    mediaType: 'image',
-                    createdAt: serverTimestamp(),
-                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
-                });
-                console.log('✅ Historia guardada en Firestore. ID:', docRef.id);
-                showToast('Historia publicada!', 'success');
-            } catch (firestoreError) {
-                console.error('❌ ERROR al escribir historia en Firestore:', firestoreError.code, firestoreError.message, firestoreError);
-                showToast('Error al guardar en base de datos: ' + firestoreError.message, 'error');
-            }
+            await addDoc(collection(db, 'stories'), {
+                imageUrl: downloadURL,
+                userId: AppState.currentUser.uid,
+                userName: AppState.currentUser.displayName || AppState.userData?.name || 'Usuario',
+                userPhoto: AppState.currentUser?.photoURL || '',
+                mediaType: 'image',
+                createdAt: serverTimestamp(),
+                expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+            });
+            console.log('\u2705 Historia registrada en Firestore');
+            showToast('Historia publicada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
-            console.error('❌ ERROR en flujo de historia:', error.code, error.message, error);
-            showToast('Error al subir: ' + error.message, 'error');
+            console.error('Error al publicar historia:', error);
+            showToast('Error: ' + error.message, 'error');
         }
     });
 
     document.getElementById('editor-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
         if (!AppState.capturedMedia || !AppState.capturedMedia.blob) {
-            console.error('[POST] ERROR: capturedMedia es null o no tiene blob');
             showToast('No hay imagen para publicar', 'error');
             return;
         }
@@ -4022,44 +4005,33 @@
         document.getElementById('post-editor-modal').classList.remove('active');
         showToast('Subiendo...', 'info');
         try {
+            // Paso 1: Subir imagen a Storage
             const fileName = 'posts/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
             const storageRef = ref(storage, fileName);
-            console.log('[POST] Subiendo imagen a Storage:', fileName);
             const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
             await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snap) => { console.log('[POST] Upload progress:', Math.round((snap.bytesTransferred / snap.totalBytes) * 100) + '%'); },
-                    (error) => reject(error),
-                    () => resolve()
-                );
+                uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
             });
+            // Paso 2: Obtener URL de descarga
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('[POST] Imagen subida a Storage OK. URL:', downloadURL);
-
-            // === ESCRITURA EN FIRESTORE ===
-            console.log('[POST] Intentando escribir en: projects/' + firebaseConfig.projectId + '/databases/(default)/documents/posts');
-            try {
-                const docRef = await addDoc(collection(db, 'posts'), {
-                    userId: AppState.currentUser.uid,
-                    userName: AppState.userData?.name || 'Usuario',
-                    userPhoto: AppState.currentUser?.photoURL || '',
-                    mediaUrl: downloadURL,
-                    mediaType: AppState.capturedMedia.type || 'image',
-                    caption: caption || '🐾',
-                    likes: [],
-                    comments: [],
-                    createdAt: serverTimestamp()
-                });
-                console.log('✅ Post guardado en Firestore. ID:', docRef.id);
-                showToast('Publicacion creada!', 'success');
-            } catch (firestoreError) {
-                console.error('❌ ERROR al escribir post en Firestore:', firestoreError.code, firestoreError.message, firestoreError);
-                showToast('Error al guardar en base de datos: ' + firestoreError.message, 'error');
-            }
+            // Paso 3: Crear documento en Firestore
+            await addDoc(collection(db, 'posts'), {
+                imageUrl: downloadURL,
+                caption: caption || '\ud83d\udc3e',
+                createdAt: serverTimestamp(),
+                userId: AppState.currentUser.uid,
+                userName: AppState.currentUser.displayName || AppState.userData?.name || 'Usuario',
+                userPhoto: AppState.currentUser?.photoURL || '',
+                mediaType: AppState.capturedMedia.type || 'image',
+                likes: [],
+                comments: []
+            });
+            console.log('\u2705 Post registrado en Firestore');
+            showToast('Publicacion creada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
-            console.error('❌ ERROR en flujo de post:', error.code, error.message, error);
-            showToast('Error al subir: ' + error.message, 'error');
+            console.error('Error al publicar post:', error);
+            showToast('Error: ' + error.message, 'error');
         }
     });
 
@@ -4087,9 +4059,9 @@
                 html += '</div>';
 
                 if (post.mediaType === 'video') {
-                    html += '<video src="' + post.mediaUrl + '" class="post-media" controls></video>';
+                    html += '<video src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media" controls></video>';
                 } else {
-                    html += '<img src="' + post.mediaUrl + '" class="post-media">';
+                    html += '<img src="' + (post.imageUrl || post.mediaUrl) + '" class="post-media">';
                 }
 
                 html += '<div class="post-actions">';
@@ -4199,7 +4171,7 @@
                 }
 
                 AppState.stories.push(story);
-                html += '<div class="story-item" data-story-id="' + story.id + '"><div class="story-avatar-ring unseen"><img src="' + story.mediaUrl + '" class="story-avatar"></div><span class="text-xs text-[#4B3621] mt-1 font-medium">' + story.userName + '</span></div>';
+                html += '<div class="story-item" data-story-id="' + story.id + '"><div class="story-avatar-ring unseen"><img src="' + (story.imageUrl || story.mediaUrl) + '" class="story-avatar"></div><span class="text-xs text-[#4B3621] mt-1 font-medium">' + story.userName + '</span></div>';
             });
 
             storiesContainer.innerHTML = html;
@@ -4260,12 +4232,12 @@
         if (story.mediaType === 'video') {
             mediaImg.classList.add('hidden');
             mediaVideo.classList.remove('hidden');
-            mediaVideo.src = story.mediaUrl;
+            mediaVideo.src = story.imageUrl || story.mediaUrl;
             mediaVideo.play();
         } else {
             mediaVideo.classList.add('hidden');
             mediaImg.classList.remove('hidden');
-            mediaImg.src = story.mediaUrl;
+            mediaImg.src = story.imageUrl || story.mediaUrl;
         }
         clearTimeout(AppState.storyTimer);
         AppState.storyTimer = setTimeout(() => nextStory(), 10000);
