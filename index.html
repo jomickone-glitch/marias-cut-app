@@ -3457,96 +3457,53 @@
         }
     });
 
-    // ===== FIX 1: AUTH STATE CON AWAIT PARA LOADUSERDATA =====
-    onAuthStateChanged(auth, async (user) => {
+    // ===== AUTH STATE SIMPLE Y ESTABLE =====
+    onAuthStateChanged(auth, (user) => {
         const nav = document.getElementById('bottom-nav');
-        if (AppState.isInitializing) {
-            showLoading('Iniciando aplicacion...');
-        }
-        try {
-            if (!user && !AppState.isGuest) {
-                // Sin usuario: ir al login
-                console.log('🚫 No hay usuario autenticado. Mostrando login.');
-                AppState.currentUser = null;
-                AppState.userData = null;
-                showScreen('screen-login');
-                nav.classList.add('hidden');
-            } else {
-                AppState.currentUser = user;
-
-                if (user && !AppState.isGuest) {
-                    console.log('✅ Auth OK. Email:', user.email, '| UID:', user.uid, '| displayName:', user.displayName);
-
-                    // Si displayName esta vacio, intentar recuperarlo
-                    if (!user.displayName) {
-                        console.log('⚠️ displayName vacio. Intentando reload()...');
-                        await user.reload();
-                        const refreshedUser = auth.currentUser;
-                        if (refreshedUser && refreshedUser.displayName) {
-                            console.log('✅ displayName recuperado via reload():', refreshedUser.displayName);
-                        } else {
-                            // Intentar recuperar de Firestore
-                            console.log('⚠️ reload() no trajo displayName. Buscando en Firestore users/...');
-                            const userDoc = await getDoc(doc(db, 'users', user.uid));
-                            if (userDoc.exists() && userDoc.data().name) {
-                                await updateProfile(user, { displayName: userDoc.data().name });
-                                console.log('✅ displayName restaurado desde Firestore:', userDoc.data().name);
-                            } else {
-                                console.warn('⚠️ No se encontro nombre en Firestore. El usuario publicara como "Usuario Anonimo".');
-                            }
-                        }
-                    }
-
-                    const dataLoaded = await loadUserData(user.uid);
-                    if (!dataLoaded) {
-                        console.warn('No se pudieron cargar los datos del usuario');
-                    }
-                } else {
-                    AppState.userData = { name: 'Invitado', petName: '' };
-                }
-                showScreen('screen-grooming');
-                nav.classList.remove('hidden');
-                loadFeed();
-                loadStories();
-            }
-        } catch (error) {
-            console.error('Error en onAuthStateChanged:', error);
-            showToast('Error al cargar');
+        
+        if (user) {
+            // USUARIO AUTENTICADO
+            console.log('✅ Usuario detectado:', user.email);
+            AppState.currentUser = user;
+            
+            // Cargar datos y mostrar app
+            loadUserData(user.uid);
+            showScreen('screen-grooming');
+            nav.classList.remove('hidden');
+            loadFeed();
+            loadStories();
+            hideLoading();
+        } else {
+            // SIN USUARIO
+            console.log('👋 Sin usuario. Mostrando login.');
+            AppState.currentUser = null;
+            AppState.userData = null;
             showScreen('screen-login');
             nav.classList.add('hidden');
-        } finally {
             hideLoading();
-            AppState.isInitializing = false;
         }
+        
+        AppState.isInitializing = false;
     });
 
-    // FIX 1: Funcion loadUserData que retorna Promise para poder hacer await
+    // Cargar datos de usuario de Firestore
     async function loadUserData(uid) {
-        if (!uid) return false;
+        if (!uid) return;
         try {
             const userDoc = await getDoc(doc(db, 'users', uid));
             if (userDoc.exists()) {
                 AppState.userData = userDoc.data();
-                // Actualizar DOM del perfil inmediatamente
                 document.getElementById('profile-name').textContent = AppState.userData.name || 'Usuario';
                 document.getElementById('profile-pet').textContent = AppState.userData.petName ? '🐕 ' + AppState.userData.petName : '';
-                if (AppState.currentUser?.photoURL) {
-                    document.getElementById('profile-avatar').src = AppState.currentUser.photoURL;
-                }
-                return true;
             } else {
-                // Si no existe el documento, crear uno basico
-                AppState.userData = { name: 'Usuario', petName: '' };
-                document.getElementById('profile-name').textContent = 'Usuario';
-                document.getElementById('profile-pet').textContent = '';
-                return true;
+                // Si no existe doc, usar datos del Auth
+                const displayName = auth.currentUser?.displayName || 'Usuario';
+                AppState.userData = { name: displayName, petName: '' };
+                document.getElementById('profile-name').textContent = displayName;
             }
         } catch (error) {
-            console.error('Error cargando datos de usuario:', error);
-            // En caso de error, mostrar valores por defecto para evitar "Cargando..."
+            console.error('Error cargando datos:', error);
             document.getElementById('profile-name').textContent = 'Usuario';
-            document.getElementById('profile-pet').textContent = '';
-            return false;
         }
     }
 
@@ -3571,39 +3528,31 @@
         errorEl.classList.add('hidden');
     });
 
+    // ===== LOGIN SIMPLE =====
     document.getElementById('btn-login').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
+        
         if (!email || !password) {
-            showError('Ingresa tu email y contrasena');
+            alert('⚠️ Ingresa tu email y contraseña');
             return;
         }
+        
         showLoading('Iniciando sesion...');
-        hideError();
+        
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            console.log('✅ Login OK. Email:', user.email, '| displayName:', user.displayName, '| UID:', user.uid);
+            await signInWithEmailAndPassword(auth, email, password);
+            alert('✅ Bienvenido de nuevo!');
+            // onAuthStateChanged se encargará del resto
         } catch (error) {
-            console.error('Login fallido:', error.code, error.message);
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                showError('Usuario o contrasena incorrectos');
-                alert('⛔ Usuario o contraseña incorrectos. Verifica tus datos.');
-            } else if (error.code === 'auth/wrong-password') {
-                showError('Contrasena incorrecta');
-                alert('⛔ Contraseña incorrecta.');
-            } else if (error.code === 'auth/too-many-requests') {
-                showError('Demasiados intentos. Espera unos minutos.');
-                alert('⛔ Demasiados intentos fallidos. Espera unos minutos.');
-            } else {
-                showError('Error al entrar: ' + error.message);
-                alert('⛔ Error: ' + error.message);
-            }
+            console.error('Login error:', error);
+            alert('❌ Error: ' + error.message);
         } finally {
             hideLoading();
         }
     });
 
+    // ===== REGISTRO SECUENCIAL SIN RELOAD =====
     document.getElementById('btn-register').addEventListener('click', async () => {
         const email = document.getElementById('login-email').value.trim();
         const password = document.getElementById('login-password').value;
@@ -3612,41 +3561,45 @@
         const phone = document.getElementById('login-phone').value.trim();
 
         if (!email || !password || !name) {
-            showError('Email, contrasena y nombre son obligatorios');
+            alert('⚠️ Email, contraseña y nombre son obligatorios');
             return;
         }
         if (password.length < 6) {
-            showError('La contrasena debe tener al menos 6 caracteres');
+            alert('⚠️ La contraseña debe tener al menos 6 caracteres');
             return;
         }
 
         showLoading('Creando cuenta...');
-        hideError();
+        
         try {
+            // 1. Crear usuario
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
+            console.log('✅ Usuario creado:', user.uid);
 
-            // Guardar perfil en Auth (displayName)
+            // 2. Actualizar perfil (displayName)
             await updateProfile(user, { displayName: name });
-            console.log('✅ updateProfile completado. displayName:', name);
+            console.log('✅ Perfil actualizado');
 
-            // Forzar reload para que la sesión tenga el displayName actualizado
-            await user.reload();
-            console.log('✅ reload() completado. displayName confirmado:', auth.currentUser.displayName);
-
-            // Guardar datos extendidos en Firestore
+            // 3. Guardar en Firestore
             await setDoc(doc(db, 'users', user.uid), {
-                name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '', createdAt: serverTimestamp()
+                name: name,
+                email: email,
+                petName: pet || 'Mi Mascota',
+                phone: phone || '',
+                createdAt: serverTimestamp()
             });
-            console.log('✅ Datos de usuario guardados en Firestore. UID:', user.uid);
+            console.log('✅ Datos guardados en Firestore');
 
-            AppState.userData = { name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '' };
-            showToast('Cuenta creada!', 'success');
+            alert('✅ Cuenta creada exitosamente!');
+            // onAuthStateChanged se encargará del resto
+            
         } catch (error) {
+            console.error('Registro error:', error);
             if (error.code === 'auth/email-already-in-use') {
-                showError('Este correo ya esta registrado');
+                alert('❌ Este correo ya está registrado');
             } else {
-                showError('Error: ' + error.message);
+                alert('❌ Error: ' + error.message);
             }
         } finally {
             hideLoading();
