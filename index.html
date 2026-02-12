@@ -2952,7 +2952,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
     import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-    import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
     const firebaseConfig = {
         apiKey: "AIzaSyBTJ1Gf__zEpi9SkA1LkJ8pYz4Jb0zkU8A",
@@ -3971,12 +3971,10 @@
             const mergedBlob = await mergeCanvasToImage();
             const fileName = 'stories/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
             const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, mergedBlob);
-            await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
-            });
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await addDoc(collection(db, 'stories'), {
+            const snapshot = await uploadBytes(storageRef, mergedBlob);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            alert('📸 DEBUG HISTORIA: Foto subida a Storage. URL: ' + downloadURL);
+            const docRef = await addDoc(collection(db, 'stories'), {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
                 userPhoto: AppState.currentUser?.photoURL || '',
@@ -3985,6 +3983,7 @@
                 createdAt: serverTimestamp(),
                 expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
             });
+            alert('✅ Historia guardada en Firestore! ID: ' + docRef.id);
             showToast('Historia publicada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
@@ -4002,12 +4001,9 @@
         try {
             const fileName = 'posts/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
             const storageRef = ref(storage, fileName);
-            const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
-            await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
-            });
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            console.log('📸 Storage OK. URL:', downloadURL, '→ Escribiendo en Firestore...');
+            const snapshot = await uploadBytes(storageRef, AppState.capturedMedia.blob);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            alert('📸 DEBUG POST: Foto subida a Storage. URL: ' + downloadURL);
             const docRef = await addDoc(collection(db, 'posts'), {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
@@ -4019,7 +4015,7 @@
                 comments: [],
                 createdAt: serverTimestamp()
             });
-            console.log('✅ Post guardado en Firestore. ID:', docRef.id);
+            alert('✅ Post guardado en Firestore! ID: ' + docRef.id);
             showToast('Publicacion creada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
