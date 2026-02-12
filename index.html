@@ -2970,11 +2970,18 @@
     const db = initializeFirestore(app, { experimentalForceLongPolling: true });
     const storage = getStorage(app);
 
+    // ===== SENSOR 1: AUDITORIA DE CONFIGURACION =====
+    console.log('🔧 [INIT] Project ID:', firebaseConfig.projectId);
+    console.log('🔧 [INIT] Coleccion destino: posts');
+    console.log('🔧 [INIT] Auth Domain:', firebaseConfig.authDomain);
+    console.log('🔧 [INIT] Firestore inicializado con experimentalForceLongPolling: true');
+
     // Forzar conexión online al iniciar
     enableNetwork(db).then(() => {
-        console.log('🚀 Conexión autorizada desde Vercel establecida — Firestore ONLINE');
+        console.log('🚀 [INIT] enableNetwork OK — Firestore ONLINE');
     }).catch((err) => {
-        console.error('⚠️ enableNetwork falló:', err);
+        console.error('⚠️ [INIT] enableNetwork FALLO:', err);
+        alert('⚠️ enableNetwork falló: ' + err.message);
     });
 
     const AppState = {
@@ -4003,16 +4010,28 @@
 
     document.getElementById('editor-submit').addEventListener('click', async () => {
         if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
+
+        // ===== SENSOR 2: BLOQUEO DE UI =====
+        const submitBtn = document.getElementById('editor-submit');
+        submitBtn.disabled = true;
+        console.log('🔒 [SUBMIT] Boton deshabilitado. Iniciando pipeline...');
+        console.log('🔒 [SUBMIT] User ID:', AppState.currentUser?.uid);
+        console.log('🔒 [SUBMIT] User Name:', AppState.userData?.name);
+
         const caption = document.getElementById('editor-caption').value.trim();
         document.getElementById('post-editor-modal').classList.remove('active');
         showToast('Subiendo...', 'info');
         try {
+            // PASO 1: Storage
             const fileName = 'posts/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
             const storageRef = ref(storage, fileName);
+            console.log('📤 [SUBMIT] Paso 1: Subiendo a Storage...', fileName);
             const snapshot = await uploadBytes(storageRef, AppState.capturedMedia.blob);
             const downloadURL = await getDownloadURL(snapshot.ref);
-            console.log('📸 Storage OK. URL:', downloadURL);
-            const docRef = await addDoc(collection(db, 'posts'), {
+            console.log('📸 [SUBMIT] Paso 1 OK. URL:', downloadURL);
+
+            // PASO 2: Firestore - preparar payload
+            const postPayload = {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
                 userPhoto: AppState.currentUser?.photoURL || '',
@@ -4022,14 +4041,28 @@
                 likes: [],
                 comments: [],
                 createdAt: serverTimestamp()
-            });
-            console.log('✅ Post guardado. ID:', docRef.id);
+            };
+            console.log('📝 [SUBMIT] Paso 2: Payload para addDoc:', JSON.stringify(postPayload, null, 2));
+            console.log('📝 [SUBMIT] Paso 2: Llamando addDoc(collection(db, "posts"), payload)...');
+
+            const docRef = await addDoc(collection(db, 'posts'), postPayload);
+
+            // PASO 3: Confirmación
+            console.log('✅ [SUBMIT] Paso 3: addDoc EXITOSO. Document ID:', docRef.id);
+            console.log('✅ [SUBMIT] Paso 3: Path completo:', docRef.path);
+            alert('✅ Post creado!\nID: ' + docRef.id + '\nPath: ' + docRef.path);
             showToast('Publicacion creada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
-            console.error('❌ Error al publicar:', error);
+            console.error('❌ [SUBMIT] ERROR COMPLETO:', error);
+            console.error('❌ [SUBMIT] error.code:', error.code);
+            console.error('❌ [SUBMIT] error.message:', error.message);
+            console.error('❌ [SUBMIT] error.stack:', error.stack);
             alert('❌ Error al publicar\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message);
             showToast('Error al subir', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            console.log('🔓 [SUBMIT] Boton re-habilitado.');
         }
     });
 
@@ -4039,9 +4072,16 @@
         const feedContainer = document.getElementById('feed-container');
         // Feed publico - sin where clause, todos los posts
         const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
+        console.log('📡 [FEED] Solicitando posts a Firestore... query: posts, orderBy createdAt desc, limit 50');
 
         onSnapshot(postsQuery, (snapshot) => {
-            console.log('🚀 Conexión autorizada desde Vercel establecida. Posts en feed:', snapshot.size);
+            console.log('📦 [FEED] Paquetes recibidos:', snapshot.size);
+            if (snapshot.size === 0) {
+                console.warn('⚠️ [FEED] La coleccion esta VACIA o no tengo permisos de lectura');
+            }
+            snapshot.forEach((docSnap) => {
+                console.log('📄 [FEED] Doc:', docSnap.id, '→ campos:', Object.keys(docSnap.data()).join(', '));
+            });
             let html = '';
             snapshot.forEach((docSnap) => {
                 const post = docSnap.data();
