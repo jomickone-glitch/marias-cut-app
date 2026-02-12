@@ -2198,7 +2198,8 @@
                     <div class="flex items-start gap-3">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">M</span></div>
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1"><span
                                     class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">-
@@ -2214,7 +2215,8 @@
                     <div class="flex items-start gap-3">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-[#C5A059] to-[#D4B896] rounded-full flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-sm">M</span></div>
+                            <span class="text-white font-bold text-sm">M</span>
+                        </div>
                         <div class="flex-1">
                             <div class="flex items-center gap-2 mb-1"><span
                                     class="font-bold text-[#4B3621]">Maria</span><span class="text-xs text-[#8B7355]">-
@@ -4022,111 +4024,57 @@
     });
 
 
-    // ===== FIX 2: FEED PUBLICO CON LIKES, COMMENTS, SHARE =====
+    // ===== FEED PUBLICO - TIEMPO REAL =====
     function loadFeed() {
         const feedContainer = document.getElementById('feed-container');
-        const postsRef = collection(db, 'posts');
-        // Query global: todos los posts, ordenados por fecha, limite 50
-        const postsQuery = query(postsRef, orderBy('createdAt', 'desc'), limit(50));
-
-        console.log('[FEED] Iniciando listener en coleccion "posts" con orderBy(createdAt, desc), limit(50)');
+        const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
 
         onSnapshot(postsQuery, (snapshot) => {
-            console.log('[FEED] Snapshot recibido. Documentos:', snapshot.size);
+            let html = '';
+            snapshot.forEach((docSnap) => {
+                const post = docSnap.data();
+                const postId = docSnap.id;
+                const likes = post.likes || [];
+                const comments = post.comments || [];
+                const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
+                const likeCount = likes.length;
+                const commentCount = comments.length;
 
-            if (snapshot.empty) {
-                console.warn('[FEED] Query ordenada vino VACIA. Intentando fallback sin orderBy...');
-                // FALLBACK: query sin orden para verificar que hay datos
-                getDocs(query(postsRef, limit(50))).then((fallbackSnap) => {
-                    console.log('[FEED FALLBACK] Documentos sin orderBy:', fallbackSnap.size);
-                    if (fallbackSnap.empty) {
-                        console.warn('[FEED FALLBACK] Coleccion "posts" esta COMPLETAMENTE VACIA en Firestore.');
-                        feedContainer.innerHTML = '<div class="text-center p-8 text-[#6D5D4E]"><p class="text-lg font-semibold">No hay publicaciones aun</p><p class="text-sm mt-2">Se el primero en publicar!</p></div>';
-                    } else {
-                        console.log('[FEED FALLBACK] HAY datos pero el orderBy los filtra. Campos del primer doc:', Object.keys(fallbackSnap.docs[0].data()));
-                        console.log('[FEED FALLBACK] Primer doc completo:', JSON.stringify(fallbackSnap.docs[0].data(), null, 2));
-                        // Renderizar con fallback
-                        renderFeedPosts(fallbackSnap, feedContainer);
-                    }
-                }).catch((err) => {
-                    console.error('[FEED FALLBACK] Error en fallback:', err);
-                    feedContainer.innerHTML = '<div class="text-center p-8 text-red-500"><p>Error al cargar el feed</p><p class="text-sm">' + err.message + '</p></div>';
-                });
-                return;
-            }
+                html += '<div class="social-card">';
+                html += '<div class="flex items-center p-3">';
+                html += '<img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2">';
+                html += '<div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div>';
+                html += '</div>';
 
-            // Log de diagnostico: mostrar campos del primer documento
-            if (snapshot.docs.length > 0) {
-                const firstDoc = snapshot.docs[0].data();
-                console.log('[FEED] Campos del primer post:', Object.keys(firstDoc));
-                console.log('[FEED] userId del primer post:', firstDoc.userId);
-                console.log('[FEED] userName del primer post:', firstDoc.userName);
-            }
-
-            renderFeedPosts(snapshot, feedContainer);
-        }, (error) => {
-            console.error('[FEED] Error en onSnapshot:', error);
-            // Si el listener falla (ej: indice faltante), intentar fallback
-            console.warn('[FEED] Intentando fallback con getDocs sin orderBy...');
-            getDocs(query(postsRef, limit(50))).then((fallbackSnap) => {
-                console.log('[FEED ERROR-FALLBACK] Documentos:', fallbackSnap.size);
-                if (!fallbackSnap.empty) {
-                    renderFeedPosts(fallbackSnap, feedContainer);
+                if (post.mediaType === 'video') {
+                    html += '<video src="' + post.mediaUrl + '" class="post-media" controls></video>';
                 } else {
-                    feedContainer.innerHTML = '<div class="text-center p-8 text-[#6D5D4E]"><p>No hay publicaciones aun</p></div>';
+                    html += '<img src="' + post.mediaUrl + '" class="post-media">';
                 }
-            }).catch((err2) => {
-                console.error('[FEED ERROR-FALLBACK] Tambien fallo:', err2);
+
+                html += '<div class="post-actions">';
+                html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
+                html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
+                html += '<span class="post-action-count like-count">' + likeCount + '</span>';
+                html += '</button>';
+
+                html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
+                html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
+                html += '<span class="post-action-count">' + commentCount + '</span>';
+                html += '</button>';
+
+                html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
+                html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
+                html += '</button>';
+                html += '</div>';
+
+                html += '<div class="post-caption">';
+                html += '<p class="post-caption-text"><span class="username">' + post.userName + '</span> ' + (post.caption || '🐾') + '</p>';
+                html += '</div>';
+                html += '</div>';
             });
+            feedContainer.innerHTML = html;
         });
-    }
-
-    function renderFeedPosts(snapshot, feedContainer) {
-        let html = '';
-        snapshot.forEach((docSnap) => {
-            const post = docSnap.data();
-            const postId = docSnap.id;
-            const likes = post.likes || [];
-            const comments = post.comments || [];
-            const isLiked = AppState.currentUser && likes.includes(AppState.currentUser.uid);
-            const likeCount = likes.length;
-            const commentCount = comments.length;
-
-            html += '<div class="social-card">';
-            html += '<div class="flex items-center p-3">';
-            html += '<img src="' + (post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg') + '" class="w-8 h-8 rounded-full object-cover mr-2">';
-            html += '<div><h4 class="text-sm font-bold text-[#4B3621]">' + post.userName + '</h4></div>';
-            html += '</div>';
-
-            if (post.mediaType === 'video') {
-                html += '<video src="' + post.mediaUrl + '" class="post-media" controls></video>';
-            } else {
-                html += '<img src="' + post.mediaUrl + '" class="post-media">';
-            }
-
-            // Barra de acciones con likes, comments, share
-            html += '<div class="post-actions">';
-            html += '<button class="post-action-btn ' + (isLiked ? 'liked' : '') + '" onclick="window.toggleLike(\'' + postId + '\', this)" data-post-id="' + postId + '">';
-            html += '<svg fill="' + (isLiked ? '#EF4444' : 'none') + '" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>';
-            html += '<span class="post-action-count like-count">' + likeCount + '</span>';
-            html += '</button>';
-
-            html += '<button class="post-action-btn" onclick="window.showComments(\'' + postId + '\')">';
-            html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>';
-            html += '<span class="post-action-count">' + commentCount + '</span>';
-            html += '</button>';
-
-            html += '<button class="post-action-btn" onclick="window.sharePost(\'' + postId + '\', \'' + encodeURIComponent(post.caption || '') + '\')">';
-            html += '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>';
-            html += '</button>';
-            html += '</div>';
-
-            html += '<div class="post-caption">';
-            html += '<p class="post-caption-text"><span class="username">' + post.userName + '</span> ' + (post.caption || '🐾') + '</p>';
-            html += '</div>';
-            html += '</div>';
-        });
-        feedContainer.innerHTML = html;
     }
 
     // Toggle Like - funcion global
@@ -4189,10 +4137,9 @@
         }
     };
 
-    // ===== FIX 3: HISTORIAS EFIMERAS - FILTRO 24H EN CLIENTE =====
+    // ===== HISTORIAS - TIEMPO REAL =====
     function loadStories() {
         const storiesContainer = document.getElementById('stories-container');
-        console.log('[STORIES] Iniciando listener en coleccion "stories" con orderBy(createdAt, desc)');
         const storiesQuery = query(collection(db, 'stories'), orderBy('createdAt', 'desc'));
 
         onSnapshot(storiesQuery, (snapshot) => {
