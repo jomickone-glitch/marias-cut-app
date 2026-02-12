@@ -2951,7 +2951,7 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove, enableNetwork, terminate, clearIndexedDbPersistence, initializeFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
     const firebaseConfig = {
@@ -2966,20 +2966,46 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // === VERIFICAR CONEXION DESDE VERCEL ===
-    getDocs(collection(db, 'posts')).then((snap) => {
-        console.log('\ud83d\ude80 Conexion autorizada desde Vercel establecida');
-        console.log('Firestore online. Documentos en posts:', snap.size);
-        if (snap.size > 0) {
-            snap.forEach((d) => console.log('  Post:', d.id, Object.keys(d.data()).join(', ')));
+    // === HARD RESET: Limpiar cache + forzar conexion online ===
+    let db;
+    (async function hardResetFirestore() {
+        try {
+            // Paso 1: Obtener instancia temporal para limpiar cache
+            const tempDb = getFirestore(app);
+            await terminate(tempDb);
+            console.log('Firestore terminado para limpieza');
+
+            // Paso 2: Limpiar toda la cache IndexedDB
+            await clearIndexedDbPersistence(tempDb);
+            console.log('Cache IndexedDB limpiada completamente');
+
+            // Paso 3: Reinicializar Firestore limpio
+            db = initializeFirestore(app, {});
+            console.log('Firestore reinicializado limpio');
+
+            // Paso 4: Forzar conexion online
+            await enableNetwork(db);
+            console.log('\ud83d\ude80 Conexion online forzada OK');
+
+            // Paso 5: Test de lectura
+            const testSnap = await getDocs(collection(db, 'posts'));
+            console.log('\ud83d\ude80 Conexion autorizada desde Vercel establecida');
+            console.log('Firestore online. projectId:', firebaseConfig.projectId, '| Documentos en posts:', testSnap.size);
+            if (testSnap.size > 0) {
+                testSnap.forEach((d) => console.log('  Post:', d.id, Object.keys(d.data()).join(', ')));
+            } else {
+                console.warn('\u26a0\ufe0f La conexion funciona pero la coleccion posts parece vacia para este Project ID');
+            }
+        } catch (err) {
+            console.error('Hard reset error:', err.code, err.message);
+            // Fallback: init normal sin limpiar cache
+            db = getFirestore(app);
+            console.warn('Usando Firestore sin limpiar cache (fallback)');
+            alert('FIRESTORE: ' + (err.code || 'error') + ' - ' + err.message);
         }
-    }).catch((err) => {
-        console.error('Error Firestore:', err.code, err.message);
-        alert('FIRESTORE ERROR: ' + err.code + ' - ' + err.message);
-    });
+    })();
 
     const AppState = {
         currentUser: null,
@@ -4056,8 +4082,11 @@
     // ===== FEED PUBLICO - TIEMPO REAL (CON DIAGNOSTICO) =====
     function loadFeed() {
         try {
+            console.log('loadFeed() llamado. db existe:', !!db, '| projectId runtime:', db?._databaseId?.projectId || firebaseConfig.projectId);
+            console.log('loadFeed() coleccion target: projects/' + firebaseConfig.projectId + '/databases/(default)/documents/posts');
             const feedContainer = document.getElementById('feed-container');
             if (!feedContainer) { alert('ERROR: No se encuentra el elemento feed-container en el DOM'); return; }
+            if (!db) { alert('ERROR: db es null/undefined. Firestore no inicializado.'); return; }
             const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
 
             onSnapshot(postsQuery, (snapshot) => {
