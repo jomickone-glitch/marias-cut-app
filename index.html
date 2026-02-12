@@ -4003,8 +4003,10 @@
             const storageRef = ref(storage, fileName);
             const snapshot = await uploadBytes(storageRef, AppState.capturedMedia.blob);
             const downloadURL = await getDownloadURL(snapshot.ref);
-            alert('📸 DEBUG POST: Foto subida a Storage. URL: ' + downloadURL);
-            const docRef = await addDoc(collection(db, 'posts'), {
+            alert('📸 Storage OK. URL: ' + downloadURL + '\n\nAhora intentando escribir en Firestore...');
+
+            // === ESCRITURA AISLADA CON TIMEOUT ===
+            const postData = {
                 userId: AppState.currentUser.uid,
                 userName: AppState.userData?.name || 'Usuario',
                 userPhoto: AppState.currentUser?.photoURL || '',
@@ -4014,13 +4016,27 @@
                 likes: [],
                 comments: [],
                 createdAt: serverTimestamp()
-            });
-            alert('✅ Post guardado en Firestore! ID: ' + docRef.id);
-            showToast('Publicacion creada!', 'success');
-            AppState.capturedMedia = null;
+            };
+            console.log('📝 Intentando addDoc con datos:', JSON.stringify(postData, null, 2));
+
+            try {
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('TIMEOUT: addDoc no respondio en 15 segundos. Firestore puede estar bloqueado o sin conexion.')), 15000)
+                );
+                const docRef = await Promise.race([
+                    addDoc(collection(db, 'posts'), postData),
+                    timeoutPromise
+                ]);
+                alert('✅ Post guardado en Firestore! ID: ' + docRef.id);
+                showToast('Publicacion creada!', 'success');
+                AppState.capturedMedia = null;
+            } catch (firestoreError) {
+                console.error('❌ Error SOLO en Firestore addDoc:', firestoreError);
+                alert('❌ FIRESTORE FALLO AL ESCRIBIR\n\nCodigo: ' + (firestoreError.code || 'N/A') + '\nMensaje: ' + firestoreError.message + '\n\nLa foto SI se subio a Storage.\nEl problema es SOLO la escritura en la base de datos.');
+            }
         } catch (error) {
-            console.error('❌ Error en pipeline de publicacion:', error);
-            alert('❌ ERROR AL PUBLICAR\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message + '\n\nRevisa la consola para mas detalles.');
+            console.error('❌ Error en Storage/Upload:', error);
+            alert('❌ ERROR EN STORAGE\n\nCodigo: ' + (error.code || 'desconocido') + '\nMensaje: ' + error.message);
             showToast('Error al subir', 'error');
         }
     });
