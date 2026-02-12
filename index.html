@@ -2936,6 +2936,9 @@
     </div>
 </div>
 
+<!-- BOTÓN DE REPARACIÓN DE CUENTA -->
+<button id="btn-repair-account" style="position:fixed; top:80px; right:10px; z-index:9999; background:#ff6600; color:white; padding:12px 20px; border-radius:25px; font-weight:bold; font-size:14px; box-shadow:0 4px 15px rgba(255,102,0,0.5); cursor:pointer; border:none;">🆘 REPARAR MI CUENTA</button>
+
 <!-- LOADING OVERLAY -->
 <div id="loading-overlay" class="loading-overlay">
     <div class="loading-spinner"></div>
@@ -3463,7 +3466,7 @@
         
         if (user) {
             // USUARIO AUTENTICADO
-            console.log('✅ Usuario detectado:', user.email);
+            console.log('[AUDIT] AUTH: UID=' + user.uid + ' | Email=' + user.email + ' | DisplayName="' + (user.displayName || 'NULL/UNDEFINED') + '"');
             AppState.currentUser = user;
             
             // Cargar datos y mostrar app
@@ -3475,7 +3478,7 @@
             hideLoading();
         } else {
             // SIN USUARIO
-            console.log('👋 Sin usuario. Mostrando login.');
+            console.log('[AUDIT] AUTH: Sin usuario activo');
             AppState.currentUser = null;
             AppState.userData = null;
             showScreen('screen-login');
@@ -3623,6 +3626,48 @@
             AppState.isGuest = false;
         }
     });
+
+    // ===== BOTÓN DE REPARACIÓN DE CUENTA =====
+    async function repairAccount() {
+        if (!auth.currentUser) {
+            alert('⚠️ No hay usuario activo para reparar');
+            return;
+        }
+        
+        console.log('[AUDIT] REPAIR: Iniciando reparación para UID:', auth.currentUser.uid);
+        console.log('[AUDIT] REPAIR: DisplayName actual:', auth.currentUser.displayName);
+        
+        try {
+            showLoading('Reparando cuenta...');
+            
+            // 1. Inyectar nombre a la fuerza
+            await updateProfile(auth.currentUser, { displayName: "Admin Braileff" });
+            console.log('[AUDIT] REPAIR: ✅ Nombre inyectado correctamente');
+            
+            // 2. Actualizar también en Firestore
+            await setDoc(doc(db, 'users', auth.currentUser.uid), {
+                name: "Admin Braileff",
+                email: auth.currentUser.email,
+                repairedAt: serverTimestamp()
+            }, { merge: true });
+            console.log('[AUDIT] REPAIR: ✅ Datos guardados en Firestore');
+            
+            // 3. Cerrar sesión forzosa
+            await signOut(auth);
+            console.log('[AUDIT] REPAIR: ✅ Sesión cerrada');
+            
+            alert('✅ CUENTA REPARADA EXITOSAMENTE\n\nTu nombre ha sido corregido a "Admin Braileff".\n\nAhora vuelve a iniciar sesión con tu email y contraseña.');
+            
+            // 4. Recargar
+            window.location.reload();
+        } catch (e) {
+            console.error('[AUDIT] REPAIR ERROR:', e);
+            alert('❌ Error reparando: ' + e.message);
+            hideLoading();
+        }
+    }
+    
+    document.getElementById('btn-repair-account')?.addEventListener('click', repairAccount);
 
     // ===== NAVEGACION =====
     document.querySelectorAll('.nav-item, .nav-center-btn').forEach(item => {
@@ -4022,6 +4067,19 @@
         const caption = document.getElementById('editor-caption').value.trim();
         const currentUserName = user.displayName || AppState.userData?.name || 'Usuario Anonimo';
         const currentUserPhoto = user.photoURL || '';
+        
+        // AUDITORÍA: Ver qué se va a escribir
+        const writePayload = {
+            userId: AppState.currentUser.uid,
+            userName: currentUserName,
+            userPhoto: currentUserPhoto,
+            mediaType: AppState.capturedMedia.type,
+            caption: caption || '🐾',
+            createdAt: 'serverTimestamp()'
+        };
+        console.log('[AUDIT] WRITE PAYLOAD:', JSON.stringify(writePayload, null, 2));
+        console.log('[AUDIT] user.displayName="' + (user.displayName || 'NULL') + '" | AppState.userData?.name="' + (AppState.userData?.name || 'NULL') + '" | Fallback="Usuario Anonimo"');
+        
         document.getElementById('post-editor-modal').classList.remove('active');
         showToast('Subiendo...', 'info');
         try {
@@ -4029,7 +4087,10 @@
             const storageRef = ref(storage, fileName);
             const snapshot = await uploadBytes(storageRef, AppState.capturedMedia.blob);
             const downloadURL = await getDownloadURL(snapshot.ref);
-            await addDoc(collection(db, 'posts'), {
+            
+            console.log('[AUDIT] Subida exitosa a Storage. URL:', downloadURL);
+            
+            const docRef = await addDoc(collection(db, 'posts'), {
                 userId: AppState.currentUser.uid,
                 userName: currentUserName,
                 userPhoto: currentUserPhoto,
@@ -4040,6 +4101,7 @@
                 comments: [],
                 createdAt: serverTimestamp()
             });
+            console.log('[AUDIT] Documento creado con ID:', docRef.id);
             showToast('Publicacion creada!', 'success');
             AppState.capturedMedia = null;
         } catch (error) {
@@ -4055,12 +4117,24 @@
     function loadFeed() {
         const feedContainer = document.getElementById('feed-container');
         const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
+        
+        console.log('[AUDIT] READ QUERY: Coleccion="posts" | Orden="createdAt desc" | Limites=50 | where=NINGUNO (publico)');
 
         onSnapshot(postsQuery, (snapshot) => {
+            console.log('[AUDIT] READ RESULT: Recibidos ' + snapshot.size + ' documentos');
             let html = '';
+            
+            if (snapshot.size === 0) {
+                console.log('[AUDIT] ATENCION: No se recibieron documentos de la coleccion posts');
+            }
             snapshot.forEach((docSnap) => {
                 const post = docSnap.data();
                 const postId = docSnap.id;
+                
+                // AUDITORÍA: Log de cada documento
+                const currentViewerUid = auth.currentUser ? auth.currentUser.uid : 'INVITADO';
+                console.log('[AUDIT] DOC: ID=' + postId + ' | CreadoPor="' + (post.userName || 'NULL') + '" | VisiblePara=' + currentViewerUid + ' | userIdEnDoc=' + post.userId);
+                
                 const displayName = post.userName || 'Usuario Anonimo';
                 const displayPhoto = post.userPhoto || 'https://randomuser.me/api/portraits/lego/1.jpg';
                 const likes = post.likes || [];
