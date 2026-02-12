@@ -2951,7 +2951,7 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, signOut, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove, enableIndexedDbPersistence } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, onSnapshot, query, orderBy, where, limit, serverTimestamp, updateDoc, arrayUnion, arrayRemove, enableNetwork, terminate, clearIndexedDbPersistence, initializeFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
     import { getStorage, ref, uploadBytes, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
     const firebaseConfig = {
@@ -2966,33 +2966,40 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    let db = getFirestore(app);
     const storage = getStorage(app);
 
-    // === DIAGNOSTICO AGRESIVO: Persistencia + Test de conexion ===
-    enableIndexedDbPersistence(db).then(() => {
-        console.log('Persistencia IndexedDB activada OK');
-    }).catch((err) => {
-        console.error('Fallo persistencia:', err.code);
-        if (err.code === 'failed-precondition') {
-            console.warn('Multiples tabs abiertas, persistencia solo en una');
-        } else if (err.code === 'unimplemented') {
-            console.warn('Navegador no soporta persistencia');
+    // === CONEXION LIMPIA: Forzar modo online, limpiar cache corrupta ===
+    (async function initFirestoreClean() {
+        try {
+            // Forzar conexion online
+            await enableNetwork(db);
+            console.log('Firestore: conexion online forzada OK');
+            // Test de lectura inmediato
+            const testSnap = await getDocs(collection(db, 'posts'));
+            console.log('Firestore: TEST lectura OK. Documentos en posts:', testSnap.size);
+            if (testSnap.size > 0) {
+                testSnap.forEach((d) => console.log('  Doc:', d.id, Object.keys(d.data()).join(', ')));
+            } else {
+                console.warn('Firestore: Coleccion posts esta vacia');
+            }
+        } catch (err) {
+            console.error('Firestore: Error en conexion inicial:', err.code, err.message);
+            alert('ERROR FIRESTORE: ' + err.code + ' - ' + err.message + '. Limpiando cache...');
+            // Limpiar cache corrupta y reiniciar
+            try {
+                await terminate(db);
+                await clearIndexedDbPersistence(db);
+                console.log('Cache IndexedDB limpiada. Reiniciando Firestore...');
+                db = initializeFirestore(app, {});
+                await enableNetwork(db);
+                console.log('Firestore reiniciado OK');
+            } catch (cleanErr) {
+                console.error('Error al limpiar cache:', cleanErr);
+                alert('ERROR CRITICO: No se pudo reconectar a Firestore: ' + cleanErr.message);
+            }
         }
-    });
-
-    // Test inmediato de lectura
-    getDocs(collection(db, 'posts')).then((snap) => {
-        console.log('TEST DIRECTO: Documentos en posts:', snap.size);
-        if (snap.size > 0) {
-            snap.forEach((d) => console.log('  Doc:', d.id, JSON.stringify(d.data())));
-        } else {
-            alert('DIAGNOSTICO: La coleccion "posts" esta VACIA en Firestore. 0 documentos encontrados.');
-        }
-    }).catch((err) => {
-        alert('DIAGNOSTICO: Error al leer Firestore: ' + err.code + ' - ' + err.message);
-        console.error('Error lectura directa:', err);
-    });
+    })();
 
     const AppState = {
         currentUser: null,
