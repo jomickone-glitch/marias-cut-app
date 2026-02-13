@@ -1574,39 +1574,40 @@
             }
         });
 
-        // ===== AUTH STATE CON AUTO-LIMPIEZA DE SESIONES ZOMBI =====
-        // ===== OBSERVADOR DE AUTH - VERSIÓN MINIMALISTA Y ROBUSTA =====
-        onAuthStateChanged(auth, (user) => {
-            console.log('[AUTH] Estado cambiado:', user ? 'Usuario logueado: ' + user.uid : 'Sin usuario');
-            
+        // ===== FIX 1: AUTH STATE CON AWAIT PARA LOADUSERDATA =====
+        onAuthStateChanged(auth, async (user) => {
             const nav = document.getElementById('bottom-nav');
-            
-            if (!user) {
-                // Sin usuario: mostrar login
-                AppState.currentUser = null;
-                AppState.userData = null;
+            if (AppState.isInitializing) {
+                showLoading('Iniciando aplicacion...');
+            }
+            try {
+                if (!user && !AppState.isGuest) {
+                    AppState.currentUser = null;
+                    AppState.userData = null;
+                    showScreen('screen-login');
+                    nav.classList.add('hidden');
+                } else {
+                    AppState.currentUser = user;
+                    if (user && !AppState.isGuest) {
+                        // FIX CRITICO: Esperar a que loadUserData termine antes de mostrar la app
+                        const dataLoaded = await loadUserData(user.uid);
+                        if (!dataLoaded) {
+                            console.warn('No se pudieron cargar los datos del usuario');
+                        }
+                    } else {
+                        AppState.userData = { name: 'Invitado', petName: '' };
+                    }
+                    showScreen('screen-grooming');
+                    nav.classList.remove('hidden');
+                    loadFeed();
+                    loadStories();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error al cargar');
                 showScreen('screen-login');
                 nav.classList.add('hidden');
-                hideLoading();
-                AppState.isInitializing = false;
-            } else {
-                // Con usuario: ir al feed
-                AppState.currentUser = user;
-                
-                if (AppState.isGuest) {
-                    AppState.userData = { name: 'Invitado', petName: '' };
-                } else {
-                    // Cargar datos del usuario (sin bloquear)
-                    loadUserData(user.uid).catch(e => console.error('[AUTH] Error cargando datos:', e));
-                }
-                
-                showScreen('screen-grooming');
-                nav.classList.remove('hidden');
-                
-                // Cargar feed y stories (sin await para no bloquear)
-                loadFeed();
-                loadStories();
-                
+            } finally {
                 hideLoading();
                 AppState.isInitializing = false;
             }
@@ -1649,12 +1650,6 @@
         const registerFields = document.getElementById('register-fields');
         const errorEl = document.getElementById('login-error');
 
-        function showError(msg) {
-            errorEl.textContent = msg;
-            errorEl.classList.remove('hidden');
-        }
-        function hideError() { errorEl.classList.add('hidden'); }
-
         document.getElementById('btn-show-register').addEventListener('click', () => {
             loginActions.classList.add('hidden');
             registerActions.classList.remove('hidden');
@@ -1669,34 +1664,28 @@
             errorEl.classList.add('hidden');
         });
 
-        // ===== LOGIN SIMPLIFICADO =====
         document.getElementById('btn-login').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
-            
             if (!email || !password) {
                 showError('Ingresa tu email y contrasena');
                 return;
             }
-            
             showLoading('Iniciando sesion...');
             hideError();
-            
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // onAuthStateChanged se encargará del resto
             } catch (error) {
-                console.error('[LOGIN] Error:', error);
-                hideLoading();
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                     showError('Usuario o contrasena incorrectos');
                 } else {
                     showError('Error al entrar: ' + error.message);
                 }
+            } finally {
+                hideLoading();
             }
         });
 
-        // ===== REGISTRO SIMPLIFICADO =====
         document.getElementById('btn-register').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
@@ -1715,50 +1704,40 @@
             
             showLoading('Creando cuenta...');
             hideError();
-            
             try {
-                // Crear usuario
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                // Actualizar displayName
-                await updateProfile(user, { displayName: name });
-                
-                // Guardar en Firestore
-                await setDoc(doc(db, 'users', user.uid), {
-                    name: name,
-                    email: email,
-                    petName: pet || 'Mi Mascota',
-                    phone: phone || '',
-                    createdAt: serverTimestamp()
+                await setDoc(doc(db, 'users', userCredential.user.uid), {
+                    name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '', createdAt: serverTimestamp()
                 });
-                
+                await updateProfile(userCredential.user, { displayName: name });
+                AppState.userData = { name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '' };
                 showToast('Cuenta creada!', 'success');
-                // onAuthStateChanged se encargará de redirigir
-                
             } catch (error) {
-                console.error('[REGISTER] Error:', error);
-                hideLoading();
                 if (error.code === 'auth/email-already-in-use') {
                     showError('Este correo ya esta registrado');
                 } else {
                     showError('Error: ' + error.message);
                 }
+            } finally {
+                hideLoading();
             }
         });
 
-        // ===== INVITADO SIMPLIFICADO =====
+        function showError(msg) {
+            errorEl.textContent = msg;
+            errorEl.classList.remove('hidden');
+        }
+        function hideError() { errorEl.classList.add('hidden'); }
+
         document.getElementById('btn-skip').addEventListener('click', async () => {
             showLoading('Entrando como invitado...');
             try {
                 AppState.isGuest = true;
                 await signInAnonymously(auth);
-                // onAuthStateChanged se encargará del resto
             } catch (error) {
-                console.error('[GUEST] Error:', error);
                 hideLoading();
+                showToast('Error al entrar como invitado', 'error');
                 AppState.isGuest = false;
-                showToast('Error al entrar como invitado: ' + error.message, 'error');
             }
         });
 
@@ -2141,52 +2120,23 @@
             }
         });
 
-        // ===== PUBLICACIÓN CON AUDITORÍA =====
         document.getElementById('editor-submit').addEventListener('click', async () => {
             if (AppState.isGuest) { showToast('Registrate para publicar', 'info'); return; }
-            
             const caption = document.getElementById('editor-caption').value.trim();
-            const user = auth.currentUser;
-            
-            // AUDITORÍA: Verificar identidad antes de publicar
-            console.log('[AUDIT] POST: Intentando publicar...');
-            console.log('[AUDIT] POST: currentUser.uid:', user?.uid);
-            console.log('[AUDIT] POST: currentUser.displayName:', user?.displayName);
-            console.log('[AUDIT] POST: AppState.userData?.name:', AppState.userData?.name);
-            
-            // VALIDACIÓN: Bloquear publicación si no hay identidad
-            if (!user || !user.displayName) {
-                console.error('[AUDIT] POST: 🚨 BLOQUEADO - Usuario sin displayName');
-                alert('⛔ ERROR: Tu sesión no tiene nombre asignado.\n\nCierra sesión y vuelve a entrar.');
-                return;
-            }
-            
-            const writePayload = {
-                userId: user.uid,
-                userName: user.displayName || AppState.userData?.name || 'Usuario',
-                userPhoto: user.photoURL || '',
-                caption: caption || '🐾',
-                mediaType: AppState.capturedMedia?.type
-            };
-            console.log('[AUDIT] POST: WRITE PAYLOAD:', JSON.stringify(writePayload, null, 2));
-            
             document.getElementById('post-editor-modal').classList.remove('active');
             showToast('Subiendo...', 'info');
-            
             try {
-                const fileName = 'posts/' + Date.now() + '_' + user.uid + '.jpg';
+                const fileName = 'posts/' + Date.now() + '_' + AppState.currentUser.uid + '.jpg';
                 const storageRef = ref(storage, fileName);
                 const uploadTask = uploadBytesResumable(storageRef, AppState.capturedMedia.blob);
                 await new Promise((resolve, reject) => {
                     uploadTask.on('state_changed', null, (error) => reject(error), () => resolve());
                 });
                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                console.log('[AUDIT] POST: URL de imagen:', downloadURL);
-                
-                const docRef = await addDoc(collection(db, 'posts'), {
-                    userId: user.uid,
-                    userName: user.displayName || AppState.userData?.name || 'Usuario',
-                    userPhoto: user.photoURL || '',
+                await addDoc(collection(db, 'posts'), {
+                    userId: AppState.currentUser.uid,
+                    userName: AppState.userData?.name || 'Usuario',
+                    userPhoto: AppState.currentUser?.photoURL || '',
                     mediaUrl: downloadURL,
                     mediaType: AppState.capturedMedia.type,
                     caption: caption || '🐾',
@@ -2194,27 +2144,21 @@
                     comments: [],
                     createdAt: serverTimestamp()
                 });
-                console.log('[AUDIT] POST: ✅ Documento creado ID:', docRef.id);
                 showToast('Publicacion creada!', 'success');
                 AppState.capturedMedia = null;
             } catch (error) {
-                console.error('[AUDIT] POST ERROR:', error);
                 showToast('Error al subir', 'error');
             }
         });
 
 
-        // ===== FIX 2: FEED PUBLICO CON AUDITORÍA =====
+        // ===== FIX 2: FEED PUBLICO CON LIKES, COMMENTS, SHARE =====
         function loadFeed() {
-            console.log('[AUDIT] FEED: Cargando feed...');
             const feedContainer = document.getElementById('feed-container');
             // Feed publico - sin where clause, todos los posts
-            const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
-            
-            console.log('[AUDIT] FEED: Query=posts | orderBy=createdAt desc | limit=50 | where=NINGUNO');
+            const postsQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
             
             onSnapshot(postsQuery, (snapshot) => {
-                console.log('[AUDIT] FEED: Recibidos ' + snapshot.size + ' documentos');
                 let html = '';
                 snapshot.forEach((docSnap) => {
                     const post = docSnap.data();
@@ -2264,7 +2208,6 @@
         }
 
         // Toggle Like - funcion global
-        // ===== LIKE CON AUDITORÍA =====
         window.toggleLike = async function(postId, btn) {
             if (AppState.isGuest || !AppState.currentUser) {
                 showToast('Registrate para dar like', 'info');
@@ -2273,41 +2216,35 @@
             
             const postRef = doc(db, 'posts', postId);
             const isLiked = btn.classList.contains('liked');
-            const userId = AppState.currentUser.uid;
-            
-            console.log('[AUDIT] LIKE: User=' + userId + ' | Post=' + postId + ' | Action=' + (isLiked ? 'remove' : 'add'));
             
             try {
                 if (isLiked) {
-                    await updateDoc(postRef, { likes: arrayRemove(userId) });
-                    console.log('[AUDIT] LIKE: ✅ Like removido');
+                    await updateDoc(postRef, { likes: arrayRemove(AppState.currentUser.uid) });
                     btn.classList.remove('liked');
                     btn.querySelector('svg').setAttribute('fill', 'none');
                 } else {
-                    await updateDoc(postRef, { likes: arrayUnion(userId) });
-                    console.log('[AUDIT] LIKE: ✅ Like agregado');
+                    await updateDoc(postRef, { likes: arrayUnion(AppState.currentUser.uid) });
                     btn.classList.add('liked');
                     btn.querySelector('svg').setAttribute('fill', '#EF4444');
                 }
             } catch (error) {
-                console.error('[AUDIT] LIKE ERROR:', error);
+                console.error('Error al dar like:', error);
                 showToast('Error al procesar like', 'error');
             }
         };
 
-        // Show Comments - funcion global con auditoría
+        // Show Comments - funcion global
         window.showComments = function(postId) {
-            console.log('[AUDIT] COMMENTS: Abriendo comentarios para post=' + postId);
             if (AppState.isGuest) {
                 showToast('Registrate para comentar', 'info');
                 return;
             }
+            // Por ahora solo mostramos un toast, en una version futura se abriria un modal
             showToast('Comentarios proximamente', 'info');
         };
 
-        // Share Post - funcion global con auditoría
+        // Share Post - funcion global
         window.sharePost = async function(postId, caption) {
-            console.log('[AUDIT] SHARE: Intentando compartir post=' + postId);
             const decodedCaption = decodeURIComponent(caption);
             const shareData = {
                 title: 'Maria\'s Cut - Social Club',
@@ -2318,29 +2255,24 @@
             try {
                 if (navigator.share) {
                     await navigator.share(shareData);
-                    console.log('[AUDIT] SHARE: ✅ Compartido nativamente');
                     showToast('Compartido!', 'success');
                 } else {
+                    // Fallback: copiar al portapapeles
                     await navigator.clipboard.writeText(shareData.url);
-                    console.log('[AUDIT] SHARE: ✅ Link copiado al portapapeles');
                     showToast('Link copiado al portapapeles', 'success');
                 }
             } catch (error) {
-                console.error('[AUDIT] SHARE ERROR:', error);
+                console.error('Error al compartir:', error);
                 showToast('Error al compartir', 'error');
             }
         };
 
-        // ===== FIX 3: HISTORIAS EFIMERAS CON AUDITORÍA =====
+        // ===== FIX 3: HISTORIAS EFIMERAS - FILTRO 24H EN CLIENTE =====
         function loadStories() {
-            console.log('[AUDIT] STORIES: Cargando historias...');
             const storiesContainer = document.getElementById('stories-container');
             const storiesQuery = query(collection(db, 'stories'), orderBy('createdAt', 'desc'));
             
-            console.log('[AUDIT] STORIES: Query=stories | orderBy=createdAt desc | where=NINGUNO');
-            
             onSnapshot(storiesQuery, (snapshot) => {
-                console.log('[AUDIT] STORIES: Recibidos ' + snapshot.size + ' documentos');
                 AppState.stories = [];
                 const now = Date.now();
                 const twentyFourHours = 24 * 60 * 60 * 1000;
