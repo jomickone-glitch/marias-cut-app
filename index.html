@@ -1575,95 +1575,38 @@
         });
 
         // ===== AUTH STATE CON AUTO-LIMPIEZA DE SESIONES ZOMBI =====
-        // ===== OBSERVADOR DE AUTH CON REPARACIÓN CONSTRUCTIVA =====
-        onAuthStateChanged(auth, async (user) => {
+        // ===== OBSERVADOR DE AUTH - VERSIÓN MINIMALISTA Y ROBUSTA =====
+        onAuthStateChanged(auth, (user) => {
+            console.log('[AUTH] Estado cambiado:', user ? 'Usuario logueado: ' + user.uid : 'Sin usuario');
+            
             const nav = document.getElementById('bottom-nav');
-            if (AppState.isInitializing) {
-                showLoading('Iniciando aplicacion...');
-            }
-            try {
-                if (!user && !AppState.isGuest) {
-                    AppState.currentUser = null;
-                    AppState.userData = null;
-                    showScreen('screen-login');
-                    nav.classList.add('hidden');
-                } else {
-                    // ===== REPARACIÓN EN CALIENTE: Detectar y curar sesiones incompletas =====
-                    if (user && !AppState.isGuest) {
-                        const hasDisplayName = user.displayName && user.displayName.trim() !== '';
-                        
-                        if (!hasDisplayName) {
-                            console.warn('[AUDIT] AUTH: ⚠️ Sesión incompleta detectada - UID:', user.uid);
-                            console.log('[AUDIT] AUTH: 🔧 Iniciando reparación constructiva...');
-                            
-                            // REPARACIÓN: Pedir nombre al usuario en lugar de expulsarlo
-                            const newName = prompt(
-                                "⚠️ Tu perfil está incompleto.\n\n" +
-                                "Por favor, introduce tu Nombre de Usuario para continuar:",
-                                ""
-                            );
-                            
-                            let nameToSet = newName ? newName.trim() : "";
-                            
-                            // Si canceló o dejó vacío, asignar nombre por defecto
-                            if (!nameToSet) {
-                                nameToSet = "Usuario " + Math.floor(Math.random() * 10000);
-                                console.log('[AUDIT] AUTH: 📝 Asignando nombre por defecto:', nameToSet);
-                            } else {
-                                console.log('[AUDIT] AUTH: 📝 Nombre proporcionado por usuario:', nameToSet);
-                            }
-                            
-                            // Actualizar perfil en Firebase
-                            try {
-                                await updateProfile(user, { displayName: nameToSet });
-                                console.log('[AUDIT] AUTH: ✅ updateProfile ejecutado');
-                                
-                                // Forzar recarga para verificar persistencia
-                                await user.reload();
-                                console.log('[AUDIT] AUTH: ✅ Usuario recargado, displayName ahora:', auth.currentUser?.displayName);
-                                
-                                // Actualizar referencia local
-                                user = auth.currentUser;
-                                
-                                // Guardar en Firestore también para consistencia
-                                await setDoc(doc(db, 'users', user.uid), {
-                                    name: nameToSet,
-                                    email: user.email || '',
-                                    displayNameRepaired: true,
-                                    repairedAt: serverTimestamp()
-                                }, { merge: true });
-                                console.log('[AUDIT] AUTH: ✅ Firestore actualizado con reparación');
-                                
-                            } catch (repairError) {
-                                console.error('[AUDIT] AUTH: 🚨 Error durante reparación:', repairError);
-                                // Si falla la reparación, continuar con nombre por defecto en memoria
-                                user.displayName = nameToSet;
-                            }
-                        } else {
-                            console.log('[AUDIT] AUTH: ✅ Sesión válida - UID:', user.uid, 'displayName:', user.displayName);
-                        }
-                    }
-                    
-                    AppState.currentUser = user;
-                    if (user && !AppState.isGuest) {
-                        const dataLoaded = await loadUserData(user.uid);
-                        if (!dataLoaded) {
-                            console.warn('No se pudieron cargar los datos del usuario');
-                        }
-                    } else {
-                        AppState.userData = { name: 'Invitado', petName: '' };
-                    }
-                    showScreen('screen-grooming');
-                    nav.classList.remove('hidden');
-                    loadFeed();
-                    loadStories();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Error al cargar');
+            
+            if (!user) {
+                // Sin usuario: mostrar login
+                AppState.currentUser = null;
+                AppState.userData = null;
                 showScreen('screen-login');
                 nav.classList.add('hidden');
-            } finally {
+                hideLoading();
+                AppState.isInitializing = false;
+            } else {
+                // Con usuario: ir al feed
+                AppState.currentUser = user;
+                
+                if (AppState.isGuest) {
+                    AppState.userData = { name: 'Invitado', petName: '' };
+                } else {
+                    // Cargar datos del usuario (sin bloquear)
+                    loadUserData(user.uid).catch(e => console.error('[AUTH] Error cargando datos:', e));
+                }
+                
+                showScreen('screen-grooming');
+                nav.classList.remove('hidden');
+                
+                // Cargar feed y stories (sin await para no bloquear)
+                loadFeed();
+                loadStories();
+                
                 hideLoading();
                 AppState.isInitializing = false;
             }
@@ -1706,6 +1649,12 @@
         const registerFields = document.getElementById('register-fields');
         const errorEl = document.getElementById('login-error');
 
+        function showError(msg) {
+            errorEl.textContent = msg;
+            errorEl.classList.remove('hidden');
+        }
+        function hideError() { errorEl.classList.add('hidden'); }
+
         document.getElementById('btn-show-register').addEventListener('click', () => {
             loginActions.classList.add('hidden');
             registerActions.classList.remove('hidden');
@@ -1720,29 +1669,34 @@
             errorEl.classList.add('hidden');
         });
 
+        // ===== LOGIN SIMPLIFICADO =====
         document.getElementById('btn-login').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
+            
             if (!email || !password) {
                 showError('Ingresa tu email y contrasena');
                 return;
             }
+            
             showLoading('Iniciando sesion...');
             hideError();
+            
             try {
                 await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged se encargará del resto
             } catch (error) {
+                console.error('[LOGIN] Error:', error);
+                hideLoading();
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                     showError('Usuario o contrasena incorrectos');
                 } else {
                     showError('Error al entrar: ' + error.message);
                 }
-            } finally {
-                hideLoading();
             }
         });
 
-        // ===== REGISTRO CON PROTOCOLO DE SEGURIDAD ESTRICTO =====
+        // ===== REGISTRO SIMPLIFICADO =====
         document.getElementById('btn-register').addEventListener('click', async () => {
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
@@ -1763,66 +1717,48 @@
             hideError();
             
             try {
-                // PASO 1: Crear usuario
+                // Crear usuario
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                console.log('[AUDIT] REG: Paso 1 - Usuario creado UID:', user.uid);
-
-                // PASO 2: Actualizar displayName OBLIGATORIAMENTE
+                
+                // Actualizar displayName
                 await updateProfile(user, { displayName: name });
-                console.log('[AUDIT] REG: Paso 2 - updateProfile completado');
                 
-                // PASO 3: VERIFICAR persistencia con reload
-                await user.reload();
-                const refreshedUser = auth.currentUser;
-                
-                if (!refreshedUser || !refreshedUser.displayName) {
-                    throw new Error('FALLO CRITICO: No se pudo persistir el displayName');
-                }
-                console.log('[AUDIT] REG: Paso 3 - Verificado displayName:', refreshedUser.displayName);
-
-                // PASO 4: Guardar en Firestore
+                // Guardar en Firestore
                 await setDoc(doc(db, 'users', user.uid), {
                     name: name,
                     email: email,
                     petName: pet || 'Mi Mascota',
                     phone: phone || '',
-                    displayNameVerified: true,
                     createdAt: serverTimestamp()
                 });
-                console.log('[AUDIT] REG: Paso 4 - Firestore guardado');
-
-                AppState.userData = { name: name, email: email, petName: pet || 'Mi Mascota', phone: phone || '' };
+                
                 showToast('Cuenta creada!', 'success');
-                console.log('[AUDIT] REG: ✅ Registro completo y verificado');
+                // onAuthStateChanged se encargará de redirigir
                 
             } catch (error) {
-                console.error('[AUDIT] REG ERROR:', error);
+                console.error('[REGISTER] Error:', error);
+                hideLoading();
                 if (error.code === 'auth/email-already-in-use') {
                     showError('Este correo ya esta registrado');
                 } else {
                     showError('Error: ' + error.message);
                 }
-            } finally {
-                hideLoading();
             }
         });
 
-        function showError(msg) {
-            errorEl.textContent = msg;
-            errorEl.classList.remove('hidden');
-        }
-        function hideError() { errorEl.classList.add('hidden'); }
-
+        // ===== INVITADO SIMPLIFICADO =====
         document.getElementById('btn-skip').addEventListener('click', async () => {
             showLoading('Entrando como invitado...');
             try {
                 AppState.isGuest = true;
                 await signInAnonymously(auth);
+                // onAuthStateChanged se encargará del resto
             } catch (error) {
+                console.error('[GUEST] Error:', error);
                 hideLoading();
-                showToast('Error al entrar como invitado', 'error');
                 AppState.isGuest = false;
+                showToast('Error al entrar como invitado: ' + error.message, 'error');
             }
         });
 
