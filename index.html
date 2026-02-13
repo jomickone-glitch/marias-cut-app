@@ -1575,6 +1575,7 @@
         });
 
         // ===== AUTH STATE CON AUTO-LIMPIEZA DE SESIONES ZOMBI =====
+        // ===== OBSERVADOR DE AUTH CON REPARACIÓN CONSTRUCTIVA =====
         onAuthStateChanged(auth, async (user) => {
             const nav = document.getElementById('bottom-nav');
             if (AppState.isInitializing) {
@@ -1587,19 +1588,60 @@
                     showScreen('screen-login');
                     nav.classList.add('hidden');
                 } else {
-                    // VALIDACIÓN ESTRUCTURAL: Detectar sesión zombie (UID sin displayName)
+                    // ===== REPARACIÓN EN CALIENTE: Detectar y curar sesiones incompletas =====
                     if (user && !AppState.isGuest) {
                         const hasDisplayName = user.displayName && user.displayName.trim() !== '';
                         
                         if (!hasDisplayName) {
-                            console.error('[AUDIT] AUTH: 🚨 SESIÓN ZOMBI DETECTADA - UID:', user.uid, 'displayName:', user.displayName);
-                            await signOut(auth);
-                            alert('⚠️ Tu sesión anterior estaba incompleta.\n\nPor seguridad, por favor inicia sesión de nuevo.');
-                            window.location.reload();
-                            return;
+                            console.warn('[AUDIT] AUTH: ⚠️ Sesión incompleta detectada - UID:', user.uid);
+                            console.log('[AUDIT] AUTH: 🔧 Iniciando reparación constructiva...');
+                            
+                            // REPARACIÓN: Pedir nombre al usuario en lugar de expulsarlo
+                            const newName = prompt(
+                                "⚠️ Tu perfil está incompleto.\n\n" +
+                                "Por favor, introduce tu Nombre de Usuario para continuar:",
+                                ""
+                            );
+                            
+                            let nameToSet = newName ? newName.trim() : "";
+                            
+                            // Si canceló o dejó vacío, asignar nombre por defecto
+                            if (!nameToSet) {
+                                nameToSet = "Usuario " + Math.floor(Math.random() * 10000);
+                                console.log('[AUDIT] AUTH: 📝 Asignando nombre por defecto:', nameToSet);
+                            } else {
+                                console.log('[AUDIT] AUTH: 📝 Nombre proporcionado por usuario:', nameToSet);
+                            }
+                            
+                            // Actualizar perfil en Firebase
+                            try {
+                                await updateProfile(user, { displayName: nameToSet });
+                                console.log('[AUDIT] AUTH: ✅ updateProfile ejecutado');
+                                
+                                // Forzar recarga para verificar persistencia
+                                await user.reload();
+                                console.log('[AUDIT] AUTH: ✅ Usuario recargado, displayName ahora:', auth.currentUser?.displayName);
+                                
+                                // Actualizar referencia local
+                                user = auth.currentUser;
+                                
+                                // Guardar en Firestore también para consistencia
+                                await setDoc(doc(db, 'users', user.uid), {
+                                    name: nameToSet,
+                                    email: user.email || '',
+                                    displayNameRepaired: true,
+                                    repairedAt: serverTimestamp()
+                                }, { merge: true });
+                                console.log('[AUDIT] AUTH: ✅ Firestore actualizado con reparación');
+                                
+                            } catch (repairError) {
+                                console.error('[AUDIT] AUTH: 🚨 Error durante reparación:', repairError);
+                                // Si falla la reparación, continuar con nombre por defecto en memoria
+                                user.displayName = nameToSet;
+                            }
+                        } else {
+                            console.log('[AUDIT] AUTH: ✅ Sesión válida - UID:', user.uid, 'displayName:', user.displayName);
                         }
-                        
-                        console.log('[AUDIT] AUTH: ✅ Sesión válida - UID:', user.uid, 'displayName:', user.displayName);
                     }
                     
                     AppState.currentUser = user;
